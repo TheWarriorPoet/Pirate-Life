@@ -3,17 +3,17 @@ using System.Collections;
 
 public class Player : MonoBehaviour
 {
-	public float laneSpeed;
+	public float runSpeed;
+	public float laneDelay;
 	public float laneDistance;
 	public int currentLane;
 
-	private Vector3 startPos;
-	private Vector3 velocity;
+	private Rigidbody rb;
+	private Vector3 velocity = Vector3.zero;
 
 	void Start()
 	{
-		startPos = transform.position;
-		velocity = Vector3.zero;
+		rb = GetComponent<Rigidbody>();
     }
 	
 	void Update()
@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
 		Limits();
 	}
 
-	void LateUpdate()
+	void FixedUpdate()
 	{
 		Movement();
 	}
@@ -57,10 +57,16 @@ public class Player : MonoBehaviour
 
 	void Movement()
 	{
-		Vector3 targetPosition = startPos + new Vector3(currentLane * laneDistance, 0, 0);
+		Vector3 pos = transform.position;
 
-		Vector3 newPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, laneSpeed);
+		// Lane Hopping
+		float targetX = currentLane * laneDistance;
 
-		transform.position = newPosition;
-	}
+		pos.x = Mathf.SmoothDamp(transform.position.x, targetX, ref velocity.x, laneDelay);
+
+		// Running
+		pos.z += runSpeed * Time.deltaTime;
+
+		transform.position = pos;
+    }
 }
