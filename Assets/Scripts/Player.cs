@@ -8,11 +8,13 @@ public class Player : MonoBehaviour
 	public float laneDistance;
 	public int currentLane;
 
-	private Rigidbody rb;
-	private Vector3 velocity = Vector3.zero;
-    private SceneManager_Andrew _mySceneManager = null;
+	private SceneManager_Andrew _mySceneManager = null;
     private Transform _PlayerTransform = null;
     private Vector3 _StartingPosition = Vector3.zero;
+	private Rigidbody rb;
+	private float laneVelocity;
+	private float lanePosition;
+
 	void Start()
 	{
         _mySceneManager = SceneManager_Andrew.instance;
@@ -49,14 +51,14 @@ public class Player : MonoBehaviour
 
 	void Limits()
 	{
-		if (currentLane > 1)
+		if (currentLane > 2)
 		{
-			currentLane = 1;
-		}
+			currentLane = 2;
+        }
 
-		if (currentLane < -1)
+		if (currentLane < -2)
 		{
-			currentLane = -1;
+			currentLane = -2;
 		}
 	}
 
@@ -65,9 +67,9 @@ public class Player : MonoBehaviour
 		Vector3 pos = transform.position;
 
 		// Lane Hopping
-		float targetX = currentLane * laneDistance;
+		lanePosition = Mathf.SmoothDamp(lanePosition, currentLane, ref laneVelocity, laneDelay);
 
-		pos.x = Mathf.SmoothDamp(transform.position.x, targetX, ref velocity.x, laneDelay);
+		pos += transform.right * (laneVelocity * laneDistance) * Time.deltaTime;
 
 		// Running
 		pos += (transform.forward * runSpeed) * Time.deltaTime;
