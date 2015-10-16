@@ -10,9 +10,14 @@ public class Player : MonoBehaviour
 
 	private Rigidbody rb;
 	private Vector3 velocity = Vector3.zero;
-
+    private SceneManager_Andrew _mySceneManager = null;
+    private Transform _PlayerTransform = null;
+    private Vector3 _StartingPosition = Vector3.zero;
 	void Start()
 	{
+        _mySceneManager = SceneManager_Andrew.instance;
+        _PlayerTransform = transform;
+        _StartingPosition = transform.position;
 		rb = GetComponent<Rigidbody>();
     }
 	
@@ -68,5 +73,19 @@ public class Player : MonoBehaviour
 		pos += (transform.forward * runSpeed) * Time.deltaTime;
 
 		transform.position = pos;
+    }
+
+    void OnCollisionEnter(Collision a_Collision)
+    {
+        if (a_Collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+        {
+            _mySceneManager.Die();
+            ResetCharacter();
+        }
+    }
+
+    public void ResetCharacter()
+    {
+        _PlayerTransform.position = _StartingPosition;
     }
 }
