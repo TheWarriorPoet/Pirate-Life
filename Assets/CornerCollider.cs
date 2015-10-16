@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class CornerCollider : MonoBehaviour {
 	public GameObject Player;
+	public GameObject WorldContainer;
 	bool hasRotated = false;
+	bool hasExited = false;
 	// Use this for initialization
 	void Start () {
 	
@@ -14,18 +16,25 @@ public class CornerCollider : MonoBehaviour {
 	
 	}
 
+	void OnTriggerEnter(Collider Other)
+	{
+		if (Other.gameObject == Player) {
+			hasExited = false;
+		}
+	}
+
 	void OnTriggerStay(Collider Other)
 	{
 		if (Other.gameObject == Player) {
-			if(!hasRotated)
+			if(!hasRotated && !hasExited)
 			{
 				if(Input.GetAxis("Horizontal") < 0)
 				{
-					Player.transform.Rotate(new Vector3(0,90,0));
+					WorldContainer.transform.RotateAround(gameObject.transform.position, new Vector3(0,1,0), 90);
 					hasRotated = true;
 				}else if(Input.GetAxis ("Horizontal") > 0)
 				{
-					Player.transform.Rotate(new Vector3(0,90,0));
+					WorldContainer.transform.RotateAround(gameObject.transform.position, new Vector3(0,1,0), -90);
 					hasRotated = true;
 				}
 			}
@@ -34,6 +43,7 @@ public class CornerCollider : MonoBehaviour {
 	void OnTriggerExit(Collider Other)
 	{
 		if (Other.gameObject == Player) {
+			hasExited = true;
 			hasRotated = false;
 		}
 	}
