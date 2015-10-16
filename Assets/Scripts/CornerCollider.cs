@@ -30,7 +30,20 @@ public class CornerCollider : MonoBehaviour {
 			{
 				if(Input.GetAxis("Horizontal") < 0)
 				{
+
 					WorldContainer.transform.RotateAround(gameObject.transform.position, new Vector3(0,1,0), 90);
+					Vector3 dist = gameObject.transform.position - Player.transform.position;
+					if(dist.z > Player.GetComponent<Player>().laneDistance)
+					{
+						Player.GetComponent<Player>().currentLane = -1;
+					}
+					else if(dist.z < (Player.GetComponent<Player>().laneDistance * -1))
+					{
+						Player.GetComponent<Player>().currentLane = 1;
+					}
+					else{
+						Player.GetComponent<Player>().currentLane = 0;
+					}
 					hasRotated = true;
 				}else if(Input.GetAxis ("Horizontal") > 0)
 				{
