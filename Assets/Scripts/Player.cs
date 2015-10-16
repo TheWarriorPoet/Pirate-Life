@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
 		pos.x = Mathf.SmoothDamp(transform.position.x, targetX, ref velocity.x, laneDelay);
 
 		// Running
-		pos.z += runSpeed * Time.deltaTime;
+		pos += (transform.forward * runSpeed) * Time.deltaTime;
 
 		transform.position = pos;
     }
