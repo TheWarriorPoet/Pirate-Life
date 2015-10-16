@@ -21,3 +21,5 @@
 sysinfo.txt
 *.ai
 
+ProjectSettings/ProjectSettings.asset
+ProjectSettings/ProjectVersion.txt
