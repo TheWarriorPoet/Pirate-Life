@@ -4,6 +4,7 @@ using System.Collections;
 public class Player : MonoBehaviour
 {
 	public float runSpeed;
+	public float jumpHeight;
 	public float laneDelay;
 	public float laneDistance;
 	public int currentLane;
@@ -14,6 +15,8 @@ public class Player : MonoBehaviour
 	private Rigidbody rb;
 	private float laneVelocity;
 	private float lanePosition;
+	public float jumpPosition;
+	public bool jumping;
 
 	void Start()
 	{
@@ -47,6 +50,11 @@ public class Player : MonoBehaviour
 		{
 			currentLane++;
 		}
+
+		if (Input.GetKeyDown(KeyCode.UpArrow) && !jumping)
+		{
+			jumping = true;
+		}
 	}
 
 	void Limits()
@@ -74,8 +82,14 @@ public class Player : MonoBehaviour
 		// Running
 		pos += (transform.forward * runSpeed) * Time.deltaTime;
 
+		// Jumping
+		if (jumping)
+		{
+			pos += (transform.up * jumpHeight) * Time.deltaTime;
+		}
+
 		transform.position = pos;
-    }
+	}
 
     void OnCollisionEnter(Collision a_Collision)
     {
@@ -84,6 +98,8 @@ public class Player : MonoBehaviour
             _mySceneManager.Die();
             ResetCharacter();
         }
+
+		jumping = false;
     }
 
     public void ResetCharacter()
