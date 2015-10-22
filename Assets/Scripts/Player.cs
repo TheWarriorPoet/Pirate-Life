@@ -15,8 +15,7 @@ public class Player : MonoBehaviour
 	private Rigidbody rb;
 	private float laneVelocity;
 	private float lanePosition;
-	public float jumpPosition;
-	public bool jumping;
+	private bool jumping;
 
 	void Start()
 	{
