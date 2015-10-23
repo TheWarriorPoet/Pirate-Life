@@ -12,11 +12,11 @@ public class Player : MonoBehaviour
 	private SceneManager_Andrew _mySceneManager = null;
     private Transform _PlayerTransform = null;
     private Vector3 _StartingPosition = Vector3.zero;
+	private Quaternion _StartingRotation = Quaternion.identity;
 	private Rigidbody rb;
 	private float laneVelocity;
 	private float lanePosition;
-	public float jumpPosition;
-	public bool jumping;
+	private bool jumping;
 
 	void Start()
 	{
@@ -104,6 +104,14 @@ public class Player : MonoBehaviour
 
     public void ResetCharacter()
     {
+		rb.velocity = Vector3.zero;
+		rb.transform.position = _StartingPosition;
+		rb.rotation = _StartingRotation;
+
         _PlayerTransform.position = _StartingPosition;
+		transform.rotation = _StartingRotation;
+
+		currentLane = 0;
+		lanePosition = 0;
     }
 }
