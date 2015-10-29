@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameManager : MonoBehaviour {
-    
+public class GameManager : MonoBehaviour
+{
+	public Player player;
+
     // Singleton Instance to provide simple access through other scripts
     private static GameManager _instance = null;
     public static GameManager instance

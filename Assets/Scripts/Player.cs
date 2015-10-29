@@ -3,9 +3,12 @@ using System.Collections;
 
 public class Player : MonoBehaviour
 {
-	public float runSpeed;
-	public float jumpHeight;
-	public float laneDelay;
+	public int drunkenness;
+	public int rumStrength;
+	public int waterStrength;
+	public float minRunSpeed, maxRunSpeed;
+	public float minJumpHeight, maxJumpHeight;
+	public float minLaneDelay, maxLaneDelay;
 	public float laneDistance;
 	public int currentLane;
 
@@ -20,10 +23,12 @@ public class Player : MonoBehaviour
 
 	void Start()
 	{
-        _mySceneManager = SceneManager_Andrew.instance;
+		_mySceneManager = SceneManager_Andrew.instance;
         _PlayerTransform = transform;
         _StartingPosition = transform.position;
 		rb = GetComponent<Rigidbody>();
+
+		ResetCharacter();
     }
 	
 	void Update()
@@ -68,6 +73,16 @@ public class Player : MonoBehaviour
 		{
 			currentLane = -2;
 		}
+
+		if (drunkenness > 100)
+		{
+			drunkenness = 100;
+        }
+
+		if (drunkenness < 0)
+		{
+			drunkenness = 0;
+		}
 	}
 
 	void Movement()
@@ -75,17 +90,21 @@ public class Player : MonoBehaviour
 		Vector3 pos = transform.position;
 
 		// Lane Hopping
+		float laneDelay = Mathf.Lerp(minLaneDelay, maxLaneDelay, drunkenness / 100);
+
 		lanePosition = Mathf.SmoothDamp(lanePosition, currentLane, ref laneVelocity, laneDelay);
 
 		pos += transform.right * (laneVelocity * laneDistance) * Time.deltaTime;
 
 		// Running
+		float runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100);
+
 		pos += (transform.forward * runSpeed) * Time.deltaTime;
 
 		// Jumping
 		if (jumping)
 		{
-			pos += (transform.up * jumpHeight) * Time.deltaTime;
+			pos += (transform.up * minJumpHeight) * Time.deltaTime;
 		}
 
 		transform.position = pos;
@@ -112,6 +131,19 @@ public class Player : MonoBehaviour
 		transform.rotation = _StartingRotation;
 
 		currentLane = 0;
+		laneVelocity = 0;
 		lanePosition = 0;
+
+		drunkenness = 0;
     }
+
+	public void GetDrunk()
+	{
+		drunkenness += rumStrength;
+	}
+
+	public void SoberUp()
+	{
+		drunkenness -= waterStrength;
+	}
 }

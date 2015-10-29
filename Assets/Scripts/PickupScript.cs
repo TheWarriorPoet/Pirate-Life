@@ -7,18 +7,22 @@ public enum PickupType
 	RUM,
 	WATER,
 }
-public class PickupScript : MonoBehaviour {
 
-	public GameObject Player;
+public class PickupScript : MonoBehaviour
+{
 	public PickupType pickupType;
+	private Player player;
+
 	// Use this for initialization
-	void Start () {
-	
+	void Start()
+	{
+		player = GameObject.Find("Player").GetComponent<Player>();
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update()
+	{
+		
 	}
 
 	void OnTriggerEnter(Collider Other)
@@ -26,7 +30,20 @@ public class PickupScript : MonoBehaviour {
 		if (Other.gameObject.layer == LayerMask.NameToLayer("Player"))
 		{
 			// Insert Reaction Code here
-			Debug.Log("AA");
+			switch (pickupType)
+			{
+				case PickupType.COIN:
+					Debug.Log("Picked up coin");
+					break;
+				case PickupType.RUM:
+					Debug.Log("Picked up rum");
+					player.GetDrunk();
+					break;
+				case PickupType.WATER:
+					Debug.Log("Picked up water");
+					player.SoberUp();
+					break;
+			}
 			Destroy(transform.parent.gameObject);
 		}
 	}
