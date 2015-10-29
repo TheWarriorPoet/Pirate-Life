@@ -23,8 +23,11 @@ public class PickupScript : MonoBehaviour {
 
 	void OnTriggerEnter(Collider Other)
 	{
-		if (Other.gameObject == Player) {
-			//Insert Reaction Code here
+		if (Other.gameObject.layer == LayerMask.NameToLayer("Player"))
+		{
+			// Insert Reaction Code here
+			Debug.Log("AA");
+			Destroy(transform.parent.gameObject);
 		}
 	}
 }
