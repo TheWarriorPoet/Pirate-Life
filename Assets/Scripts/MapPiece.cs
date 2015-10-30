@@ -6,11 +6,11 @@ public class MapPiece : MonoBehaviour {
 	public Vector3 LeftLaneOffset = new Vector3(-3,0,0),MiddleLaneOffset = new Vector3(0,0,0), RightLaneOffset = new Vector3(3,0,0);
 	// Use this for initialization
 	void Start () {
-		GameObject obj = (GameObject)GameObject.Instantiate(LeftLane,gameObject.transform.position + LeftLaneOffset,Quaternion.identity);
+		GameObject obj = (GameObject)GameObject.Instantiate(LeftLane,gameObject.transform.position + LeftLaneOffset,gameObject.transform.rotation);
 		obj.transform.SetParent (gameObject.transform);
-		obj = (GameObject)GameObject.Instantiate(MiddleLane,gameObject.transform.position,Quaternion.identity);
+		obj = (GameObject)GameObject.Instantiate(MiddleLane,gameObject.transform.position,gameObject.transform.rotation);
 		obj.transform.SetParent (gameObject.transform);
-		obj = (GameObject)GameObject.Instantiate(RightLane,gameObject.transform.position + RightLaneOffset,Quaternion.identity);
+		obj = (GameObject)GameObject.Instantiate(RightLane,gameObject.transform.position + RightLaneOffset,gameObject.transform.rotation);
 		obj.transform.SetParent (gameObject.transform);
 	}
 	
