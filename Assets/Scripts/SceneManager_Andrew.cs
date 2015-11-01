@@ -7,6 +7,11 @@ public class SceneManager_Andrew : SceneManager_Base {
     public GameObject m_GameOverText = null;
     public float m_Distance = 0;
 
+    public UnityEngine.UI.Text m_CoinCounter = null;
+    public int coinCount = 0;
+
+    public bool magneticCoins = false;
+
     private static SceneManager_Andrew _instance = null;
     public static SceneManager_Andrew instance
     {
@@ -19,9 +24,18 @@ public class SceneManager_Andrew : SceneManager_Base {
             return _instance;
         }
     }
+
+    void Awake()
+    {
+        base.Awake();
+        if (_myGameManager != null && _myGameManager.magneticCoins)
+        {
+            magneticCoins = true;
+        }
+    }
     // Use this for initialization
     void Start () {
-	
+	    
 	}
 	
 	// Update is called once per frame
@@ -56,5 +70,14 @@ public class SceneManager_Andrew : SceneManager_Base {
         }
         else Debug.Log("GameManager is null");
         Application.LoadLevel("Main Menu");
+    }
+
+    public void AddCoins(int a_iNumberOfCoins)
+    {
+        coinCount += a_iNumberOfCoins;
+        if (m_CoinCounter != null)
+        {
+            m_CoinCounter.text = "Coins: " + coinCount;
+        }
     }
 }

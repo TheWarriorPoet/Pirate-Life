@@ -12,20 +12,33 @@ public class PickupScript : MonoBehaviour
 {
 	public PickupType pickupType;
 	private Player player;
-    private SceneManager_Base _mySceneManager = null;
-
+    private Transform playerTransform = null;
+    private Transform objectTransform = null;
+    private SceneManager_Andrew _mySceneManager = null;
+    private bool MagneticCoin = false;
+    public float magnetSpeed = 20.0f;
 	// Use this for initialization
 	void Start()
 	{
-		player = GameObject.Find("Player").GetComponent<Player>();
+        objectTransform = transform;
+        GameObject temp = GameObject.Find("Player");
+        player = temp.GetComponent<Player>();
+        playerTransform = temp.transform;
         _mySceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager_Andrew>();
+        if (_mySceneManager != null && pickupType == PickupType.COIN && _mySceneManager.magneticCoins)
+        {
+            MagneticCoin = true;
+        }
 	}
 	
 	// Update is called once per frame
 	void Update()
 	{
-		
-	}
+        if (MagneticCoin)
+        {
+            objectTransform.position = Vector3.MoveTowards(objectTransform.position, playerTransform.position, magnetSpeed * Time.deltaTime);
+        }
+    }
 
 	void OnTriggerEnter(Collider Other)
 	{
@@ -49,7 +62,7 @@ public class PickupScript : MonoBehaviour
 					player.SoberUp();
 					break;
 			}
-			Destroy(transform.parent.gameObject);
+			Destroy(gameObject);
 		}
 	}
 }

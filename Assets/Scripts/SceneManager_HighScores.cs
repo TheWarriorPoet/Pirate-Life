@@ -3,20 +3,29 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class SceneManager_HighScores : SceneManager_Base {
-    public Text HighScores = null;
+    public Text Dates = null;
+    public Text Names = null;
+    public Text Distances = null;
 	// Use this for initialization
 	void Start () {
-        HighScores.text = "";
-        if (_myGameManager != null)
+        if (Dates != null && Names != null && Distances != null)
         {
-            foreach (HighScore hs in _myGameManager.GetHighScores())
+            Dates.text = "DATES\n";
+            Names.text = "NAMES\n";
+            Distances.text = "DISTANCE\n";
+            if (_myGameManager != null)
             {
-                HighScores.text += hs.name + "\t\t" + hs.date + "\t\t" + hs.distance + "m\n";
+                foreach (HighScore hs in _myGameManager.GetHighScores())
+                {
+                    Names.text += hs.name + "\n";
+                    Dates.text += hs.date + "\n";
+                    Distances.text += hs.distance + "m\n";
+                }
             }
-        }
-        else
-        {
-            Debug.Log("GameManager is null");
+            else
+            {
+                Debug.Log("GameManager is null");
+            }
         }
 	}
 	

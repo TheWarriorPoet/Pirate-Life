@@ -8,8 +8,7 @@ public class SceneManager_Base : MonoBehaviour {
 
     protected GameManager _myGameManager = null;
 
-    public Text m_CoinCounter = null;
-    public int coinCount = 0;
+
     // private properties
 
     //-------------------------------------------------------------------------------------
@@ -40,12 +39,5 @@ public class SceneManager_Base : MonoBehaviour {
         Application.LoadLevel(a_SceneName);
     }
 
-    public void AddCoins(int a_iNumberOfCoins)
-    {
-        coinCount += a_iNumberOfCoins;
-        if (m_CoinCounter != null)
-        {
-            m_CoinCounter.text = "Coins: " + coinCount;
-        }
-    }
+
 }

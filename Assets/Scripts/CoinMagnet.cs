@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SceneManager_Credits : SceneManager_Base {
-
+public class CoinMagnet : MonoBehaviour {
+    public GameObject Player = null;
 	// Use this for initialization
 	void Start () {
 	

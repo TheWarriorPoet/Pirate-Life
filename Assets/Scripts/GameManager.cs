@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
 	public Player player;
     public int m_CoinScore;
     public List<HighScore> HighScores = new List<HighScore>();
+    public bool magneticCoins = false;
 
     // Singleton Instance to provide simple access through other scripts
     private static GameManager _instance = null;
