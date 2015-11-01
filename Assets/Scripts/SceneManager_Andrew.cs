@@ -4,6 +4,8 @@ using System.Collections;
 public class SceneManager_Andrew : SceneManager_Base {
     public int m_Lives = 3;
     public GameObject m_PlayerObject = null;
+    public GameObject m_GameOverText = null;
+    public float m_Distance = 0;
 
     private static SceneManager_Andrew _instance = null;
     public static SceneManager_Andrew instance
@@ -37,13 +39,22 @@ public class SceneManager_Andrew : SceneManager_Base {
         m_Lives--;
         if (m_Lives == 0)
         {
-            GameOver();
+            if (m_GameOverText != null)
+            {
+                m_GameOverText.SetActive(true);
+            }
+            Invoke("GameOver", 2.0f);
         }
     }
 
     public void GameOver()
     {
-        Debug.Log("Game Over!!!");
-        Time.timeScale = 0;
+        if (_myGameManager != null)
+        {
+            _myGameManager.AddCoins(coinCount);
+            _myGameManager.AddHighScore((int)m_Distance);
+        }
+        else Debug.Log("GameManager is null");
+        Application.LoadLevel("Main Menu");
     }
 }

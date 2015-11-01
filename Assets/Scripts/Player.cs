@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
 	private float laneVelocity;
 	private float lanePosition;
 	private bool jumping;
+    private bool dead = false;
 
 	void Start()
 	{
@@ -87,6 +88,7 @@ public class Player : MonoBehaviour
 
 	void Movement()
 	{
+        if (dead) return;
 		Vector3 pos = transform.position;
 
 		// Lane Hopping
@@ -101,6 +103,11 @@ public class Player : MonoBehaviour
 
 		pos += (transform.forward * runSpeed) * Time.deltaTime;
 
+        if (_mySceneManager != null)
+        {
+            _mySceneManager.m_Distance += runSpeed * Time.deltaTime;
+        }
+
 		// Jumping
 		if (jumping)
 		{
@@ -112,10 +119,14 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter(Collision a_Collision)
     {
-        if (a_Collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+        if (_mySceneManager != null && a_Collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
         {
             _mySceneManager.Die();
             ResetCharacter();
+            if (_mySceneManager.m_Lives <= 0)
+            {
+                dead = true;
+            }
         }
 
 		jumping = false;

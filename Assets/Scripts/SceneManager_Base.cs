@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class SceneManager_Base : MonoBehaviour {
     // public properties
     public GameObject gameManager = null;
 
-    private GameManager _myGameManager = null;
+    protected GameManager _myGameManager = null;
 
+    public Text m_CoinCounter = null;
+    public int coinCount = 0;
     // private properties
 
     //-------------------------------------------------------------------------------------
@@ -18,8 +21,8 @@ public class SceneManager_Base : MonoBehaviour {
         _myGameManager = GameManager.instance;
         if (_myGameManager == null && gameManager != null)
         {
-            GameObject temp = Instantiate(gameManager);
-            _myGameManager = temp.GetComponent<GameManager>();
+            Instantiate(gameManager);
+            _myGameManager = GameManager.instance;
         }
     }
     // Use this for initialization
@@ -35,5 +38,14 @@ public class SceneManager_Base : MonoBehaviour {
     public void LoadScene(string a_SceneName)
     {
         Application.LoadLevel(a_SceneName);
+    }
+
+    public void AddCoins(int a_iNumberOfCoins)
+    {
+        coinCount += a_iNumberOfCoins;
+        if (m_CoinCounter != null)
+        {
+            m_CoinCounter.text = "Coins: " + coinCount;
+        }
     }
 }

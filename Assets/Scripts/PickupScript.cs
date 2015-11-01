@@ -12,11 +12,13 @@ public class PickupScript : MonoBehaviour
 {
 	public PickupType pickupType;
 	private Player player;
+    private SceneManager_Base _mySceneManager = null;
 
 	// Use this for initialization
 	void Start()
 	{
 		player = GameObject.Find("Player").GetComponent<Player>();
+        _mySceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager_Andrew>();
 	}
 	
 	// Update is called once per frame
@@ -33,7 +35,10 @@ public class PickupScript : MonoBehaviour
 			switch (pickupType)
 			{
 				case PickupType.COIN:
-					Debug.Log("Picked up coin");
+					if (_mySceneManager != null)
+                    {
+                        _mySceneManager.AddCoins(1);
+                    }
 					break;
 				case PickupType.RUM:
 					Debug.Log("Picked up rum");
