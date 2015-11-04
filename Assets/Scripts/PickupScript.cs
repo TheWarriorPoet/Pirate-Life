@@ -17,6 +17,7 @@ public class PickupScript : MonoBehaviour
     private SceneManager_Andrew _mySceneManager = null;
     private bool MagneticCoin = false;
     public float magnetSpeed = 20.0f;
+    public float magnetRadius = 50.0f;
 	// Use this for initialization
 	void Start()
 	{
@@ -34,7 +35,7 @@ public class PickupScript : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-        if (MagneticCoin)
+        if (MagneticCoin && playerTransform != null && Vector3.Distance(playerTransform.position, objectTransform.position) <= magnetRadius)
         {
             objectTransform.position = Vector3.MoveTowards(objectTransform.position, playerTransform.position, magnetSpeed * Time.deltaTime);
         }
