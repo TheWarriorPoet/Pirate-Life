@@ -35,7 +35,7 @@ public class PickupScript : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-        if (MagneticCoin && playerTransform != null && Vector3.Distance(playerTransform.position, objectTransform.position) <= magnetRadius)
+        if (MagneticCoin && pickupType == PickupType.COIN && playerTransform != null && Vector3.Distance(playerTransform.position, objectTransform.position) <= magnetRadius)
         {
             objectTransform.position = Vector3.MoveTowards(objectTransform.position, playerTransform.position, magnetSpeed * Time.deltaTime);
         }
