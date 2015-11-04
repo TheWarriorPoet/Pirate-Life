@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class LevelGen : MonoBehaviour {
 	public int TrackDirection;
 	public float PieceLength = 50;
-	public GameObject CornerBlock; //This is to check if the block is a corner, and to start layering the track around the corner
+	//public GameObject CornerBlock; //This is to check if the block is a corner, and to start layering the track around the corner
 	public List<GameObject> PieceList;
 	private Vector3 TrackPos = new Vector3(0,0,0);
 	// Use this for initialization
