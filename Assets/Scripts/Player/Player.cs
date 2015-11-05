@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
 	public float minLaneDelay, maxLaneDelay;
 	public float laneDistance;
 	public int currentLane;
+	public bool isTurning;
 
 	private SceneManager_Andrew _mySceneManager = null;
     private Transform _PlayerTransform = null;
@@ -19,11 +20,12 @@ public class Player : MonoBehaviour
 	private Rigidbody rb;
 	private float laneVelocity;
 	private float lanePosition;
+	private int previousLane;
 	private bool jumping;
     private bool dead = false;
 
 	// Touch
-	private float minSwipeDist = 5, maxSwipeTime = 0.75f;
+	public float swipeDistance = 5, swipeTime = 0.75f;
 	private bool couldBeSwipe;
 	private Vector2 swipeStartPos;
 	private float swipeStartTime;
@@ -55,11 +57,13 @@ public class Player : MonoBehaviour
 		// PC Controls
 		if (Input.GetKeyDown(KeyCode.LeftArrow))
 		{
+			previousLane = currentLane;
 			currentLane--;
 		}
 
 		if (Input.GetKeyDown(KeyCode.RightArrow))
 		{
+			previousLane = currentLane;
 			currentLane++;
 		}
 
@@ -91,10 +95,10 @@ public class Player : MonoBehaviour
 					break;
 			}
 
-			float swipeTime = Time.time - swipeStartTime; // Time the touch stayed at the screen till now.
-			float swipeDist = Mathf.Abs(touch.position.x - swipeStartPos.x); //Swipe distance
+			float time = Time.time - swipeStartTime; // Time the touch stayed at the screen till now.
+			float distance = Mathf.Abs(touch.position.x - swipeStartPos.x); //Swipe distance
 
-			if (couldBeSwipe && swipeTime < maxSwipeTime && swipeDist > minSwipeDist)
+			if (couldBeSwipe && time < swipeTime && distance > swipeDistance)
 			{
 				// It's a swiiiiiiiiiiiipe!
 				couldBeSwipe = false; //<-- Otherwise this part would be called over and over again.
@@ -134,6 +138,15 @@ public class Player : MonoBehaviour
 		{
 			drunkenness = 0;
 		}
+
+		if (isTurning)
+		{
+			rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+		}
+		else
+		{
+			rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
+		}
 	}
 
 	void Movement()
@@ -171,15 +184,53 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter(Collision a_Collision)
     {
-        if (_mySceneManager != null && a_Collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
-        {
-            _mySceneManager.Die();
-            ResetCharacter();
-            if (_mySceneManager.m_Lives <= 0)
-            {
-                dead = true;
-            }
-        }
+		if (_mySceneManager != null && a_Collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+		{
+			_mySceneManager.Die();
+			ResetCharacter();
+			if (_mySceneManager.m_Lives <= 0)
+			{
+				dead = true;
+			}
+		}
+		//else
+		//{
+		//	// Detect direction of collision
+		//	Vector3 hit = a_Collision.contacts[0].normal;
+		//	Debug.Log(hit);
+		//	float angle = Vector3.Angle(hit, Vector3.up);
+
+		//	if (Mathf.Approximately(angle, 0))
+		//	{
+		//		//Down
+		//		Debug.Log("Down");
+		//	}
+		//	if (Mathf.Approximately(angle, 180))
+		//	{
+		//		//Up
+		//		Debug.Log("Up");
+		//	}
+		//	if (Mathf.Approximately(angle, 90)) // Sides
+		//	{
+		//		Vector3 cross = Vector3.Cross(Vector3.forward, hit);
+		//		if (cross.y == 1)
+		//		{
+		//			// Left side
+		//			Debug.Log("Left");
+
+		//			// Stop from running into wall
+		//			currentLane = previousLane;
+		//		}
+		//		else if (cross.y == -1)
+		//		{
+		//			// Right side
+		//			Debug.Log("Right");
+
+		//			// Stop from running into wall
+		//			currentLane = previousLane;
+		//		}
+		//	}
+		//}
 
 		jumping = false;
     }
