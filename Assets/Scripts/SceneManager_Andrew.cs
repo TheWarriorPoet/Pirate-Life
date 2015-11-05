@@ -12,7 +12,9 @@ public class SceneManager_Andrew : SceneManager_Base {
 
     public bool magneticCoins = false;
 
-    private static SceneManager_Andrew _instance = null;
+	public UnityEngine.UI.Text drunkMeter;
+
+	private static SceneManager_Andrew _instance = null;
     public static SceneManager_Andrew instance
     {
         get
@@ -34,14 +36,19 @@ public class SceneManager_Andrew : SceneManager_Base {
         }
     }
     // Use this for initialization
-    void Start () {
+    void Start()
+	{
 	    
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
-	}
+	void Update()
+	{
+		// GUI
+		Player p = m_PlayerObject.GetComponent<Player>();
+
+		drunkMeter.text = p.drunkenness.ToString() + "% Drunk";
+    }
 
     public void AddLife(int a_Lives)
     {
