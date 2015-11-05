@@ -18,7 +18,7 @@ public class SavePrefabScript : MonoBehaviour {
 	public void SavePrefab()
 	{
 		MapPiece.name = IF.text;
-		UnityEditor.PrefabUtility.CreatePrefab ("Assets/Prefabs/LevelObjects/" + MapPiece.name + ".prefab", MapPiece);
+		//UnityEditor.PrefabUtility.CreatePrefab ("Assets/Prefabs/LevelObjects/" + MapPiece.name + ".prefab", MapPiece);
 		MapPiece.name = "MapPiece";
 	}
 }

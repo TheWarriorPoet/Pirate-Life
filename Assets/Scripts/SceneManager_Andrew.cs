@@ -27,7 +27,7 @@ public class SceneManager_Andrew : SceneManager_Base {
         }
     }
 
-    void Awake()
+    new void Awake()
     {
         base.Awake();
         if (_myGameManager != null && _myGameManager.magneticCoins)
