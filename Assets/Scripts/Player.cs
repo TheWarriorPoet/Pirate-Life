@@ -22,6 +22,13 @@ public class Player : MonoBehaviour
 	private bool jumping;
     private bool dead = false;
 
+	// Touch
+	public float minSwipeDist, maxSwipeTime;
+
+	private bool couldBeSwipe;
+	private Vector2 swipeStartPos;
+	private float swipeStartTime;
+
 	void Start()
 	{
 		_mySceneManager = SceneManager_Andrew.instance;
@@ -60,6 +67,50 @@ public class Player : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.UpArrow) && !jumping)
 		{
 			jumping = true;
+		}
+
+		// Touch Controls
+		CheckHorizontalSwipes();
+    }
+
+	void CheckHorizontalSwipes()
+	{
+		foreach (Touch touch in Input.touches)
+		{ // For every touch in the Input.touches - array...
+
+			switch (touch.phase)
+			{
+				case TouchPhase.Began: // The finger first touched the screen --> It could be(come) a swipe
+					couldBeSwipe = true;
+
+					swipeStartPos = touch.position;  // Position where the touch started
+					swipeStartTime = Time.time; // The time it started
+					break;
+
+				case TouchPhase.Stationary: // Is the touch stationary? --> No swipe then!
+					couldBeSwipe = false;
+					break;
+			}
+
+			float swipeTime = Time.time - swipeStartTime; // Time the touch stayed at the screen till now.
+			float swipeDist = Mathf.Abs(touch.position.x - swipeStartPos.x); //Swipe distance
+
+			if (couldBeSwipe && swipeTime < maxSwipeTime && swipeDist > minSwipeDist)
+			{
+				// It's a swiiiiiiiiiiiipe!
+				couldBeSwipe = false; //<-- Otherwise this part would be called over and over again.
+
+				if (Mathf.Sign(touch.position.x - swipeStartPos.x) == 1f) //Swipe-direction, either 1 or -1.
+				{
+					//Right-swipe
+					currentLane++;
+				}
+				else
+				{
+					// Left-swipe
+					currentLane--;
+				}
+			}
 		}
 	}
 
