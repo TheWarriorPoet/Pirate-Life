@@ -14,6 +14,8 @@ public class SceneManager_Andrew : SceneManager_Base {
 
 	public UnityEngine.UI.Text drunkMeter;
 
+	public UnityEngine.UI.Text lifeCounter;
+
 	private static SceneManager_Andrew _instance = null;
     public static SceneManager_Andrew instance
     {
@@ -48,6 +50,7 @@ public class SceneManager_Andrew : SceneManager_Base {
 		Player p = m_PlayerObject.GetComponent<Player>();
 
 		drunkMeter.text = p.drunkenness.ToString() + "% Drunk";
+		lifeCounter.text = "Lives: " + m_Lives.ToString();
     }
 
     public void AddLife(int a_Lives)
