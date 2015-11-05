@@ -23,8 +23,7 @@ public class Player : MonoBehaviour
     private bool dead = false;
 
 	// Touch
-	public float minSwipeDist, maxSwipeTime;
-
+	private float minSwipeDist = 5, maxSwipeTime = 0.75f;
 	private bool couldBeSwipe;
 	private Vector2 swipeStartPos;
 	private float swipeStartTime;
