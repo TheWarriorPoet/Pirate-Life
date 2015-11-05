@@ -142,14 +142,14 @@ public class Player : MonoBehaviour
 		Vector3 pos = transform.position;
 
 		// Lane Hopping
-		float laneDelay = Mathf.Lerp(minLaneDelay, maxLaneDelay, drunkenness / 100);
+		float laneDelay = Mathf.Lerp(minLaneDelay, maxLaneDelay, drunkenness / 100.0f);
 
 		lanePosition = Mathf.SmoothDamp(lanePosition, currentLane, ref laneVelocity, laneDelay);
 
 		pos += transform.right * (laneVelocity * laneDistance) * Time.deltaTime;
 
 		// Running
-		float runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100);
+		float runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
 
 		pos += (transform.forward * runSpeed) * Time.deltaTime;
 
@@ -159,9 +159,11 @@ public class Player : MonoBehaviour
         }
 
 		// Jumping
+		float jumpHeight = Mathf.Lerp(minJumpHeight, maxJumpHeight, drunkenness / 100.0f);
+
 		if (jumping)
 		{
-			pos += (transform.up * minJumpHeight) * Time.deltaTime;
+			pos += (transform.up * jumpHeight) * Time.deltaTime;
 		}
 
 		transform.position = pos;

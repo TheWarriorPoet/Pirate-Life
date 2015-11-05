@@ -10,8 +10,8 @@ public class PlayerInspector : Editor
 		Player p = target as Player;
 
 		GUILayout.Label("Player Settings");
-	
-		EditorGUILayout.Slider("Drunkness", p.drunkenness, 0, 100);
+
+		p.drunkenness = (int)EditorGUILayout.Slider("Drunkness", p.drunkenness, 0, 100);
 
 		p.rumStrength = EditorGUILayout.IntField("Rum Strength", p.rumStrength);
 		p.waterStrength = EditorGUILayout.IntField("Water Strength", p.waterStrength);
