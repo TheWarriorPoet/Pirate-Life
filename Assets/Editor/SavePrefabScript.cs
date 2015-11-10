@@ -2,7 +2,8 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class SavePrefabScript : MonoBehaviour {
+public class SavePrefabScript : UnityEngine.MonoBehaviour 
+{
 	public GameObject MapPiece;
 	public InputField IF;
 	// Use this for initialization
