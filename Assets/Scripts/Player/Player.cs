@@ -33,10 +33,12 @@ public class Player : MonoBehaviour
 	private int previousLane;
 	private bool jumping;
 	// Corner Turning
-	private Vector3 cornerPoint;
-	private Vector3 cornerTarget;
+	private Vector3 cornerStart;
+    private Vector3 cornerPoint;
+	private Vector3 cornerEnd;
 	private float turnTimer;
-
+	private float turnDegree;
+	private float turnAngle;
 	// Touch
 	public float swipeDistance = 5, swipeTime = 0.75f;
 	private bool couldBeSwipe;
@@ -63,10 +65,10 @@ public class Player : MonoBehaviour
 		}
 
 		// Debug
-		if (cornerPoint != Vector3.zero && cornerTarget != Vector3.zero)
+		if (cornerPoint != Vector3.zero && cornerEnd != Vector3.zero)
 		{
-			Debug.DrawLine(transform.position, cornerPoint, Color.red);
-			Debug.DrawLine(cornerPoint, cornerTarget, Color.red);
+			Debug.DrawLine(cornerStart, cornerPoint, Color.red);
+			Debug.DrawLine(cornerPoint, cornerEnd, Color.red);
 		}
 	}
 
@@ -167,14 +169,50 @@ public class Player : MonoBehaviour
 
 			case PlayerMode.TURNING:
 
-				if (actionLeft)
+				if (isTurning)
 				{
-					cornerTarget = cornerPoint + -transform.right * 10;
+					if (cornerStart == Vector3.zero)
+					{
+						cornerStart = transform.position;// cornerPoint + -transform.forward * Vector3.Distance(transform.position, cornerPoint);
+                    }
+
+					turnTimer += Time.deltaTime;
+
+					// Position
+					Vector3 point1 = Vector3.Lerp(cornerStart, cornerPoint, turnTimer);
+					Vector3 point2 = Vector3.Lerp(cornerPoint, cornerEnd, turnTimer);
+
+					transform.position = Vector3.Lerp(point1, point2, turnTimer);
+
+					// Rotation
+					//turnAngle = Mathf.LerpAngle(transform.rotation.y, turnDegree, turnTimer);
+					transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, turnDegree, 0), turnTimer);
+
+					// Stop Turning
+					if (turnTimer >= 1)
+					{
+						currentLane = 0;
+						laneVelocity = 0;
+						lanePosition = 0;
+
+						isTurning = false;
+					}
 				}
 
-				if (actionRight)
+				if (actionLeft && !isTurning)
 				{
-					cornerTarget = cornerPoint + transform.right * 10;
+					cornerEnd = cornerPoint + -transform.right * 10;
+					turnDegree -= 90.0f;
+
+					isTurning = true;
+                }
+
+				if (actionRight && !isTurning)
+				{
+					cornerEnd = cornerPoint + transform.right * 10;
+					turnDegree += 90.0f;
+
+					isTurning = true;
 				}
 				break;
 		}
@@ -218,6 +256,16 @@ public class Player : MonoBehaviour
 		if (cornerPoint != Vector3.zero)
 		{
 			cornerPoint.y = transform.position.y;
+		}
+
+		if (turnDegree >= 360)
+		{
+			turnDegree = 0;
+		}
+
+		if (turnDegree <= -360)
+		{
+			turnDegree = 0;
 		}
 	}
 
@@ -311,7 +359,7 @@ public class Player : MonoBehaviour
 	{
 		if (collider.gameObject.tag == "Corner")
 		{
-			currentLane = 0;
+			//currentLane = 0;
 			jumping = false;
 
 			cornerPoint = collider.gameObject.transform.position;
@@ -324,10 +372,14 @@ public class Player : MonoBehaviour
 	{
 		if (collider.gameObject.tag == "Corner")
 		{
+			cornerStart = Vector3.zero;
 			cornerPoint = Vector3.zero;
-			cornerTarget = Vector3.zero;
+			cornerEnd = Vector3.zero;
+			turnTimer = 0;
 
 			playerMode = PlayerMode.RUNNING;
+
+			isTurning = false;
 		}
 	}
 
@@ -344,8 +396,9 @@ public class Player : MonoBehaviour
 		laneVelocity = 0;
 		lanePosition = 0;
 
+		cornerStart = Vector3.zero;
 		cornerPoint = Vector3.zero;
-		cornerTarget = Vector3.zero;
+		cornerEnd = Vector3.zero;
 		turnTimer = 0;
 
 		drunkenness = 0;
