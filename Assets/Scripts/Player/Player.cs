@@ -3,6 +3,13 @@ using System.Collections;
 
 public class Player : MonoBehaviour
 {
+	public enum PlayerMode
+	{
+		RUNNING,
+		TURNING
+	}
+
+	public PlayerMode playerMode;
 	public int drunkenness;
 	public int rumStrength;
 	public int waterStrength;
@@ -14,9 +21,10 @@ public class Player : MonoBehaviour
 	public bool isTurning;
 
 	private SceneManager_Andrew sceneManager = null;
-    private Vector3 startingPosition = Vector3.zero;
+	private Vector3 startingPosition = Vector3.zero;
 	private Quaternion startingRotation = Quaternion.identity;
 	private Rigidbody rb;
+	private bool dead = false;
 	// Controls
 	private bool actionLeft, actionRight, actionJump;
 	// Lane Switching
@@ -24,9 +32,10 @@ public class Player : MonoBehaviour
 	private float lanePosition;
 	private int previousLane;
 	private bool jumping;
-    private bool dead = false;
 	// Corner Turning
-	private GameObject cornerTarget;
+	private Vector3 cornerPoint;
+	private Vector3 cornerTarget;
+	private float turnTimer;
 
 	// Touch
 	public float swipeDistance = 5, swipeTime = 0.75f;
@@ -38,12 +47,12 @@ public class Player : MonoBehaviour
 	{
 		sceneManager = SceneManager_Andrew.instance;
 		startingRotation = transform.rotation;
-        startingPosition = transform.position;
+		startingPosition = transform.position;
 		rb = GetComponent<Rigidbody>();
 
 		ResetCharacter();
-    }
-	
+	}
+
 	void Update()
 	{
 		if (!dead)
@@ -51,6 +60,13 @@ public class Player : MonoBehaviour
 			Controls();
 			Action();
 			Limits();
+		}
+
+		// Debug
+		if (cornerPoint != Vector3.zero && cornerTarget != Vector3.zero)
+		{
+			Debug.DrawLine(transform.position, cornerPoint, Color.red);
+			Debug.DrawLine(cornerPoint, cornerTarget, Color.red);
 		}
 	}
 
@@ -82,7 +98,7 @@ public class Player : MonoBehaviour
 
 		// Touch Controls
 		CheckHorizontalSwipes();
-    }
+	}
 
 	void CheckHorizontalSwipes()
 	{
@@ -127,50 +143,45 @@ public class Player : MonoBehaviour
 
 	void Action()
 	{
-		if (isTurning)
+		switch (playerMode)
 		{
-			// Corner
-			if (actionLeft)
-			{
-				actionLeft = false;
-			}
+			case PlayerMode.RUNNING:
 
-			if (actionRight)
-			{
-				actionRight = false;
-			}
+				if (actionLeft)
+				{
+					previousLane = currentLane;
+					currentLane--;
+				}
 
-			if (actionJump)
-			{
-				actionJump = false;
-			}
+				if (actionRight)
+				{
+					previousLane = currentLane;
+					currentLane++;
+				}
+
+				if (actionJump)
+				{
+					jumping = true;
+				}
+				break;
+
+			case PlayerMode.TURNING:
+
+				if (actionLeft)
+				{
+					cornerTarget = cornerPoint + -transform.right * 10;
+				}
+
+				if (actionRight)
+				{
+					cornerTarget = cornerPoint + transform.right * 10;
+				}
+				break;
 		}
-		else
-		{
-			// Lanes
-			if (actionLeft)
-			{
-				previousLane = currentLane;
-				currentLane--;
 
-				actionLeft = false;
-			}
-
-			if (actionRight)
-			{
-				previousLane = currentLane;
-				currentLane++;
-
-				actionRight = false;
-			}
-
-			if (actionJump)
-			{
-				jumping = true;
-
-				actionJump = false;
-			}
-		}
+		actionLeft = false;
+		actionRight = false;
+		actionJump = false;
 	}
 
 	void Limits()
@@ -178,7 +189,7 @@ public class Player : MonoBehaviour
 		if (currentLane > 2)
 		{
 			currentLane = 2;
-        }
+		}
 
 		if (currentLane < -2)
 		{
@@ -188,20 +199,25 @@ public class Player : MonoBehaviour
 		if (drunkenness > 100)
 		{
 			drunkenness = 100;
-        }
+		}
 
 		if (drunkenness < 0)
 		{
 			drunkenness = 0;
 		}
 
-		if (isTurning)
+		if (playerMode == PlayerMode.TURNING)
 		{
 			rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 		}
 		else
 		{
 			rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
+		}
+
+		if (cornerPoint != Vector3.zero)
+		{
+			cornerPoint.y = transform.position.y;
 		}
 	}
 
@@ -221,10 +237,10 @@ public class Player : MonoBehaviour
 
 		pos += (transform.forward * runSpeed) * Time.deltaTime;
 
-        if (sceneManager != null)
-        {
-            sceneManager.m_Distance += runSpeed * Time.deltaTime;
-        }
+		if (sceneManager != null)
+		{
+			sceneManager.m_Distance += runSpeed * Time.deltaTime;
+		}
 
 		// Jumping
 		float jumpHeight = Mathf.Lerp(minJumpHeight, maxJumpHeight, drunkenness / 100.0f);
@@ -237,8 +253,8 @@ public class Player : MonoBehaviour
 		transform.position = pos;
 	}
 
-    void OnCollisionEnter(Collision collision)
-    {
+	void OnCollisionEnter(Collision collision)
+	{
 		if (sceneManager != null && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
 		{
 			sceneManager.Die();
@@ -289,7 +305,7 @@ public class Player : MonoBehaviour
 		//}
 
 		jumping = false;
-    }
+	}
 
 	void OnTriggerEnter(Collider collider)
 	{
@@ -298,9 +314,9 @@ public class Player : MonoBehaviour
 			currentLane = 0;
 			jumping = false;
 
-			cornerTarget = collider.gameObject;
-			
-			isTurning = true;
+			cornerPoint = collider.gameObject.transform.position;
+
+			playerMode = PlayerMode.TURNING;
 		}
 	}
 
@@ -308,14 +324,15 @@ public class Player : MonoBehaviour
 	{
 		if (collider.gameObject.tag == "Corner")
 		{
-			cornerTarget = null;
+			cornerPoint = Vector3.zero;
+			cornerTarget = Vector3.zero;
 
-			isTurning = false;
+			playerMode = PlayerMode.RUNNING;
 		}
 	}
 
 	public void ResetCharacter()
-    {
+	{
 		rb.velocity = Vector3.zero;
 		rb.transform.position = startingPosition;
 		rb.rotation = startingRotation;
@@ -327,8 +344,12 @@ public class Player : MonoBehaviour
 		laneVelocity = 0;
 		lanePosition = 0;
 
+		cornerPoint = Vector3.zero;
+		cornerTarget = Vector3.zero;
+		turnTimer = 0;
+
 		drunkenness = 0;
-    }
+	}
 
 	public void GetDrunk()
 	{

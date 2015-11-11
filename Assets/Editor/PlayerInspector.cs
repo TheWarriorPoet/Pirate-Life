@@ -11,6 +11,8 @@ public class PlayerInspector : Editor
 
 		GUILayout.Label("Player Settings", EditorStyles.boldLabel);
 
+		p.playerMode = (Player.PlayerMode) EditorGUILayout.EnumPopup("Player Mode", p.playerMode);
+
 		p.drunkenness = EditorGUILayout.IntSlider("Drunkenness", p.drunkenness, 0, 100);
 
 		p.rumStrength = EditorGUILayout.IntField("Rum Strength", p.rumStrength);
