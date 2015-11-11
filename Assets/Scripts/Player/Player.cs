@@ -13,16 +13,20 @@ public class Player : MonoBehaviour
 	public int currentLane;
 	public bool isTurning;
 
-	private SceneManager_Andrew _mySceneManager = null;
-    private Transform _PlayerTransform = null;
-    private Vector3 _StartingPosition = Vector3.zero;
-	private Quaternion _StartingRotation = Quaternion.identity;
+	private SceneManager_Andrew sceneManager = null;
+    private Vector3 startingPosition = Vector3.zero;
+	private Quaternion startingRotation = Quaternion.identity;
 	private Rigidbody rb;
+	// Controls
+	private bool actionLeft, actionRight, actionJump;
+	// Lane Switching
 	private float laneVelocity;
 	private float lanePosition;
 	private int previousLane;
 	private bool jumping;
     private bool dead = false;
+	// Corner Turning
+	private GameObject cornerTarget;
 
 	// Touch
 	public float swipeDistance = 5, swipeTime = 0.75f;
@@ -32,9 +36,9 @@ public class Player : MonoBehaviour
 
 	void Start()
 	{
-		_mySceneManager = SceneManager_Andrew.instance;
-        _PlayerTransform = transform;
-        _StartingPosition = transform.position;
+		sceneManager = SceneManager_Andrew.instance;
+		startingRotation = transform.rotation;
+        startingPosition = transform.position;
 		rb = GetComponent<Rigidbody>();
 
 		ResetCharacter();
@@ -42,14 +46,20 @@ public class Player : MonoBehaviour
 	
 	void Update()
 	{
-		Controls();
-
-		Limits();
+		if (!dead)
+		{
+			Controls();
+			Action();
+			Limits();
+		}
 	}
 
 	void FixedUpdate()
 	{
-		Movement();
+		if (!dead)
+		{
+			Movement();
+		}
 	}
 
 	void Controls()
@@ -57,19 +67,17 @@ public class Player : MonoBehaviour
 		// PC Controls
 		if (Input.GetKeyDown(KeyCode.LeftArrow))
 		{
-			previousLane = currentLane;
-			currentLane--;
+			actionLeft = true;
 		}
 
 		if (Input.GetKeyDown(KeyCode.RightArrow))
 		{
-			previousLane = currentLane;
-			currentLane++;
+			actionRight = true;
 		}
 
 		if (Input.GetKeyDown(KeyCode.UpArrow) && !jumping)
 		{
-			jumping = true;
+			actionJump = true;
 		}
 
 		// Touch Controls
@@ -106,13 +114,61 @@ public class Player : MonoBehaviour
 				if (Mathf.Sign(touch.position.x - swipeStartPos.x) == 1f) //Swipe-direction, either 1 or -1.
 				{
 					//Right-swipe
-					currentLane++;
+					actionRight = true;
 				}
 				else
 				{
 					// Left-swipe
-					currentLane--;
+					actionLeft = true;
 				}
+			}
+		}
+	}
+
+	void Action()
+	{
+		if (isTurning)
+		{
+			// Corner
+			if (actionLeft)
+			{
+				actionLeft = false;
+			}
+
+			if (actionRight)
+			{
+				actionRight = false;
+			}
+
+			if (actionJump)
+			{
+				actionJump = false;
+			}
+		}
+		else
+		{
+			// Lanes
+			if (actionLeft)
+			{
+				previousLane = currentLane;
+				currentLane--;
+
+				actionLeft = false;
+			}
+
+			if (actionRight)
+			{
+				previousLane = currentLane;
+				currentLane++;
+
+				actionRight = false;
+			}
+
+			if (actionJump)
+			{
+				jumping = true;
+
+				actionJump = false;
 			}
 		}
 	}
@@ -151,7 +207,6 @@ public class Player : MonoBehaviour
 
 	void Movement()
 	{
-        if (dead) return;
 		Vector3 pos = transform.position;
 
 		// Lane Hopping
@@ -166,9 +221,9 @@ public class Player : MonoBehaviour
 
 		pos += (transform.forward * runSpeed) * Time.deltaTime;
 
-        if (_mySceneManager != null)
+        if (sceneManager != null)
         {
-            _mySceneManager.m_Distance += runSpeed * Time.deltaTime;
+            sceneManager.m_Distance += runSpeed * Time.deltaTime;
         }
 
 		// Jumping
@@ -182,17 +237,18 @@ public class Player : MonoBehaviour
 		transform.position = pos;
 	}
 
-    void OnCollisionEnter(Collision a_Collision)
+    void OnCollisionEnter(Collision collision)
     {
-		if (_mySceneManager != null && a_Collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+		if (sceneManager != null && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
 		{
-			_mySceneManager.Die();
+			sceneManager.Die();
 			ResetCharacter();
-			if (_mySceneManager.m_Lives <= 0)
+			if (sceneManager.m_Lives <= 0)
 			{
 				dead = true;
 			}
 		}
+
 		//else
 		//{
 		//	// Detect direction of collision
@@ -235,14 +291,37 @@ public class Player : MonoBehaviour
 		jumping = false;
     }
 
-    public void ResetCharacter()
+	void OnTriggerEnter(Collider collider)
+	{
+		if (collider.gameObject.tag == "Corner")
+		{
+			currentLane = 0;
+			jumping = false;
+
+			cornerTarget = collider.gameObject;
+			
+			isTurning = true;
+		}
+	}
+
+	void OnTriggerExit(Collider collider)
+	{
+		if (collider.gameObject.tag == "Corner")
+		{
+			cornerTarget = null;
+
+			isTurning = false;
+		}
+	}
+
+	public void ResetCharacter()
     {
 		rb.velocity = Vector3.zero;
-		rb.transform.position = _StartingPosition;
-		rb.rotation = _StartingRotation;
+		rb.transform.position = startingPosition;
+		rb.rotation = startingRotation;
 
-        _PlayerTransform.position = _StartingPosition;
-		transform.rotation = _StartingRotation;
+		transform.position = startingPosition;
+		transform.rotation = startingRotation;
 
 		currentLane = 0;
 		laneVelocity = 0;
