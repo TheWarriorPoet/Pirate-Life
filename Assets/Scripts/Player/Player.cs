@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
 	public float laneDistance;
 	public int currentLane;
 	public bool isTurning;
+	public LevelGen lg;
 
 	private SceneManager_Andrew sceneManager = null;
 	private Vector3 startingPosition = Vector3.zero;
@@ -51,7 +52,7 @@ public class Player : MonoBehaviour
 		startingRotation = transform.rotation;
 		startingPosition = transform.position;
 		rb = GetComponent<Rigidbody>();
-
+		lg = GameObject.FindGameObjectWithTag ("LevelGen").GetComponent<LevelGen>();
 		ResetCharacter();
 	}
 
@@ -402,6 +403,8 @@ public class Player : MonoBehaviour
 		turnTimer = 0;
 
 		drunkenness = 0;
+
+		lg.RebuildMap ();
 	}
 
 	public void GetDrunk()
