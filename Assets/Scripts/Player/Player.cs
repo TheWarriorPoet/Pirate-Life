@@ -358,7 +358,7 @@ public class Player : MonoBehaviour
 
 	void OnTriggerEnter(Collider collider)
 	{
-		if (collider.gameObject.tag == "Corner")
+		if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
 		{
 			//currentLane = 0;
 			jumping = false;
@@ -371,7 +371,7 @@ public class Player : MonoBehaviour
 
 	void OnTriggerExit(Collider collider)
 	{
-		if (collider.gameObject.tag == "Corner")
+		if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
 		{
 			cornerStart = Vector3.zero;
 			cornerPoint = Vector3.zero;
