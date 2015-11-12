@@ -11,7 +11,8 @@ public class LevelGen : MonoBehaviour {
 	private Vector3 TrackPos = new Vector3(0,0,0);
 	// Use this for initialization
 	void Start () {
-
+		TrackPos = new Vector3 (0, 0, 0);
+		TrackDirection = 0;
 		for (int i = 0; i < PieceList.Count; i+=1) {
 			//Creates Rotation for newly spawned map pieces
 			//Creates the new Map Piece at TrackPos Position with rot Rotation
@@ -64,6 +65,7 @@ public class LevelGen : MonoBehaviour {
 			}
 
 		}
+		TrackDirection = 0;
 	}
 	
 	// Update is called once per frame
@@ -131,5 +133,6 @@ public class LevelGen : MonoBehaviour {
 			}
 			
 		}
+		TrackDirection = 0;
 	}
 }

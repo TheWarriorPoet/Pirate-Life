@@ -20,6 +20,11 @@ public class SavePrefabScript : MonoBehaviour
 	
 	public void SavePrefab()
 	{
+		while(MapPiece.transform.childCount > 0)
+		{
+			GameObject.Destroy (MapPiece.transform.GetChild (MapPiece.transform.childCount - 1).gameObject);
+			MapPiece.transform.GetChild (MapPiece.transform.childCount - 1).parent = null;
+		}
 		MapPiece.name = IF.text;
 		UnityEditor.PrefabUtility.CreatePrefab ("Assets/Prefabs/LevelObjects/" + MapPiece.name + ".prefab", MapPiece);
 		MapPiece.name = "MapPiece";
