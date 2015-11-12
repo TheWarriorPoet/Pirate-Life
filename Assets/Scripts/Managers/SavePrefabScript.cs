@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -23,3 +25,5 @@ public class SavePrefabScript : MonoBehaviour
 		MapPiece.name = "MapPiece";
 	}
 }
+
+#endif
