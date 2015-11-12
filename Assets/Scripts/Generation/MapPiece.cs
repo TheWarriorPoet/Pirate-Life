@@ -9,7 +9,7 @@ public class MapPiece : MonoBehaviour {
 	void Start () {
 		objL = (GameObject)GameObject.Instantiate(LeftLane,gameObject.transform.position + (gameObject.transform.rotation * LeftLaneOffset),gameObject.transform.rotation);
 		objL.transform.SetParent (gameObject.transform);
-		objM = (GameObject)GameObject.Instantiate(MiddleLane,gameObject.transform.position,gameObject.transform.rotation);
+		objM = (GameObject)GameObject.Instantiate(MiddleLane,gameObject.transform.position + MiddleLaneOffset,gameObject.transform.rotation);
 		objM.transform.SetParent (gameObject.transform);
 		objR = (GameObject)GameObject.Instantiate(RightLane,gameObject.transform.position + (gameObject.transform.rotation * RightLaneOffset),gameObject.transform.rotation);
 		objR.transform.SetParent (gameObject.transform);
@@ -27,7 +27,7 @@ public class MapPiece : MonoBehaviour {
 		Destroy (objR);
 		objL = (GameObject)GameObject.Instantiate(LeftLane,gameObject.transform.position + (gameObject.transform.rotation * LeftLaneOffset),gameObject.transform.rotation);
 		objL.transform.SetParent (gameObject.transform);
-		objM = (GameObject)GameObject.Instantiate(MiddleLane,gameObject.transform.position,gameObject.transform.rotation);
+		objM = (GameObject)GameObject.Instantiate(MiddleLane,gameObject.transform.position + MiddleLaneOffset,gameObject.transform.rotation);
 		objM.transform.SetParent (gameObject.transform);
 		objR = (GameObject)GameObject.Instantiate(RightLane,gameObject.transform.position + (gameObject.transform.rotation * RightLaneOffset),gameObject.transform.rotation);
 		objR.transform.SetParent (gameObject.transform);
