@@ -13,6 +13,9 @@ public class SceneManager_Andrew : SceneManager_Base {
     public bool magneticCoins = false;
 
 	public UnityEngine.UI.Text drunkText;
+	public GameObject drunkMask;
+	private RectTransform drunkRect;
+	private float drunkWidth;
 
 	public UnityEngine.UI.Text lifeCounter;
 
@@ -40,7 +43,8 @@ public class SceneManager_Andrew : SceneManager_Base {
     // Use this for initialization
     void Start()
 	{
-	    
+		drunkRect = drunkMask.GetComponent<RectTransform>();
+		drunkWidth = drunkRect.sizeDelta.x;
 	}
 	
 	// Update is called once per frame
@@ -49,7 +53,22 @@ public class SceneManager_Andrew : SceneManager_Base {
 		// GUI
 		Player p = m_PlayerObject.GetComponent<Player>();
 
+		// Drunk Meter
 		drunkText.text = p.drunkenness.ToString() + "% Drunk";
+
+		Vector2 newSize;
+
+		newSize = drunkRect.sizeDelta;
+		newSize.x = drunkWidth * p.drunkenness / 100.0f;
+		drunkRect.sizeDelta = newSize;
+
+		Vector2 newPos;
+
+		newPos = drunkRect.localPosition;
+		newPos.x = -drunkWidth * (1.0f - p.drunkenness / 100.0f) / 2;
+		drunkRect.localPosition = newPos;
+
+		// Lives
 		lifeCounter.text = "Lives: " + m_Lives.ToString();
     }
 
