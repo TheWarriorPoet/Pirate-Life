@@ -12,7 +12,7 @@ public class SceneManager_Andrew : SceneManager_Base {
 
     public bool magneticCoins = false;
 
-	public UnityEngine.UI.Text drunkMeter;
+	public UnityEngine.UI.Text drunkText;
 
 	public UnityEngine.UI.Text lifeCounter;
 
@@ -49,7 +49,7 @@ public class SceneManager_Andrew : SceneManager_Base {
 		// GUI
 		Player p = m_PlayerObject.GetComponent<Player>();
 
-		drunkMeter.text = p.drunkenness.ToString() + "% Drunk";
+		drunkText.text = p.drunkenness.ToString() + "% Drunk";
 		lifeCounter.text = "Lives: " + m_Lives.ToString();
     }
 
