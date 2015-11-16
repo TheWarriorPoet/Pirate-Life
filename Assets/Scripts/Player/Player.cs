@@ -39,7 +39,6 @@ public class Player : MonoBehaviour
 	private Vector3 cornerEnd;
 	private float turnTimer;
 	private float turnDegree;
-	private float turnAngle;
 	// Touch
 	public float swipeDistance = 5, swipeTime = 0.75f;
 	private bool couldBeSwipe;
@@ -401,7 +400,6 @@ public class Player : MonoBehaviour
 		cornerPoint = Vector3.zero;
 		cornerEnd = Vector3.zero;
 		turnTimer = 0;
-		turnAngle = 0;
 		turnDegree = 0;
 
 	drunkenness = 0;
