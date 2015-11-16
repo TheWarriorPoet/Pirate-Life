@@ -13,6 +13,7 @@ public class MapPiece : MonoBehaviour {
 		objM.transform.SetParent (gameObject.transform);
 		objR = (GameObject)GameObject.Instantiate(RightLane,gameObject.transform.position + (gameObject.transform.rotation * RightLaneOffset),gameObject.transform.rotation);
 		objR.transform.SetParent (gameObject.transform);
+		GetComponent<PickupLayout> ().RebuildCollectables ();
 	}
 	
 	// Update is called once per frame
