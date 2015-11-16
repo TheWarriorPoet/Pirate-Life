@@ -201,7 +201,7 @@ public class Player : MonoBehaviour
 
 				if (actionLeft && !isTurning)
 				{
-					cornerEnd = cornerPoint + -transform.right * 10;
+					cornerEnd = cornerPoint + -transform.right * 4.5f;
 					turnDegree -= 90.0f;
 
 					isTurning = true;
@@ -209,7 +209,7 @@ public class Player : MonoBehaviour
 
 				if (actionRight && !isTurning)
 				{
-					cornerEnd = cornerPoint + transform.right * 10;
+					cornerEnd = cornerPoint + transform.right * 4.5f;
 					turnDegree += 90.0f;
 
 					isTurning = true;
