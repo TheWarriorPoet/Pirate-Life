@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
 	private Quaternion startingRotation = Quaternion.identity;
 	private Rigidbody rb;
 	private bool dead = false;
+	private AudioClip jumpSound;
 	// Controls
 	private bool actionLeft, actionRight, actionJump;
 	// Lane Switching
@@ -52,6 +53,9 @@ public class Player : MonoBehaviour
 		startingPosition = transform.position;
 		rb = GetComponent<Rigidbody>();
 		lg = GameObject.FindGameObjectWithTag ("LevelGen").GetComponent<LevelGen>();
+
+		jumpSound = (AudioClip)Resources.Load("Sounds/player_jump");
+
 		ResetCharacter();
 	}
 
@@ -163,6 +167,8 @@ public class Player : MonoBehaviour
 
 				if (actionJump)
 				{
+					AudioSource.PlayClipAtPoint(jumpSound, transform.position);
+
 					jumping = true;
 				}
 				break;

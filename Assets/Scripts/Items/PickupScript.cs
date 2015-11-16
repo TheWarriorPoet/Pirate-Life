@@ -15,6 +15,7 @@ public class PickupScript : MonoBehaviour
     private Transform playerTransform = null;
     private Transform objectTransform = null;
     private SceneManager_Andrew _mySceneManager = null;
+	private AudioClip soundEffect;
     private bool MagneticCoin = false;
     public float magnetSpeed = 20.0f;
     public float magnetRadius = 50.0f;
@@ -30,6 +31,20 @@ public class PickupScript : MonoBehaviour
         {
             MagneticCoin = true;
         }
+
+		// Set sound effect
+		switch (pickupType)
+		{
+			case PickupType.COIN:
+				soundEffect = (AudioClip) Resources.Load("Sounds/player_coin");
+				break;
+			case PickupType.RUM:
+				soundEffect = (AudioClip)Resources.Load("Sounds/player_drink");
+				break;
+			case PickupType.WATER:
+				soundEffect = (AudioClip)Resources.Load("Sounds/player_drink");
+				break;
+		}
 	}
 	
 	// Update is called once per frame
@@ -45,6 +60,8 @@ public class PickupScript : MonoBehaviour
 	{
 		if (Other.gameObject.layer == LayerMask.NameToLayer("Player"))
 		{
+			AudioSource.PlayClipAtPoint(soundEffect, transform.position);
+
 			// Insert Reaction Code here
 			switch (pickupType)
 			{
