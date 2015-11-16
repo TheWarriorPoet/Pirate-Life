@@ -401,8 +401,10 @@ public class Player : MonoBehaviour
 		cornerPoint = Vector3.zero;
 		cornerEnd = Vector3.zero;
 		turnTimer = 0;
+		turnAngle = 0;
+		turnDegree = 0;
 
-		drunkenness = 0;
+	drunkenness = 0;
 
 		lg.RebuildMap ();
 	}
