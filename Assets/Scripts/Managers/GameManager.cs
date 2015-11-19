@@ -45,8 +45,13 @@ public class GameManager : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update()
+	{
+		// Quit from any scene anytime
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			Application.Quit();
+		}
 	}
 
     public void AddCoins(int a_iNumberOfCoins)
