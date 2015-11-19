@@ -39,5 +39,8 @@ public class SceneManager_Base : MonoBehaviour {
         Application.LoadLevel(a_SceneName);
     }
 
-
+	public void QuitGame()
+	{
+		Application.Quit();
+	}
 }
