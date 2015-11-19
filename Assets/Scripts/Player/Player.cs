@@ -408,7 +408,9 @@ public class Player : MonoBehaviour
 		turnTimer = 0;
 		turnDegree = 0;
 
-	drunkenness = 0;
+		jumping = false;
+
+		drunkenness = 0;
 
 		lg.RebuildMap ();
 	}
