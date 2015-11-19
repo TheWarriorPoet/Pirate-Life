@@ -87,17 +87,17 @@ public class Player : MonoBehaviour
 	void Controls()
 	{
 		// PC Controls
-		if (Input.GetKeyDown(KeyCode.LeftArrow))
+		if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
 		{
 			actionLeft = true;
 		}
 
-		if (Input.GetKeyDown(KeyCode.RightArrow))
+		if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
 		{
 			actionRight = true;
 		}
 
-		if (Input.GetKeyDown(KeyCode.UpArrow) && !jumping)
+		if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) && !jumping)
 		{
 			actionJump = true;
 		}
