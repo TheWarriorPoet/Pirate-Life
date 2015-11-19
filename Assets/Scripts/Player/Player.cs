@@ -314,7 +314,7 @@ public class Player : MonoBehaviour
 		{
 			if (collision.gameObject.tag == "Ocean")
 			{
-				AudioSource.PlayClipAtPoint(splashSound, transform.position);
+				AudioSource.PlayClipAtPoint(splashSound, Vector3.zero);
 			}
 
 			sceneManager.Die();
@@ -322,6 +322,12 @@ public class Player : MonoBehaviour
 			if (sceneManager.m_Lives <= 0)
 			{
 				dead = true;
+				Renderer[] renderers = GetComponentsInChildren<Renderer>();
+
+				foreach (var renderer in renderers)
+				{
+					renderer.enabled = false;
+				}
 			}
 		}
 
