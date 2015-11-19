@@ -28,6 +28,11 @@ public class SavePrefabScript : MonoBehaviour
 		MapPiece.name = IF.text;
 		UnityEditor.PrefabUtility.CreatePrefab ("Assets/Prefabs/LevelObjects/" + MapPiece.name + ".prefab", MapPiece);
 		MapPiece.name = "MapPiece";
+
+		if (MapPiece.GetComponent<LevelGen> () != null) {
+			MapPiece.tag = "LevelGen";
+			MapPiece.name = "LevelGenerator";
+		}
 	}
 }
 
