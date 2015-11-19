@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
 	private Quaternion startingRotation = Quaternion.identity;
 	private Rigidbody rb;
 	private bool dead = false;
-	private AudioClip jumpSound;
+	private AudioClip jumpSound, splashSound;
 	// Controls
 	private bool actionLeft, actionRight, actionJump;
 	// Lane Switching
@@ -55,6 +55,7 @@ public class Player : MonoBehaviour
 		lg = GameObject.FindGameObjectWithTag ("LevelGen").GetComponent<LevelGen>();
 
 		jumpSound = (AudioClip)Resources.Load("Sounds/player_jump");
+		splashSound = (AudioClip)Resources.Load("Sounds/player_splash");
 
 		ResetCharacter();
 	}
@@ -311,6 +312,11 @@ public class Player : MonoBehaviour
 	{
 		if (sceneManager != null && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
 		{
+			if (collision.gameObject.tag == "Ocean")
+			{
+				AudioSource.PlayClipAtPoint(splashSound, transform.position);
+			}
+
 			sceneManager.Die();
 			ResetCharacter();
 			if (sceneManager.m_Lives <= 0)
