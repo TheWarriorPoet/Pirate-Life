@@ -11,7 +11,6 @@ public class Player : MonoBehaviour
 
 	public PlayerMode playerMode;
 	public int drunkenness;
-    public float drunkDelay;
 	public int rumStrength;
 	public int waterStrength;
 	public float minRunSpeed, maxRunSpeed;
@@ -30,10 +29,6 @@ public class Player : MonoBehaviour
 	private AudioClip jumpSound, splashSound;
 	// Controls
 	private bool actionLeft, actionRight, actionJump;
-    // Drunkenness
-    private float prevDrunkenness;
-    private float newDrunkenness;
-    private float drunkTimer;
 	// Lane Switching
 	private float laneVelocity;
 	private float lanePosition;
@@ -285,15 +280,8 @@ public class Player : MonoBehaviour
 	{
 		Vector3 pos = transform.position;
 
-        // Drunkenness
-        if (drunkenness != newDrunkenness)
-        {
-            drunkTimer += Time.deltaTime / drunkDelay;
-            drunkenness = (int)Mathf.Lerp(prevDrunkenness, newDrunkenness, drunkTimer);
-        }
-
-        // Lane Hopping
-        float laneDelay = Mathf.Lerp(minLaneDelay, maxLaneDelay, drunkenness / 100.0f);
+		// Lane Hopping
+		float laneDelay = Mathf.Lerp(minLaneDelay, maxLaneDelay, drunkenness / 100.0f);
 
 		lanePosition = Mathf.SmoothDamp(lanePosition, currentLane, ref laneVelocity, laneDelay);
 
@@ -435,24 +423,17 @@ public class Player : MonoBehaviour
 		jumping = false;
 
 		drunkenness = 0;
-        drunkTimer = 0;
-        prevDrunkenness = 0;
-        newDrunkenness = 0;
 
-        lg.RebuildMap ();
+		lg.RebuildMap ();
 	}
 
 	public void GetDrunk()
 	{
-        prevDrunkenness = drunkenness;
-        newDrunkenness += rumStrength;
-        drunkTimer = 0;
-    }
+		drunkenness += rumStrength;
+	}
 
 	public void SoberUp()
 	{
-        prevDrunkenness = drunkenness;
-        newDrunkenness -= waterStrength;
-        drunkTimer = 0;
+		drunkenness -= waterStrength;
 	}
 }

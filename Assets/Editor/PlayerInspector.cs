@@ -15,9 +15,7 @@ public class PlayerInspector : Editor
 
 		p.drunkenness = EditorGUILayout.IntSlider("Drunkenness", p.drunkenness, 0, 100);
 
-        p.drunkDelay = EditorGUILayout.FloatField("Drunk Delay", p.drunkDelay);
-
-        p.rumStrength = EditorGUILayout.IntField("Rum Strength", p.rumStrength);
+		p.rumStrength = EditorGUILayout.IntField("Rum Strength", p.rumStrength);
 		p.waterStrength = EditorGUILayout.IntField("Water Strength", p.waterStrength);
 
 		Vector2 runSpeed = EditorGUILayout.Vector2Field("Run Speed (Sober, Drunk)", new Vector2(p.minRunSpeed, p.maxRunSpeed));
