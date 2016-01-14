@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
 	}
 
 	public PlayerMode playerMode;
-	public int drunkenness;
+    public int drunkenness;
 	public int rumStrength;
 	public int waterStrength;
 	public float minRunSpeed, maxRunSpeed;
@@ -45,6 +45,8 @@ public class Player : MonoBehaviour
 	private bool couldBeSwipe;
 	private Vector2 swipeStartPos;
 	private float swipeStartTime;
+
+    
 
 	void Start()
 	{
