@@ -3,437 +3,458 @@ using System.Collections;
 
 public class Player : MonoBehaviour
 {
-	public enum PlayerMode
-	{
-		RUNNING,
-		TURNING
-	}
+    public enum PlayerMode
+    {
+        RUNNING,
+        TURNING
+    }
 
-	public PlayerMode playerMode;
-	public int drunkenness;
-	public int rumStrength;
-	public int waterStrength;
-	public float minRunSpeed, maxRunSpeed;
-	public float minJumpHeight, maxJumpHeight;
-	public float minLaneDelay, maxLaneDelay;
-	public float laneDistance;
-	public int currentLane;
-	public bool isTurning;
-	public LevelGen lg;
+    public PlayerMode playerMode;
+    public int drunkenness;
+    public float drunkDelay;
+    public int rumStrength;
+    public int waterStrength;
+    public float minRunSpeed, maxRunSpeed;
+    public float minJumpHeight, maxJumpHeight;
+    public float minLaneDelay, maxLaneDelay;
+    public float laneDistance;
+    public int currentLane;
+    public bool isTurning;
+    public LevelGen lg;
 
-	private SceneManager_Andrew sceneManager = null;
-	private Vector3 startingPosition = Vector3.zero;
-	private Quaternion startingRotation = Quaternion.identity;
-	private Rigidbody rb;
-	private bool dead = false;
-	private AudioClip jumpSound, splashSound;
-	// Controls
-	private bool actionLeft, actionRight, actionJump;
-	// Lane Switching
-	private float laneVelocity;
-	private float lanePosition;
-	private int previousLane;
-	private bool jumping;
-	// Corner Turning
-	private Vector3 cornerStart;
+    private SceneManager_Andrew sceneManager = null;
+    private Vector3 startingPosition = Vector3.zero;
+    private Quaternion startingRotation = Quaternion.identity;
+    private Rigidbody rb;
+    private bool dead = false;
+    private AudioClip jumpSound, splashSound;
+    // Controls
+    private bool actionLeft, actionRight, actionJump;
+    // Drunkenness
+    private float prevDrunkenness;
+    private float newDrunkenness;
+    private float drunkTimer;
+    // Lane Switching
+    private float laneVelocity;
+    private float lanePosition;
+    private int previousLane;
+    private bool jumping;
+    // Corner Turning
+    private Vector3 cornerStart;
     private Vector3 cornerPoint;
-	private Vector3 cornerEnd;
-	private float turnTimer;
-	private float turnDegree;
-	// Touch
-	public float swipeDistance = 5, swipeTime = 0.75f;
-	private bool couldBeSwipe;
-	private Vector2 swipeStartPos;
-	private float swipeStartTime;
+    private Vector3 cornerEnd;
+    private float turnTimer;
+    private float turnDegree;
+    // Touch
+    public float swipeDistance = 5, swipeTime = 0.75f;
+    private bool couldBeSwipe;
+    private Vector2 swipeStartPos;
+    private float swipeStartTime;
 
-	void Start()
-	{
-		sceneManager = SceneManager_Andrew.instance;
-		startingRotation = transform.rotation;
-		startingPosition = transform.position;
-		rb = GetComponent<Rigidbody>();
-		lg = GameObject.FindGameObjectWithTag ("LevelGen").GetComponent<LevelGen>();
 
-		jumpSound = (AudioClip)Resources.Load("Sounds/player_jump");
-		splashSound = (AudioClip)Resources.Load("Sounds/player_splash");
 
-		ResetCharacter();
-	}
+    void Start()
+    {
+        sceneManager = SceneManager_Andrew.instance;
+        startingRotation = transform.rotation;
+        startingPosition = transform.position;
+        rb = GetComponent<Rigidbody>();
+        lg = GameObject.FindGameObjectWithTag("LevelGen").GetComponent<LevelGen>();
 
-	void Update()
-	{
-		if (!dead)
-		{
-			Controls();
-			Action();
-			Limits();
-		}
+        jumpSound = (AudioClip)Resources.Load("Sounds/player_jump");
+        splashSound = (AudioClip)Resources.Load("Sounds/player_splash");
 
-		// Debug
-		if (cornerPoint != Vector3.zero && cornerEnd != Vector3.zero)
-		{
-			Debug.DrawLine(cornerStart, cornerPoint, Color.red);
-			Debug.DrawLine(cornerPoint, cornerEnd, Color.red);
-		}
-	}
+        ResetCharacter();
+    }
 
-	void FixedUpdate()
-	{
-		if (!dead)
-		{
-			Movement();
-		}
-	}
+    void Update()
+    {
+        if (!dead)
+        {
+            Controls();
+            Action();
+            Limits();
+        }
 
-	void Controls()
-	{
-		// PC Controls
-		if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
-		{
-			actionLeft = true;
-		}
+        // Debug
+        if (cornerPoint != Vector3.zero && cornerEnd != Vector3.zero)
+        {
+            Debug.DrawLine(cornerStart, cornerPoint, Color.red);
+            Debug.DrawLine(cornerPoint, cornerEnd, Color.red);
+        }
+    }
 
-		if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
-		{
-			actionRight = true;
-		}
+    void FixedUpdate()
+    {
+        if (!dead)
+        {
+            Movement();
+        }
+    }
 
-		if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) && !jumping)
-		{
-			actionJump = true;
-		}
+    void Controls()
+    {
+        // PC Controls
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+        {
+            actionLeft = true;
+        }
 
-		// Touch Controls
-		CheckHorizontalSwipes();
-	}
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+        {
+            actionRight = true;
+        }
 
-	void CheckHorizontalSwipes()
-	{
-		foreach (Touch touch in Input.touches)
-		{ // For every touch in the Input.touches - array...
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) && !jumping)
+        {
+            actionJump = true;
+        }
 
-			switch (touch.phase)
-			{
-				case TouchPhase.Began: // The finger first touched the screen --> It could be(come) a swipe
-					couldBeSwipe = true;
+        // Touch Controls
+        CheckHorizontalSwipes();
+    }
 
-					swipeStartPos = touch.position;  // Position where the touch started
-					swipeStartTime = Time.time; // The time it started
-					break;
+    void CheckHorizontalSwipes()
+    {
+        foreach (Touch touch in Input.touches)
+        { // For every touch in the Input.touches - array...
 
-				case TouchPhase.Stationary: // Is the touch stationary? --> No swipe then!
-					couldBeSwipe = false;
-					break;
-			}
+            switch (touch.phase)
+            {
+                case TouchPhase.Began: // The finger first touched the screen --> It could be(come) a swipe
+                    couldBeSwipe = true;
 
-			float time = Time.time - swipeStartTime; // Time the touch stayed at the screen till now.
-			float distance = Mathf.Abs(touch.position.x - swipeStartPos.x); //Swipe distance
+                    swipeStartPos = touch.position;  // Position where the touch started
+                    swipeStartTime = Time.time; // The time it started
+                    break;
 
-			if (couldBeSwipe && time < swipeTime && distance > swipeDistance)
-			{
-				// It's a swiiiiiiiiiiiipe!
-				couldBeSwipe = false; //<-- Otherwise this part would be called over and over again.
+                case TouchPhase.Stationary: // Is the touch stationary? --> No swipe then!
+                    couldBeSwipe = false;
+                    break;
+            }
 
-				if (Mathf.Sign(touch.position.x - swipeStartPos.x) == 1f) //Swipe-direction, either 1 or -1.
-				{
-					//Right-swipe
-					actionRight = true;
-				}
-				else
-				{
-					// Left-swipe
-					actionLeft = true;
-				}
-			}
-		}
-	}
+            float time = Time.time - swipeStartTime; // Time the touch stayed at the screen till now.
+            float distance = Mathf.Abs(touch.position.x - swipeStartPos.x); //Swipe distance
 
-	void Action()
-	{
-		switch (playerMode)
-		{
-			case PlayerMode.RUNNING:
+            if (couldBeSwipe && time < swipeTime && distance > swipeDistance)
+            {
+                // It's a swiiiiiiiiiiiipe!
+                couldBeSwipe = false; //<-- Otherwise this part would be called over and over again.
 
-				if (actionLeft)
-				{
-					previousLane = currentLane;
-					currentLane--;
-				}
+                if (Mathf.Sign(touch.position.x - swipeStartPos.x) == 1f) //Swipe-direction, either 1 or -1.
+                {
+                    //Right-swipe
+                    actionRight = true;
+                }
+                else
+                {
+                    // Left-swipe
+                    actionLeft = true;
+                }
+            }
+        }
+    }
 
-				if (actionRight)
-				{
-					previousLane = currentLane;
-					currentLane++;
-				}
+    void Action()
+    {
+        switch (playerMode)
+        {
+            case PlayerMode.RUNNING:
 
-				if (actionJump)
-				{
-					AudioSource.PlayClipAtPoint(jumpSound, transform.position);
-
-					jumping = true;
-				}
-				break;
-
-			case PlayerMode.TURNING:
-
-				if (isTurning)
-				{
-					if (cornerStart == Vector3.zero)
-					{
-						cornerStart = transform.position;// cornerPoint + -transform.forward * Vector3.Distance(transform.position, cornerPoint);
-                    }
-
-					turnTimer += Time.deltaTime;
-
-					// Position
-					Vector3 point1 = Vector3.Lerp(cornerStart, cornerPoint, turnTimer);
-					Vector3 point2 = Vector3.Lerp(cornerPoint, cornerEnd, turnTimer);
-
-					transform.position = Vector3.Lerp(point1, point2, turnTimer);
-
-					// Rotation
-					//turnAngle = Mathf.LerpAngle(transform.rotation.y, turnDegree, turnTimer);
-					transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, turnDegree, 0), turnTimer);
-
-					// Stop Turning
-					if (turnTimer >= 1)
-					{
-						currentLane = 0;
-						laneVelocity = 0;
-						lanePosition = 0;
-
-						isTurning = false;
-					}
-				}
-
-				if (actionLeft && !isTurning)
-				{
-					cornerEnd = cornerPoint + -transform.right * 4.5f;
-					turnDegree -= 90.0f;
-
-					isTurning = true;
+                if (actionLeft)
+                {
+                    previousLane = currentLane;
+                    currentLane--;
                 }
 
-				if (actionRight && !isTurning)
-				{
-					cornerEnd = cornerPoint + transform.right * 4.5f;
-					turnDegree += 90.0f;
+                if (actionRight)
+                {
+                    previousLane = currentLane;
+                    currentLane++;
+                }
 
-					isTurning = true;
-				}
-				break;
-		}
+                if (actionJump)
+                {
+                    AudioSource.PlayClipAtPoint(jumpSound, transform.position);
 
-		actionLeft = false;
-		actionRight = false;
-		actionJump = false;
-	}
+                    jumping = true;
+                }
+                break;
 
-	void Limits()
-	{
-		if (currentLane > 2)
-		{
-			currentLane = 2;
-		}
+            case PlayerMode.TURNING:
 
-		if (currentLane < -2)
-		{
-			currentLane = -2;
-		}
+                if (isTurning)
+                {
+                    if (cornerStart == Vector3.zero)
+                    {
+                        cornerStart = transform.position;// cornerPoint + -transform.forward * Vector3.Distance(transform.position, cornerPoint);
+                    }
 
-		if (drunkenness > 100)
-		{
-			drunkenness = 100;
-		}
+                    turnTimer += Time.deltaTime;
 
-		if (drunkenness < 0)
-		{
-			drunkenness = 0;
-		}
+                    // Position
+                    Vector3 point1 = Vector3.Lerp(cornerStart, cornerPoint, turnTimer);
+                    Vector3 point2 = Vector3.Lerp(cornerPoint, cornerEnd, turnTimer);
 
-		if (playerMode == PlayerMode.TURNING)
-		{
-			rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-		}
-		else
-		{
-			rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
-		}
+                    transform.position = Vector3.Lerp(point1, point2, turnTimer);
 
-		if (cornerPoint != Vector3.zero)
-		{
-			cornerPoint.y = transform.position.y;
-		}
+                    // Rotation
+                    //turnAngle = Mathf.LerpAngle(transform.rotation.y, turnDegree, turnTimer);
+                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, turnDegree, 0), turnTimer);
 
-		if (turnDegree >= 360)
-		{
-			turnDegree = 0;
-		}
+                    // Stop Turning
+                    if (turnTimer >= 1)
+                    {
+                        currentLane = 0;
+                        laneVelocity = 0;
+                        lanePosition = 0;
 
-		if (turnDegree <= -360)
-		{
-			turnDegree = 0;
-		}
-	}
+                        isTurning = false;
+                    }
+                }
 
-	void Movement()
-	{
-		Vector3 pos = transform.position;
+                if (actionLeft && !isTurning)
+                {
+                    cornerEnd = cornerPoint + -transform.right * 4.5f;
+                    turnDegree -= 90.0f;
 
-		// Lane Hopping
-		float laneDelay = Mathf.Lerp(minLaneDelay, maxLaneDelay, drunkenness / 100.0f);
+                    isTurning = true;
+                }
 
-		lanePosition = Mathf.SmoothDamp(lanePosition, currentLane, ref laneVelocity, laneDelay);
+                if (actionRight && !isTurning)
+                {
+                    cornerEnd = cornerPoint + transform.right * 4.5f;
+                    turnDegree += 90.0f;
 
-		pos += transform.right * (laneVelocity * laneDistance) * Time.deltaTime;
+                    isTurning = true;
+                }
+                break;
+        }
 
-		// Running
-		float runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
+        actionLeft = false;
+        actionRight = false;
+        actionJump = false;
+    }
 
-		pos += (transform.forward * runSpeed) * Time.deltaTime;
+    void Limits()
+    {
+        if (currentLane > 2)
+        {
+            currentLane = 2;
+        }
 
-		if (sceneManager != null)
-		{
-			sceneManager.m_Distance += runSpeed * Time.deltaTime;
-		}
+        if (currentLane < -2)
+        {
+            currentLane = -2;
+        }
 
-		// Jumping
-		float jumpHeight = Mathf.Lerp(minJumpHeight, maxJumpHeight, drunkenness / 100.0f);
+        if (drunkenness > 100)
+        {
+            drunkenness = 100;
+        }
 
-		if (jumping)
-		{
-			pos += (transform.up * jumpHeight) * Time.deltaTime;
-		}
+        if (drunkenness < 0)
+        {
+            drunkenness = 0;
+        }
 
-		transform.position = pos;
-	}
+        if (playerMode == PlayerMode.TURNING)
+        {
+            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        }
+        else
+        {
+            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
+        }
 
-	void OnCollisionEnter(Collision collision)
-	{
-		if (sceneManager != null && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
-		{
-			if (collision.gameObject.tag == "Ocean")
-			{
-				AudioSource.PlayClipAtPoint(splashSound, Vector3.zero);
-			}
+        if (cornerPoint != Vector3.zero)
+        {
+            cornerPoint.y = transform.position.y;
+        }
 
-			sceneManager.Die();
-			ResetCharacter();
-			if (sceneManager.m_Lives <= 0)
-			{
-				dead = true;
-				Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        if (turnDegree >= 360)
+        {
+            turnDegree = 0;
+        }
 
-				foreach (var renderer in renderers)
-				{
-					renderer.enabled = false;
-				}
-			}
-		}
+        if (turnDegree <= -360)
+        {
+            turnDegree = 0;
+        }
+    }
 
-		//else
-		//{
-		//	// Detect direction of collision
-		//	Vector3 hit = a_Collision.contacts[0].normal;
-		//	Debug.Log(hit);
-		//	float angle = Vector3.Angle(hit, Vector3.up);
+    void Movement()
+    {
+        Vector3 pos = transform.position;
 
-		//	if (Mathf.Approximately(angle, 0))
-		//	{
-		//		//Down
-		//		Debug.Log("Down");
-		//	}
-		//	if (Mathf.Approximately(angle, 180))
-		//	{
-		//		//Up
-		//		Debug.Log("Up");
-		//	}
-		//	if (Mathf.Approximately(angle, 90)) // Sides
-		//	{
-		//		Vector3 cross = Vector3.Cross(Vector3.forward, hit);
-		//		if (cross.y == 1)
-		//		{
-		//			// Left side
-		//			Debug.Log("Left");
+        // Drunkenness
+        if (drunkenness != newDrunkenness)
+        {
+            drunkTimer += Time.deltaTime / drunkDelay;
+            drunkenness = (int)Mathf.Lerp(prevDrunkenness, newDrunkenness, drunkTimer);
+        }
 
-		//			// Stop from running into wall
-		//			currentLane = previousLane;
-		//		}
-		//		else if (cross.y == -1)
-		//		{
-		//			// Right side
-		//			Debug.Log("Right");
+        // Lane Hopping
+        float laneDelay = Mathf.Lerp(minLaneDelay, maxLaneDelay, drunkenness / 100.0f);
 
-		//			// Stop from running into wall
-		//			currentLane = previousLane;
-		//		}
-		//	}
-		//}
+        lanePosition = Mathf.SmoothDamp(lanePosition, currentLane, ref laneVelocity, laneDelay);
 
-		jumping = false;
-	}
+        pos += transform.right * (laneVelocity * laneDistance) * Time.deltaTime;
 
-	void OnTriggerEnter(Collider collider)
-	{
-		if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
-		{
-			//currentLane = 0;
-			jumping = false;
+        // Running
+        float runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
 
-			cornerPoint = collider.gameObject.transform.position;
+        pos += (transform.forward * runSpeed) * Time.deltaTime;
 
-			playerMode = PlayerMode.TURNING;
-		}
-	}
+        if (sceneManager != null)
+        {
+            sceneManager.m_Distance += runSpeed * Time.deltaTime;
+        }
 
-	void OnTriggerExit(Collider collider)
-	{
-		if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
-		{
-			cornerStart = Vector3.zero;
-			cornerPoint = Vector3.zero;
-			cornerEnd = Vector3.zero;
-			turnTimer = 0;
+        // Jumping
+        float jumpHeight = Mathf.Lerp(minJumpHeight, maxJumpHeight, drunkenness / 100.0f);
 
-			playerMode = PlayerMode.RUNNING;
+        if (jumping)
+        {
+            pos += (transform.up * jumpHeight) * Time.deltaTime;
+        }
 
-			isTurning = false;
-		}
-	}
+        transform.position = pos;
+    }
 
-	public void ResetCharacter()
-	{
-		rb.velocity = Vector3.zero;
-		rb.transform.position = startingPosition;
-		rb.rotation = startingRotation;
+    void OnCollisionEnter(Collision collision)
+    {
+        if (sceneManager != null && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+        {
+            if (collision.gameObject.tag == "Ocean")
+            {
+                AudioSource.PlayClipAtPoint(splashSound, Vector3.zero);
+            }
 
-		transform.position = startingPosition;
-		transform.rotation = startingRotation;
+            sceneManager.Die();
+            ResetCharacter();
+            if (sceneManager.m_Lives <= 0)
+            {
+                dead = true;
+                Renderer[] renderers = GetComponentsInChildren<Renderer>();
 
-		currentLane = 0;
-		laneVelocity = 0;
-		lanePosition = 0;
+                foreach (var renderer in renderers)
+                {
+                    renderer.enabled = false;
+                }
+            }
+        }
 
-		cornerStart = Vector3.zero;
-		cornerPoint = Vector3.zero;
-		cornerEnd = Vector3.zero;
-		turnTimer = 0;
-		turnDegree = 0;
+        //else
+        //{
+        //	// Detect direction of collision
+        //	Vector3 hit = a_Collision.contacts[0].normal;
+        //	Debug.Log(hit);
+        //	float angle = Vector3.Angle(hit, Vector3.up);
 
-		jumping = false;
+        //	if (Mathf.Approximately(angle, 0))
+        //	{
+        //		//Down
+        //		Debug.Log("Down");
+        //	}
+        //	if (Mathf.Approximately(angle, 180))
+        //	{
+        //		//Up
+        //		Debug.Log("Up");
+        //	}
+        //	if (Mathf.Approximately(angle, 90)) // Sides
+        //	{
+        //		Vector3 cross = Vector3.Cross(Vector3.forward, hit);
+        //		if (cross.y == 1)
+        //		{
+        //			// Left side
+        //			Debug.Log("Left");
 
-		drunkenness = 0;
+        //			// Stop from running into wall
+        //			currentLane = previousLane;
+        //		}
+        //		else if (cross.y == -1)
+        //		{
+        //			// Right side
+        //			Debug.Log("Right");
 
-		lg.RebuildMap ();
-	}
+        //			// Stop from running into wall
+        //			currentLane = previousLane;
+        //		}
+        //	}
+        //}
 
-	public void GetDrunk()
-	{
-		drunkenness += rumStrength;
-	}
+        jumping = false;
+    }
 
-	public void SoberUp()
-	{
-		drunkenness -= waterStrength;
-	}
+    void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
+        {
+            //currentLane = 0;
+            jumping = false;
+
+            cornerPoint = collider.gameObject.transform.position;
+
+            playerMode = PlayerMode.TURNING;
+        }
+    }
+
+    void OnTriggerExit(Collider collider)
+    {
+        if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
+        {
+            cornerStart = Vector3.zero;
+            cornerPoint = Vector3.zero;
+            cornerEnd = Vector3.zero;
+            turnTimer = 0;
+
+            playerMode = PlayerMode.RUNNING;
+
+            isTurning = false;
+        }
+    }
+
+    public void ResetCharacter()
+    {
+        rb.velocity = Vector3.zero;
+        rb.transform.position = startingPosition;
+        rb.rotation = startingRotation;
+
+        transform.position = startingPosition;
+        transform.rotation = startingRotation;
+
+        currentLane = 0;
+        laneVelocity = 0;
+        lanePosition = 0;
+
+        cornerStart = Vector3.zero;
+        cornerPoint = Vector3.zero;
+        cornerEnd = Vector3.zero;
+        turnTimer = 0;
+        turnDegree = 0;
+
+        jumping = false;
+
+        drunkenness = 0;
+        drunkTimer = 0;
+        prevDrunkenness = 0;
+        newDrunkenness = 0;
+
+        lg.RebuildMap();
+    }
+
+    public void GetDrunk()
+    {
+        prevDrunkenness = drunkenness;
+        newDrunkenness += rumStrength;
+        drunkTimer = 0;
+    }
+
+    public void SoberUp()
+    {
+        prevDrunkenness = drunkenness;
+        newDrunkenness -= waterStrength;
+        drunkTimer = 0;
+    }
 }
