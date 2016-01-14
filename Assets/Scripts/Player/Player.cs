@@ -248,14 +248,14 @@ public class Player : MonoBehaviour
             currentLane = -2;
         }
 
-        if (drunkenness > 100)
+        if (newDrunkenness > 100)
         {
-            drunkenness = 100;
+            newDrunkenness = 100;
         }
 
-        if (drunkenness < 0)
+        if (newDrunkenness < 0)
         {
-            drunkenness = 0;
+            newDrunkenness = 0;
         }
 
         if (playerMode == PlayerMode.TURNING)
