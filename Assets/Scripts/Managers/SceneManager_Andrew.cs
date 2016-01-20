@@ -106,7 +106,7 @@ public class SceneManager_Andrew : SceneManager_Base {
         coinCount += a_iNumberOfCoins;
         if (m_CoinCounter != null)
         {
-            m_CoinCounter.text = "Coins: " + coinCount;
+            m_CoinCounter.text = "x " + coinCount;
         }
     }
 }

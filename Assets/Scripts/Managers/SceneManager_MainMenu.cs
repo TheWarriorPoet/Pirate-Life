@@ -8,7 +8,7 @@ public class SceneManager_MainMenu : SceneManager_Base {
     void Start () {
 	    if (m_CoinCounter != null && _myGameManager != null)
         {
-            m_CoinCounter.text = "Coins: " + _myGameManager.m_CoinScore;
+            m_CoinCounter.text = "x " + _myGameManager.m_CoinScore;
         }
 	}
 	
