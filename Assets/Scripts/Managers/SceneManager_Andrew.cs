@@ -17,7 +17,7 @@ public class SceneManager_Andrew : SceneManager_Base {
 	private RectTransform drunkRect;
 	private float drunkWidth;
 
-	public UnityEngine.UI.Text lifeCounter;
+    public GameObject[] hearts;
 
 	private static SceneManager_Andrew _instance = null;
     public static SceneManager_Andrew instance
@@ -69,7 +69,17 @@ public class SceneManager_Andrew : SceneManager_Base {
 		drunkRect.localPosition = newPos;
 
 		// Lives
-		lifeCounter.text = "Lives: " + m_Lives.ToString();
+		for (int i = 0; i < hearts.Length; i++)
+        {
+            if (m_Lives >= i + 1 && hearts[i].activeInHierarchy)
+            {
+                hearts[i].SetActive(true);
+            }
+            else
+            {
+                hearts[i].SetActive(false);
+            }
+        }
     }
 
     public void AddLife(int a_Lives)
