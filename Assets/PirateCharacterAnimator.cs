@@ -7,32 +7,67 @@ public class PirateCharacterAnimator : MonoBehaviour {
     public Animator PlayerAnimator;
 
     float NewPlayerSpeedMult;
-
+    CharacterJoint[] MyCharJoints;
+    Rigidbody[] CharRbs;
 
     float LastDrunkenValue;
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         PlayerAnimator = GetComponent<Animator>();
-    
+
         PiratePlayer = GetComponentInParent<Player>();
         PlayerAnimator.enabled = true;
+        ResetRagdoll();
     }
-	
+
+
 	// Update is called once per frame
 	void Update ()
     {
 
-        //NewPlayerSpeedMult = (float)PiratePlayer.drunkenness / 100f;
+        
         NewPlayerSpeedMult = Mathf.Clamp(((float)PiratePlayer.drunkenness / 100f), 0, 1);
         PlayerAnimator.SetFloat("PlayerSpeed", NewPlayerSpeedMult);
-       // Debug.Log(NewPlayerSpeedMult);
+        
 
+        if (Input.GetButtonDown("TestRagdoll"))
+        {
+            GoToRagdoll();
+        }
+
+        if (Input.GetButtonDown("ResetRagdoll"))
+        {
+            ResetRagdoll();
+        }
     }
 
     public void GoToRagdoll()
     {
-        PlayerAnimator.enabled = false;
-    }
 
+        Rigidbody[] CharRbs = gameObject.GetComponentsInChildren<Rigidbody>();
+        PlayerAnimator.enabled = false;
+
+        foreach (Rigidbody RB in CharRbs)
+        {
+            RB.isKinematic = false;
+            RB.detectCollisions = true;
+            Debug.Log(RB.name + "Got listed");
+
+        }
+
+    }
+    //Use this function to reset the player from ragdolling and dying.
+    public void ResetRagdoll()
+    {
+        Rigidbody[] CharRbs = gameObject.GetComponentsInChildren<Rigidbody>();
+        foreach (Rigidbody RB in CharRbs)
+        {
+            PlayerAnimator.enabled = true;
+            RB.isKinematic = true;
+            RB.detectCollisions = false;
+        }
+    }
 }
+
+
