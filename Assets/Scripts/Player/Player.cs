@@ -51,8 +51,6 @@ public class Player : MonoBehaviour
     private Vector2 swipeStartPos;
     private float swipeStartTime;
 
-
-
     void Start()
     {
         sceneManager = SceneManager_Andrew.instance;
@@ -300,6 +298,9 @@ public class Player : MonoBehaviour
         lanePosition = Mathf.SmoothDamp(lanePosition, currentLane, ref laneVelocity, laneDelay);
 
         pos += transform.right * (laneVelocity * laneDistance) * Time.deltaTime;
+
+        // Leaning
+        transform.GetChild(1).localEulerAngles = new Vector3(0, 0, -laneVelocity * drunkenness / 20.0f);
 
         // Running
         float runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
