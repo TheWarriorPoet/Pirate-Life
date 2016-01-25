@@ -22,12 +22,14 @@ public class Player : MonoBehaviour
     public bool isTurning;
     public LevelGen lg;
 
-    private SceneManager_Andrew sceneManager = null;
+	private Camera mainCamera;
+	private PirateCharacterAnimator ragdoll;
+	private SceneManager_Andrew sceneManager = null;
     private Vector3 startingPosition = Vector3.zero;
     private Quaternion startingRotation = Quaternion.identity;
     private Rigidbody rb;
-    private bool dead = false;
-    private AudioClip jumpSound, splashSound;
+    private bool dead = false, ragdolled = false;
+    private AudioClip jumpSound, splashSound, smackSound;
     // Controls
     private bool actionLeft, actionRight, actionJump;
     // Drunkenness
@@ -53,7 +55,9 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        sceneManager = SceneManager_Andrew.instance;
+		mainCamera = GetComponentInChildren<Camera>();
+		ragdoll = GetComponentInChildren<PirateCharacterAnimator>();
+		sceneManager = SceneManager_Andrew.instance;
         startingRotation = transform.rotation;
         startingPosition = transform.position;
         rb = GetComponent<Rigidbody>();
@@ -61,13 +65,14 @@ public class Player : MonoBehaviour
 
         jumpSound = (AudioClip)Resources.Load("Sounds/player_jump");
         splashSound = (AudioClip)Resources.Load("Sounds/player_splash");
+		smackSound = (AudioClip)Resources.Load("Sounds/player_smack");
 
-        ResetCharacter();
+		ResetCharacter();
     }
 
     void Update()
     {
-        if (!dead)
+        if (!dead && !ragdolled)
         {
             Controls();
             Action();
@@ -84,7 +89,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!dead)
+        if (!dead && !ragdolled)
         {
             Movement();
         }
@@ -300,10 +305,10 @@ public class Player : MonoBehaviour
         pos += transform.right * (laneVelocity * laneDistance) * Time.deltaTime;
 
         // Leaning
-        transform.GetChild(1).localEulerAngles = new Vector3(0, 0, -laneVelocity * (1.0f + drunkenness / 20.0f));
+        transform.Find("Pirate_Character").localEulerAngles = new Vector3(0, 0, -laneVelocity * (1.0f + drunkenness / 20.0f));
 
-        // Running
-        float runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
+		// Running
+		float runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
 
         pos += (transform.forward * runSpeed) * Time.deltaTime;
 
@@ -323,28 +328,36 @@ public class Player : MonoBehaviour
         transform.position = pos;
     }
 
+	void KillCharacter()
+	{
+		sceneManager.Die();
+		ragdoll.GoToRagdoll();
+		ragdolled = true;
+		mainCamera.transform.SetParent(null);
+
+		if (sceneManager.m_Lives <= 0)
+		{
+			dead = true;
+			//Renderer[] renderers = GetComponentsInChildren<Renderer>();
+
+			//foreach (var renderer in renderers)
+			//{
+			//	renderer.enabled = false;
+			//}
+		}
+		else
+		{
+			Invoke("ResetCharacter", 2.0f);
+		}
+	}
+
     void OnCollisionEnter(Collision collision)
     {
-        if (sceneManager != null && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+        if (sceneManager != null && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle") && !ragdolled)
         {
-            if (collision.gameObject.tag == "Ocean")
-            {
-                AudioSource.PlayClipAtPoint(splashSound, Vector3.zero);
-            }
-
-            sceneManager.Die();
-            ResetCharacter();
-            if (sceneManager.m_Lives <= 0)
-            {
-                dead = true;
-                Renderer[] renderers = GetComponentsInChildren<Renderer>();
-
-                foreach (var renderer in renderers)
-                {
-                    renderer.enabled = false;
-                }
-            }
-        }
+			AudioSource.PlayClipAtPoint(smackSound, transform.position);
+			KillCharacter();
+		}
 
         //else
         //{
@@ -390,7 +403,13 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
+		if (collider.gameObject.layer == LayerMask.NameToLayer("GameWater") && !ragdolled)
+		{
+			AudioSource.PlayClipAtPoint(splashSound, transform.position);
+			KillCharacter();
+		}
+
+		if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
         {
             //currentLane = 0;
             jumping = false;
@@ -418,14 +437,21 @@ public class Player : MonoBehaviour
 
     public void ResetCharacter()
     {
-        rb.velocity = Vector3.zero;
+		mainCamera.transform.SetParent(transform);
+		ragdoll.ResetRagdoll();
+		ragdolled = false;
+
+		rb.velocity = Vector3.zero;
         rb.transform.position = startingPosition;
         rb.rotation = startingRotation;
 
         transform.position = startingPosition;
         transform.rotation = startingRotation;
 
-        currentLane = 0;
+		mainCamera.transform.position = transform.position + new Vector3(0, 3.75f, -4.5f);
+		mainCamera.transform.rotation = Quaternion.Euler(15, 0, 0);
+
+		currentLane = 0;
         laneVelocity = 0;
         lanePosition = 0;
 

@@ -8,7 +8,6 @@ public class PirateCharacterAnimator : MonoBehaviour {
 
     float NewPlayerSpeedMult;
     CharacterJoint[] MyCharJoints;
-    Rigidbody[] CharRbs;
 
     float LastDrunkenValue;
     // Use this for initialization
@@ -24,12 +23,9 @@ public class PirateCharacterAnimator : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update ()
-    {
-
-        
+    {        
         NewPlayerSpeedMult = Mathf.Clamp(((float)PiratePlayer.drunkenness / 100f), 0, 1);
         PlayerAnimator.SetFloat("PlayerSpeed", NewPlayerSpeedMult);
-        
 
         if (Input.GetButtonDown("TestRagdoll"))
         {
@@ -53,7 +49,6 @@ public class PirateCharacterAnimator : MonoBehaviour {
             RB.isKinematic = false;
             RB.detectCollisions = true;
             Debug.Log(RB.name + "Got listed");
-
         }
 
     }
