@@ -300,7 +300,7 @@ public class Player : MonoBehaviour
         pos += transform.right * (laneVelocity * laneDistance) * Time.deltaTime;
 
         // Leaning
-        transform.GetChild(1).localEulerAngles = new Vector3(0, 0, -laneVelocity * drunkenness / 20.0f);
+        transform.GetChild(1).localEulerAngles = new Vector3(0, 0, -laneVelocity * (1.0f + drunkenness / 20.0f));
 
         // Running
         float runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
