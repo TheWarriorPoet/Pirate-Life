@@ -6,10 +6,14 @@ public class SceneManager_Store : SceneManager_Base {
 	public UnityEngine.UI.Text m_CoinCounter = null;
 	public Button MagneticButton = null;
 
+	private AudioClip soundEffect;
+
 	private int coinCount;
 
 	// Use this for initialization
 	void Start () {
+		soundEffect = (AudioClip)Resources.Load("Sounds/store_buy");
+
 		if (_myGameManager.magneticCoins)
 		{
 			MagneticButton.interactable = false;
@@ -33,7 +37,8 @@ public class SceneManager_Store : SceneManager_Base {
     {
         if(_myGameManager != null && _myGameManager.m_CoinScore >= cost)
         {
-            _myGameManager.magneticCoins = true;
+			AudioSource.PlayClipAtPoint(soundEffect, Vector3.zero);
+			_myGameManager.magneticCoins = true;
             _myGameManager.m_CoinScore -= cost;
             if (MagneticButton != null)
             {
