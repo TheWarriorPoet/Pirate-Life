@@ -108,7 +108,7 @@ public class Player : MonoBehaviour
             actionRight = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) && !jumping)
+        if (rb.velocity.y >= -0.25f && Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) && !jumping)
         {
             actionJump = true;
         }
@@ -176,7 +176,7 @@ public class Player : MonoBehaviour
                     currentLane++;
                 }
 
-                if (actionJump)
+                if (actionJump && !jumping)
                 {
                     AudioSource.PlayClipAtPoint(jumpSound, transform.position);
 
