@@ -11,61 +11,7 @@ public class LevelGen : MonoBehaviour {
 	private Vector3 TrackPos = new Vector3(0,0,0);
 	// Use this for initialization
 	void Start () {
-		TrackPos = new Vector3 (0, 0, 0);
-		TrackDirection = 0;
-		for (int i = 0; i < PieceList.Count; i+=1) {
-			//Creates Rotation for newly spawned map pieces
-			//Creates the new Map Piece at TrackPos Position with rot Rotation
-			GameObject obj = (GameObject)GameObject.Instantiate(PieceList[i],TrackPos, Quaternion.Euler(0,TrackDirection,0));
-			obj.GetComponent<Transform>().rotation.Set (0,TrackDirection,0,0);
-			obj.transform.SetParent(gameObject.transform);
-			objList.Add (obj);
-			//Checks if the current piece is a corner, if so:
-			if(PieceList[i].tag == "Corner")
-			{
-				//If the piece is flagged as a Left Corner:
-				if(PieceList[i].GetComponent<CornerCheck>().LeftCorner)
-				{
-					//If the Current Direction Isn't North, reduce it by 90, if it is north, set it to west (because West is 270, and wont wirh with -90)
-
-					TrackDirection -= 90;
-					if(TrackDirection == -90)
-					{
-						TrackDirection = 270;
-					}
-				}else
-				{
-					//If the Current Direction isn't West, Add 90 to it, if it is, set it to North (as North = 0, not 360)
-
-						TrackDirection += 90;
-					if(TrackDirection == 360)
-					{
-						TrackDirection = 0;
-					}
-				}
-			}
-
-			//Adjusts the Position of the next block position based on what direction we're heading in
-			switch(TrackDirection)
-			{
-			case 0:
-				TrackPos.z += PieceLength;
-				break;
-			case 90:
-				TrackPos.x += PieceLength;
-				break;
-			case 180:
-				TrackPos.z -= PieceLength;
-				break;
-			case 270:
-				TrackPos.x -= PieceLength;
-				break;
-			default:
-				break;
-			}
-
-		}
-		TrackDirection = 0;
+		RebuildMap ();
 	}
 	
 	// Update is called once per frame
