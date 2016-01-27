@@ -24,13 +24,14 @@ public class Player : MonoBehaviour
     public LevelGen lg;
 
 	private Camera mainCamera;
+	private Animator anim;
 	private PirateCharacterAnimator ragdoll;
 	private SceneManager_Andrew sceneManager = null;
     private Vector3 startingPosition = Vector3.zero;
     private Quaternion startingRotation = Quaternion.identity;
     private Rigidbody rb;
     private bool dead = false, ragdolled = false;
-    private AudioClip jumpSound, splashSound, smackSound;
+    private AudioClip jumpSound, deckSound, landSound, splashSound, smackSound;
     // Controls
     private bool actionLeft, actionRight, actionJump;
     // Drunkenness
@@ -55,6 +56,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+		anim = GetComponentInChildren<Animator>();
 		mainCamera = GetComponentInChildren<Camera>();
 		ragdoll = GetComponentInChildren<PirateCharacterAnimator>();
 		sceneManager = SceneManager_Andrew.instance;
@@ -66,6 +68,8 @@ public class Player : MonoBehaviour
         jumpSound = (AudioClip)Resources.Load("Sounds/player_jump");
         splashSound = (AudioClip)Resources.Load("Sounds/player_splash");
 		smackSound = (AudioClip)Resources.Load("Sounds/player_smack");
+		deckSound = (AudioClip)Resources.Load("Sounds/deck_jump");
+		landSound = (AudioClip)Resources.Load("Sounds/player_land");
 
 		ResetCharacter();
     }
@@ -179,8 +183,10 @@ public class Player : MonoBehaviour
                 if (actionJump && !jumping)
                 {
                     AudioSource.PlayClipAtPoint(jumpSound, transform.position);
+					AudioSource.PlayClipAtPoint(deckSound, transform.position);
+					anim.Play("Jumping");
 
-                    jumping = true;
+					jumping = true;
                 }
                 break;
 
@@ -288,7 +294,7 @@ public class Player : MonoBehaviour
 
     void Movement()
     {
-		if (rb.velocity.y < -0.25f)
+		if (rb.velocity.y < -0.25f && !falling)
 		{
 			falling = true;
 		}
@@ -368,46 +374,51 @@ public class Player : MonoBehaviour
 			KillCharacter();
 		}
 
-        //else
-        //{
-        //	// Detect direction of collision
-        //	Vector3 hit = a_Collision.contacts[0].normal;
-        //	Debug.Log(hit);
-        //	float angle = Vector3.Angle(hit, Vector3.up);
+		//else
+		//{
+		//	// Detect direction of collision
+		//	Vector3 hit = a_Collision.contacts[0].normal;
+		//	Debug.Log(hit);
+		//	float angle = Vector3.Angle(hit, Vector3.up);
 
-        //	if (Mathf.Approximately(angle, 0))
-        //	{
-        //		//Down
-        //		Debug.Log("Down");
-        //	}
-        //	if (Mathf.Approximately(angle, 180))
-        //	{
-        //		//Up
-        //		Debug.Log("Up");
-        //	}
-        //	if (Mathf.Approximately(angle, 90)) // Sides
-        //	{
-        //		Vector3 cross = Vector3.Cross(Vector3.forward, hit);
-        //		if (cross.y == 1)
-        //		{
-        //			// Left side
-        //			Debug.Log("Left");
+		//	if (Mathf.Approximately(angle, 0))
+		//	{
+		//		//Down
+		//		Debug.Log("Down");
+		//	}
+		//	if (Mathf.Approximately(angle, 180))
+		//	{
+		//		//Up
+		//		Debug.Log("Up");
+		//	}
+		//	if (Mathf.Approximately(angle, 90)) // Sides
+		//	{
+		//		Vector3 cross = Vector3.Cross(Vector3.forward, hit);
+		//		if (cross.y == 1)
+		//		{
+		//			// Left side
+		//			Debug.Log("Left");
 
-        //			// Stop from running into wall
-        //			currentLane = previousLane;
-        //		}
-        //		else if (cross.y == -1)
-        //		{
-        //			// Right side
-        //			Debug.Log("Right");
+		//			// Stop from running into wall
+		//			currentLane = previousLane;
+		//		}
+		//		else if (cross.y == -1)
+		//		{
+		//			// Right side
+		//			Debug.Log("Right");
 
-        //			// Stop from running into wall
-        //			currentLane = previousLane;
-        //		}
-        //	}
-        //}
+		//			// Stop from running into wall
+		//			currentLane = previousLane;
+		//		}
+		//	}
+		//}
 
-        jumping = false;
+		if (jumping)
+		{
+			AudioSource.PlayClipAtPoint(landSound, transform.position);
+			anim.Play("Falling");
+			jumping = false;
+		}
     }
 
     void OnTriggerEnter(Collider collider)
