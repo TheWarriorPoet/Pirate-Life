@@ -294,7 +294,7 @@ public class Player : MonoBehaviour
 
     void Movement()
     {
-		if (rb.velocity.y < -0.25f && !falling)
+		if (rb.velocity.y < -0.15f && !falling)
 		{
 			falling = true;
 		}
@@ -415,8 +415,11 @@ public class Player : MonoBehaviour
 
 		if (jumping)
 		{
-			AudioSource.PlayClipAtPoint(landSound, transform.position);
-			anim.Play("Falling");
+			if (!ragdolled)
+			{
+				AudioSource.PlayClipAtPoint(landSound, transform.position);
+				anim.Play("Falling");
+			}
 			jumping = false;
 		}
     }
@@ -493,7 +496,9 @@ public class Player : MonoBehaviour
         newDrunkenness = 0;
 
         lg.RebuildMap();
-    }
+
+		anim.Play("Movement");
+	}
 
     public void GetDrunk()
     {
