@@ -22,7 +22,6 @@ public class PlayerFootstepsAudio : MonoBehaviour {
 	{
 		audioSource.clip = footsteps[Random.Range(0, footsteps.Length)];
 		audioSource.Play();
-		Debug.Log("PLAYED SOUND");
 	}
 
 	void FootstepsWalk()
@@ -32,6 +31,7 @@ public class PlayerFootstepsAudio : MonoBehaviour {
 			return;
 		}
 
+		audioSource.volume = 0.2f;
 		PlayFootsteps();
 	}
 
@@ -42,6 +42,7 @@ public class PlayerFootstepsAudio : MonoBehaviour {
 			return;
 		}
 
+		audioSource.volume = 0.4f;
 		PlayFootsteps();
 	}
 }
