@@ -26,7 +26,7 @@ public class PlayerFootstepsAudio : MonoBehaviour {
 
 	void FootstepsWalk()
 	{
-		if (player.drunkenness >= 50 || player.jumping)
+		if (player.drunkenness >= 50 || player.jumping || player.falling)
 		{
 			return;
 		}
@@ -37,7 +37,7 @@ public class PlayerFootstepsAudio : MonoBehaviour {
 
 	void FootstepsRun()
 	{
-		if (player.drunkenness < 50 || player.jumping)
+		if (player.drunkenness < 50 || player.jumping || player.falling)
 		{
 			return;
 		}

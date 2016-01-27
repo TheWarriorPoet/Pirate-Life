@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     public float minLaneDelay, maxLaneDelay;
     public float laneDistance;
     public int currentLane;
-	public bool jumping;
+	public bool jumping, falling;
 	public bool isTurning;
     public LevelGen lg;
 
@@ -108,7 +108,7 @@ public class Player : MonoBehaviour
             actionRight = true;
         }
 
-        if (rb.velocity.y >= -0.25f && Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) && !jumping)
+        if (!falling && Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) && !jumping)
         {
             actionJump = true;
         }
@@ -288,6 +288,15 @@ public class Player : MonoBehaviour
 
     void Movement()
     {
+		if (rb.velocity.y < -0.25f)
+		{
+			falling = true;
+		}
+		else
+		{
+			falling = false;
+		}
+
         Vector3 pos = transform.position;
 
         // Drunkenness
