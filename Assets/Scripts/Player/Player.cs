@@ -19,7 +19,8 @@ public class Player : MonoBehaviour
     public float minLaneDelay, maxLaneDelay;
     public float laneDistance;
     public int currentLane;
-    public bool isTurning;
+	public bool jumping;
+	public bool isTurning;
     public LevelGen lg;
 
 	private Camera mainCamera;
@@ -40,7 +41,6 @@ public class Player : MonoBehaviour
     private float laneVelocity;
     private float lanePosition;
     private int previousLane;
-    private bool jumping;
     // Corner Turning
     private Vector3 cornerStart;
     private Vector3 cornerPoint;
@@ -438,8 +438,12 @@ public class Player : MonoBehaviour
     public void ResetCharacter()
     {
 		mainCamera.transform.SetParent(transform);
-		ragdoll.ResetRagdoll();
-		ragdolled = false;
+
+		if (ragdolled)
+		{
+			ragdoll.ResetRagdoll();
+			ragdolled = false;
+		}
 
 		rb.velocity = Vector3.zero;
         rb.transform.position = startingPosition;

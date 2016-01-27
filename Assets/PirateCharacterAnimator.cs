@@ -3,8 +3,8 @@ using System.Collections;
 
 public class PirateCharacterAnimator : MonoBehaviour {
 
-    public Player PiratePlayer;
-    public Animator PlayerAnimator;
+    Player PiratePlayer;
+    Animator PlayerAnimator;
 
     float NewPlayerSpeedMult;
     CharacterJoint[] MyCharJoints;
@@ -24,7 +24,7 @@ public class PirateCharacterAnimator : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {        
-        NewPlayerSpeedMult = Mathf.Clamp(((float)PiratePlayer.drunkenness / 100f), 0, 1);
+        NewPlayerSpeedMult = PiratePlayer.drunkenness / 100.0f;
         PlayerAnimator.SetFloat("PlayerSpeed", NewPlayerSpeedMult);
 
         if (Input.GetButtonDown("TestRagdoll"))
