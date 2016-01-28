@@ -194,7 +194,8 @@ public class Player : MonoBehaviour
 
                 if (isTurning)
                 {
-                    if (cornerStart == Vector3.zero)
+					// Calculate curve
+					if (cornerStart == Vector3.zero)
                     {
                         cornerStart = transform.position;// cornerPoint + -transform.forward * Vector3.Distance(transform.position, cornerPoint);
                     }
@@ -294,6 +295,11 @@ public class Player : MonoBehaviour
 
     void Movement()
     {
+		// Camera effects
+		mainCamera.fieldOfView = 60.0f + drunkenness / 5.0f;
+		mainCamera.transform.localEulerAngles = new Vector3(15, 0, laneVelocity * drunkenness / 75.0f);
+
+		// Falling
 		if (rb.velocity.y < -0.15f && !falling)
 		{
 			falling = true;
@@ -454,7 +460,11 @@ public class Player : MonoBehaviour
 
             playerMode = PlayerMode.RUNNING;
 
-            isTurning = false;
+			// Avoid flying
+			AudioSource.PlayClipAtPoint(landSound, transform.position);
+			anim.Play("Falling");
+
+			isTurning = false;
         }
     }
 
