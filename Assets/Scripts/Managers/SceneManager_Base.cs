@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using UnityEngine.SceneManagement;
+//using UnityEngine.SceneManagement;
 
 public class SceneManager_Base : MonoBehaviour {
     // public properties
@@ -37,7 +37,8 @@ public class SceneManager_Base : MonoBehaviour {
 
     public void LoadScene(string a_SceneName)
     {
-        SceneManager.LoadScene(a_SceneName);
+        Application.LoadLevel(a_SceneName);
+        //SceneManager.LoadScene(a_SceneName);
     }
 
 	public void QuitGame()
