@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.SceneManagement;
+//using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
@@ -24,12 +24,14 @@ public class SceneManager_Tutorial : SceneManager_Base {
 
     public void Skip()
     {
-        SceneManager.LoadScene("Main Game");
+        Application.LoadLevel("Main Game");
+        //SceneManager.LoadScene("Main Game");
     }
 
     public void Back()
     {
-        SceneManager.LoadScene("Main Menu");
+        Application.LoadLevel("Main Menu"); 
+        //SceneManager.LoadScene("Main Menu");
     }
 
     public void Next()

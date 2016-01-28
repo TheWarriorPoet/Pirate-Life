@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.SceneManagement;
+//using UnityEngine.SceneManagement;
 
 public class SceneManager_Andrew : SceneManager_Base {
     public int m_Lives = 3;
@@ -109,7 +109,8 @@ public class SceneManager_Andrew : SceneManager_Base {
             _myGameManager.AddHighScore((int)m_Distance);
         }
         else Debug.Log("GameManager is null");
-        SceneManager.LoadScene("Main Menu");
+        Application.LoadLevel("Main Menu");
+        //SceneManager.LoadScene("Main Menu");
     }
 
     public void AddCoins(int a_iNumberOfCoins)

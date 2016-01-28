@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using UnityEngine.SceneManagement;
+//using UnityEngine.SceneManagement;
 
 public class SceneManager_HighScores : SceneManager_Base {
     public Text Dates = null;
@@ -37,6 +37,7 @@ public class SceneManager_HighScores : SceneManager_Base {
 
     public void MainMenu()
     {
-        SceneManager.LoadScene("Main Menu");
+        Application.LoadLevel("Main Menu");
+        //SceneManager.LoadScene("Main Menu");
     }
 }
