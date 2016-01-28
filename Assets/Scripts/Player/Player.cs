@@ -440,8 +440,14 @@ public class Player : MonoBehaviour
 
 		if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
         {
-            //currentLane = 0;
-            jumping = false;
+			//currentLane = 0;
+			// Avoid flying
+			if (jumping)
+			{
+				AudioSource.PlayClipAtPoint(landSound, transform.position);
+				anim.Play("Falling");
+				jumping = false;
+			}
 
             cornerPoint = collider.gameObject.transform.position;
 
@@ -459,10 +465,6 @@ public class Player : MonoBehaviour
             turnTimer = 0;
 
             playerMode = PlayerMode.RUNNING;
-
-			// Avoid flying
-			AudioSource.PlayClipAtPoint(landSound, transform.position);
-			anim.Play("Falling");
 
 			isTurning = false;
         }
