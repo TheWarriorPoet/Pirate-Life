@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     }
     void Awake()
     {
-        System.Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
+        //System.Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
         DontDestroyOnLoad(this);
         Load();
     }
