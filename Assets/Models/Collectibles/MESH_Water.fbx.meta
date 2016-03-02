@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: e319df8758e16b646a80cecdc5f8e03e
-timeCreated: 1450080202
+guid: 7fd6356744465c94fa0855fb9dc2a1dc
+timeCreated: 1456884641
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: COLL_T_Corner_kroberts_01
+    4300000: MESH_Waterdrop
   materials:
     importMaterials: 0
     materialName: 0
