@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     public float laneDistance;
 	public float gravity = 9.8f;
 	public int currentLane;
-	public bool jumping, falling;
+	public bool jumping, falling, grounded;
 	public bool isTurning;
     public LevelGen lg;
 
@@ -43,6 +43,8 @@ public class Player : MonoBehaviour
     private float laneVelocity;
     private float lanePosition;
     private int previousLane;
+	// Jumping
+	private float jumpDistance;
     // Corner Turning
     private Vector3 cornerStart;
     private Vector3 cornerPoint;
@@ -82,7 +84,6 @@ public class Player : MonoBehaviour
             Controls();
             Action();
             Limits();
-			Movement();
 		}
 
         // Debug
@@ -93,7 +94,15 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Controls()
+	void FixedUpdate()
+	{
+		if (!dead && !ragdolled)
+		{
+			Movement();
+		}
+	}
+
+	void Controls()
     {
         // PC Controls
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
@@ -106,7 +115,7 @@ public class Player : MonoBehaviour
             actionRight = true;
         }
 
-        if (controller.isGrounded && Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) && !jumping)
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) && controller.isGrounded)
         {
             actionJump = true;
         }
@@ -133,7 +142,7 @@ public class Player : MonoBehaviour
 				actionRight = true;
 			}
 
-			if (delta.y > deadzone && !falling && !jumping)
+			if (delta.y > deadzone && controller.isGrounded)
 			{
 				actionJump = true;
 			}
@@ -158,13 +167,11 @@ public class Player : MonoBehaviour
                     currentLane++;
                 }
 
-                if (actionJump && !jumping)
+                if (actionJump && !jumping && !falling)
                 {
                     AudioSource.PlayClipAtPoint(jumpSound, transform.position);
 					AudioSource.PlayClipAtPoint(deckSound, transform.position);
 					anim.Play("Jumping");
-
-					Debug.Log("JUMPING.");
 					jumping = true;
                 }
                 break;
@@ -247,15 +254,6 @@ public class Player : MonoBehaviour
             newDrunkenness = 0;
         }
 
-        if (playerMode == PlayerMode.TURNING)
-        {
-            //rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-        }
-        else
-        {
-            //rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
-        }
-
         if (cornerPoint != Vector3.zero)
         {
             cornerPoint.y = transform.position.y;
@@ -270,26 +268,38 @@ public class Player : MonoBehaviour
         {
             turnDegree = 0;
         }
-    }
+
+		//// Running into sides of track
+		//float dist = 1.0f;
+		//Vector3 dir = new Vector3(0, 0, 1);
+
+		//Debug.DrawRay(transform.position, dir * dist, Color.green);
+		//if (Physics.Raycast(transform.position, dir, dist))
+		//{
+		//	KillCharacter();
+		//}
+	}
 
     void Movement()
     {
+		Vector3 vel = Vector3.zero;
+
 		// Camera effects
 		mainCamera.fieldOfView = 60.0f + drunkenness / 5.0f;
 		mainCamera.transform.localEulerAngles = new Vector3(15, 0, laneVelocity * drunkenness / 75.0f);
 
 		// Falling
-		if (!controller.isGrounded && !jumping)
-		{
-			falling = true;
-			Debug.Log("FALLING.");
-		}
-		else
-		{
-			falling = false;
-		}
+		float dist = 1.0f;
+		Vector3 dir = new Vector3(0, -1, 0);
 
-		Vector3 pos = Vector3.zero;// = transform.position;
+		Debug.DrawRay(transform.position, dir * dist, Color.green);
+		if (!Physics.Raycast(transform.position, dir, dist))
+		{
+			if (!jumping)
+			{
+				falling = true;
+			}
+		}
 
         // Drunkenness
         if (drunkenness != newDrunkenness)
@@ -303,7 +313,7 @@ public class Player : MonoBehaviour
 
         lanePosition = Mathf.SmoothDamp(lanePosition, currentLane, ref laneVelocity, laneDelay);
 
-        pos += transform.right * (laneVelocity * laneDistance);
+		vel += transform.right * (laneVelocity * laneDistance) * Time.deltaTime;
 
         // Leaning
         transform.Find("Pirate_Character").localEulerAngles = new Vector3(0, 0, -laneVelocity * (1.0f + drunkenness / 20.0f));
@@ -311,7 +321,7 @@ public class Player : MonoBehaviour
 		// Running
 		float runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
 
-        pos += (transform.forward * runSpeed);
+		vel += (transform.forward * runSpeed) * Time.deltaTime;
 
         if (sceneManager != null)
         {
@@ -323,22 +333,36 @@ public class Player : MonoBehaviour
 
         if (jumping)
         {
-            pos += (transform.up * jumpHeight * 5);
+			float jump = gravity * Time.deltaTime;
+
+			jumpDistance += jump;
+
+			if (jumpDistance > jumpHeight)
+			{
+				jumping = false;
+				jumpDistance = 0;
+			}
+			else
+			{
+				vel.y += jump;
+			}
+
+			Debug.Log(jumpDistance);
         }
 
 		// Falling
 		if (falling)
 		{
-			pos.y -= gravity;
+			vel.y -= gravity * Time.deltaTime;
 		}
 
-		//transform.position = pos;
-		controller.Move(pos * Time.deltaTime);
+		controller.Move(vel);
     }
 
 	void KillCharacter()
 	{
 		sceneManager.Die();
+
 		controller.enabled = false;
 		ragdoll.GoToRagdoll();
 		ragdolled = true;
@@ -347,12 +371,6 @@ public class Player : MonoBehaviour
 		if (sceneManager.m_Lives <= 0)
 		{
 			dead = true;
-			//Renderer[] renderers = GetComponentsInChildren<Renderer>();
-
-			//foreach (var renderer in renderers)
-			//{
-			//	renderer.enabled = false;
-			//}
 		}
 		else
 		{
@@ -368,53 +386,14 @@ public class Player : MonoBehaviour
 			KillCharacter();
 		}
 
-		//else
-		//{
-		//	// Detect direction of collision
-		//	Vector3 hit = a_Collision.contacts[0].normal;
-		//	Debug.Log(hit);
-		//	float angle = Vector3.Angle(hit, Vector3.up);
-
-		//	if (Mathf.Approximately(angle, 0))
-		//	{
-		//		//Down
-		//		Debug.Log("Down");
-		//	}
-		//	if (Mathf.Approximately(angle, 180))
-		//	{
-		//		//Up
-		//		Debug.Log("Up");
-		//	}
-		//	if (Mathf.Approximately(angle, 90)) // Sides
-		//	{
-		//		Vector3 cross = Vector3.Cross(Vector3.forward, hit);
-		//		if (cross.y == 1)
-		//		{
-		//			// Left side
-		//			Debug.Log("Left");
-
-		//			// Stop from running into wall
-		//			currentLane = previousLane;
-		//		}
-		//		else if (cross.y == -1)
-		//		{
-		//			// Right side
-		//			Debug.Log("Right");
-
-		//			// Stop from running into wall
-		//			currentLane = previousLane;
-		//		}
-		//	}
-		//}
-
-		if (jumping)
+		if (falling)
 		{
 			if (!ragdolled)
 			{
 				AudioSource.PlayClipAtPoint(landSound, transform.position);
 				anim.Play("Falling");
 			}
-			jumping = false;
+			falling = false;
 		}
     }
 
@@ -428,7 +407,6 @@ public class Player : MonoBehaviour
 
 		if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
         {
-			//currentLane = 0;
 			// Avoid flying
 			if (jumping)
 			{
@@ -464,14 +442,10 @@ public class Player : MonoBehaviour
 
 		if (ragdolled)
 		{
+			controller.enabled = true;
 			ragdoll.ResetRagdoll();
 			ragdolled = false;
-			controller.enabled = true;
 		}
-
-		//controller.velocity = Vector3.zero;
-        controller.transform.position = startingPosition;
-        //controller.rotation = startingRotation;
 
         transform.position = startingPosition;
         transform.rotation = startingRotation;
@@ -490,6 +464,8 @@ public class Player : MonoBehaviour
         turnDegree = 0;
 
         jumping = false;
+		falling = false;
+		grounded = false;
 
         drunkenness = 0;
         drunkTimer = 0;
