@@ -18,7 +18,8 @@ public class Player : MonoBehaviour
     public float minJumpHeight, maxJumpHeight;
     public float minLaneDelay, maxLaneDelay;
     public float laneDistance;
-    public int currentLane;
+	public float gravity = 9.8f;
+	public int currentLane;
 	public bool jumping, falling;
 	public bool isTurning;
     public LevelGen lg;
@@ -29,7 +30,7 @@ public class Player : MonoBehaviour
 	private SceneManager_Andrew sceneManager = null;
     private Vector3 startingPosition = Vector3.zero;
     private Quaternion startingRotation = Quaternion.identity;
-    private Rigidbody rb;
+    private CharacterController controller;
     private bool dead = false, ragdolled = false;
     private AudioClip jumpSound, deckSound, landSound, splashSound, smackSound;
     // Controls
@@ -62,7 +63,7 @@ public class Player : MonoBehaviour
 		sceneManager = SceneManager_Andrew.instance;
         startingRotation = transform.rotation;
         startingPosition = transform.position;
-        rb = GetComponent<Rigidbody>();
+        controller = GetComponent<CharacterController>();
         lg = GameObject.FindGameObjectWithTag("LevelGen").GetComponent<LevelGen>();
 
         jumpSound = (AudioClip)Resources.Load("Sounds/player_jump");
@@ -81,21 +82,14 @@ public class Player : MonoBehaviour
             Controls();
             Action();
             Limits();
-        }
+			Movement();
+		}
 
         // Debug
         if (cornerPoint != Vector3.zero && cornerEnd != Vector3.zero)
         {
             Debug.DrawLine(cornerStart, cornerPoint, Color.red);
             Debug.DrawLine(cornerPoint, cornerEnd, Color.red);
-        }
-    }
-
-    void FixedUpdate()
-    {
-        if (!dead && !ragdolled)
-        {
-            Movement();
         }
     }
 
@@ -112,55 +106,39 @@ public class Player : MonoBehaviour
             actionRight = true;
         }
 
-        if (!falling && Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) && !jumping)
+        if (controller.isGrounded && Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) && !jumping)
         {
             actionJump = true;
         }
 
         // Touch Controls
-        CheckHorizontalSwipes();
+        CheckSwipes();
     }
 
-    void CheckHorizontalSwipes()
+    void CheckSwipes()
     {
-        foreach (Touch touch in Input.touches)
-        { // For every touch in the Input.touches - array...
+		if (Input.touchCount > 0)
+		{
+			Touch tch = Input.GetTouch(0);
+			Vector2 delta = tch.deltaPosition.normalized;
+			float deadzone = 0.9f;
 
-            switch (touch.phase)
-            {
-                case TouchPhase.Began: // The finger first touched the screen --> It could be(come) a swipe
-                    couldBeSwipe = true;
+			if (delta.x > deadzone)
+			{
+				actionRight = true;
+			}
 
-                    swipeStartPos = touch.position;  // Position where the touch started
-                    swipeStartTime = Time.time; // The time it started
-                    break;
+			if (delta.x < deadzone)
+			{
+				actionRight = true;
+			}
 
-                case TouchPhase.Stationary: // Is the touch stationary? --> No swipe then!
-                    couldBeSwipe = false;
-                    break;
-            }
-
-            float time = Time.time - swipeStartTime; // Time the touch stayed at the screen till now.
-            float distance = Mathf.Abs(touch.position.x - swipeStartPos.x); //Swipe distance
-
-            if (couldBeSwipe && time < swipeTime && distance > swipeDistance)
-            {
-                // It's a swiiiiiiiiiiiipe!
-                couldBeSwipe = false; //<-- Otherwise this part would be called over and over again.
-
-                if (Mathf.Sign(touch.position.x - swipeStartPos.x) == 1f) //Swipe-direction, either 1 or -1.
-                {
-                    //Right-swipe
-                    actionRight = true;
-                }
-                else
-                {
-                    // Left-swipe
-                    actionLeft = true;
-                }
-            }
-        }
-    }
+			if (delta.y > deadzone && !falling && !jumping)
+			{
+				actionJump = true;
+			}
+		}
+	}
 
     void Action()
     {
@@ -186,6 +164,7 @@ public class Player : MonoBehaviour
 					AudioSource.PlayClipAtPoint(deckSound, transform.position);
 					anim.Play("Jumping");
 
+					Debug.Log("JUMPING.");
 					jumping = true;
                 }
                 break;
@@ -270,11 +249,11 @@ public class Player : MonoBehaviour
 
         if (playerMode == PlayerMode.TURNING)
         {
-            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            //rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         }
         else
         {
-            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
+            //rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
         }
 
         if (cornerPoint != Vector3.zero)
@@ -300,16 +279,17 @@ public class Player : MonoBehaviour
 		mainCamera.transform.localEulerAngles = new Vector3(15, 0, laneVelocity * drunkenness / 75.0f);
 
 		// Falling
-		if (rb.velocity.y < -0.15f && !falling)
+		if (!controller.isGrounded && !jumping)
 		{
 			falling = true;
+			Debug.Log("FALLING.");
 		}
 		else
 		{
 			falling = false;
 		}
 
-        Vector3 pos = transform.position;
+		Vector3 pos = Vector3.zero;// = transform.position;
 
         // Drunkenness
         if (drunkenness != newDrunkenness)
@@ -323,7 +303,7 @@ public class Player : MonoBehaviour
 
         lanePosition = Mathf.SmoothDamp(lanePosition, currentLane, ref laneVelocity, laneDelay);
 
-        pos += transform.right * (laneVelocity * laneDistance) * Time.deltaTime;
+        pos += transform.right * (laneVelocity * laneDistance);
 
         // Leaning
         transform.Find("Pirate_Character").localEulerAngles = new Vector3(0, 0, -laneVelocity * (1.0f + drunkenness / 20.0f));
@@ -331,11 +311,11 @@ public class Player : MonoBehaviour
 		// Running
 		float runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
 
-        pos += (transform.forward * runSpeed) * Time.deltaTime;
+        pos += (transform.forward * runSpeed);
 
         if (sceneManager != null)
         {
-            sceneManager.m_Distance += runSpeed * Time.deltaTime;
+            sceneManager.m_Distance += runSpeed;
         }
 
         // Jumping
@@ -343,15 +323,23 @@ public class Player : MonoBehaviour
 
         if (jumping)
         {
-            pos += (transform.up * jumpHeight) * Time.deltaTime;
+            pos += (transform.up * jumpHeight * 5);
         }
 
-        transform.position = pos;
+		// Falling
+		if (falling)
+		{
+			pos.y -= gravity;
+		}
+
+		//transform.position = pos;
+		controller.Move(pos * Time.deltaTime);
     }
 
 	void KillCharacter()
 	{
 		sceneManager.Die();
+		controller.enabled = false;
 		ragdoll.GoToRagdoll();
 		ragdolled = true;
 		mainCamera.transform.SetParent(null);
@@ -372,7 +360,7 @@ public class Player : MonoBehaviour
 		}
 	}
 
-    void OnCollisionEnter(Collision collision)
+    void OnControllerColliderHit(ControllerColliderHit collision)
     {
         if (sceneManager != null && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle") && !ragdolled)
         {
@@ -478,11 +466,12 @@ public class Player : MonoBehaviour
 		{
 			ragdoll.ResetRagdoll();
 			ragdolled = false;
+			controller.enabled = true;
 		}
 
-		rb.velocity = Vector3.zero;
-        rb.transform.position = startingPosition;
-        rb.rotation = startingRotation;
+		//controller.velocity = Vector3.zero;
+        controller.transform.position = startingPosition;
+        //controller.rotation = startingRotation;
 
         transform.position = startingPosition;
         transform.rotation = startingRotation;
