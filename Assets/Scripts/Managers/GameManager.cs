@@ -18,6 +18,13 @@ public class GameManager : MonoBehaviour
     public int m_CoinScore;
     public List<HighScore> HighScores = new List<HighScore>();
     public bool magneticCoins = false;
+    public List<Upgrade> _allUpgrades = new List<Upgrade>();
+
+    /// <summary>
+    /// This needs to be connected once we have new track sections generating. 
+    /// Whenever a new section of track is deployed, some upgrades need to reset their lists of affected objects
+    /// </summary>
+    public bool newTrackSection = false;
 
     // Singleton Instance to provide simple access through other scripts
     private static GameManager _instance = null;

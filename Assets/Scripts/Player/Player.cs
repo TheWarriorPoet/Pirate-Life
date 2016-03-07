@@ -57,6 +57,18 @@ public class Player : MonoBehaviour
     private Vector2 swipeStartPos;
     private float swipeStartTime;
 
+    private static Player _instance = null;
+    public static Player instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = (Player)FindObjectOfType(typeof(Player));
+            }
+            return _instance;
+        }
+    }
     void Start()
     {
 		anim = GetComponentInChildren<Animator>();
