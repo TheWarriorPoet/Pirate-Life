@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 50374235afbe10a448b17f20cbe4e28d
-timeCreated: 1457418614
+timeCreated: 1457424448
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
@@ -11,7 +11,7 @@ ModelImporter:
     3300000: //RootNode
     4300000: MESH_Skybox
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
   animations:
