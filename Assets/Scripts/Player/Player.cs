@@ -375,10 +375,10 @@ public class Player : MonoBehaviour
 	{
 		sceneManager.Die();
 
+		mainCamera.transform.SetParent(null);
 		controller.enabled = false;
 		ragdoll.GoToRagdoll();
 		ragdolled = true;
-		mainCamera.transform.SetParent(null);
 
 		if (sceneManager.m_Lives <= 0)
 		{
@@ -454,7 +454,6 @@ public class Player : MonoBehaviour
 
 		if (ragdolled)
 		{
-			controller.enabled = true;
 			ragdoll.ResetRagdoll();
 			ragdolled = false;
 		}
@@ -487,6 +486,8 @@ public class Player : MonoBehaviour
         lg.RebuildMap();
 
 		anim.Play("Movement");
+
+		controller.enabled = true;
 	}
 
     public void GetDrunk()
