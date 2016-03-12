@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -51,13 +52,13 @@ public class Player : MonoBehaviour
     private Vector3 cornerEnd;
     private float turnTimer;
     private float turnDegree;
-    // Touch
-    public float swipeDistance = 5, swipeTime = 0.75f;
-    private bool couldBeSwipe;
-    private Vector2 swipeStartPos;
-    private float swipeStartTime;
+	// Touch
+	Vector2 touchDelta, touchPrevious;
+    private bool swiping;
+	private float deadzone = 0.8f;
+	Text debugText; // Quick and dirty debugging
 
-    private static Player _instance = null;
+	private static Player _instance = null;
     public static Player instance
     {
         get
@@ -79,8 +80,10 @@ public class Player : MonoBehaviour
         startingPosition = transform.position;
         controller = GetComponent<CharacterController>();
         lg = GameObject.FindGameObjectWithTag("LevelGen").GetComponent<LevelGen>();
+		debugText = GameObject.Find("DEBUG").GetComponent<Text>(); // Quick and dirty debugging
 
-        jumpSound = (AudioClip)Resources.Load("Sounds/player_jump");
+
+		jumpSound = (AudioClip)Resources.Load("Sounds/player_jump");
         splashSound = (AudioClip)Resources.Load("Sounds/player_splash");
 		smackSound = (AudioClip)Resources.Load("Sounds/player_smack");
 		deckSound = (AudioClip)Resources.Load("Sounds/deck_jump");
@@ -140,24 +143,35 @@ public class Player : MonoBehaviour
     {
 		if (Input.touchCount > 0)
 		{
-			Touch tch = Input.GetTouch(0);
-			Vector2 delta = tch.deltaPosition.normalized;
-			float deadzone = 0.9f;
-
-			if (delta.x > deadzone)
+			if (!swiping)
 			{
-				actionRight = true;
-			}
+				swiping = true;
+				Touch tch = Input.GetTouch(0);
+				touchDelta = (touchPrevious - tch.position).normalized;
 
-			if (delta.x < deadzone)
-			{
-				actionRight = true;
-			}
+				if (touchDelta.x > deadzone)
+				{
+					actionRight = true;
+				}
 
-			if (delta.y > deadzone && controller.isGrounded)
-			{
-				actionJump = true;
+				if (touchDelta.x < deadzone)
+				{
+					actionLeft = true;
+				}
+
+				if (touchDelta.y > deadzone && controller.isGrounded)
+				{
+					actionJump = true;
+				}
+
+				touchPrevious = tch.position;
+
+				debugText.text = "TOUCH DEBUGGING\nX: " + touchDelta.x + "\nY: " + touchDelta.y + "";
 			}
+		}
+		else
+		{
+			swiping = false;
 		}
 	}
 

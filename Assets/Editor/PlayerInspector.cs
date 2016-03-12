@@ -40,9 +40,6 @@ public class PlayerInspector : Editor
 
         GUILayout.Label("Touch Settings", EditorStyles.boldLabel);
 
-        p.swipeDistance = EditorGUILayout.FloatField("Swipe Distance", p.swipeDistance);
-        p.swipeTime = EditorGUILayout.FloatField("Swipe Time", p.swipeTime);
-
         //base.OnInspectorGUI();
     }
 }
