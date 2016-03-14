@@ -10,7 +10,8 @@ public class Player : MonoBehaviour
         TURNING
     }
 
-    public PlayerMode playerMode;
+	[Header("Player Settings")]
+	public PlayerMode playerMode;
     public int drunkenness;
     public float drunkDelay;
     public int rumStrength;
@@ -21,9 +22,11 @@ public class Player : MonoBehaviour
     public float laneDistance;
 	public float gravity = 9.8f;
 	public int currentLane;
-	public bool jumping, falling, grounded;
-	public bool isTurning;
-    public LevelGen lg;
+	public bool jumping, falling, grounded, isTurning;
+	[Header("Touch Settings")]
+	public float deadzone = 0.8f;
+	[Header("Object Linking")]
+	public LevelGen lg;
 
 	private Camera mainCamera;
 	private Animator anim;
@@ -55,7 +58,6 @@ public class Player : MonoBehaviour
 	// Touch
 	Vector2 touchDelta, touchPrevious;
     private bool swiping;
-	private float deadzone = 0.8f;
 	Text debugText; // Quick and dirty debugging
 
 	private static Player _instance = null;
