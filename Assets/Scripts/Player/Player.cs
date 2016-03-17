@@ -14,8 +14,6 @@ public class Player : MonoBehaviour
 	public PlayerMode playerMode;
     public int drunkenness;
     public float drunkDelay;
-    public int rumStrength;
-    public int waterStrength;
     public float minRunSpeed, maxRunSpeed;
     public float minJumpHeight, maxJumpHeight;
     public float minLaneDelay, maxLaneDelay;
@@ -40,8 +38,8 @@ public class Player : MonoBehaviour
     // Controls
     private bool actionLeft, actionRight, actionJump;
     // Drunkenness
-    private float prevDrunkenness;
-    private float newDrunkenness;
+    private int prevDrunkenness;
+    private int newDrunkenness;
     private float drunkTimer;
     // Lane Switching
     private float laneVelocity;
@@ -506,17 +504,17 @@ public class Player : MonoBehaviour
 		controller.enabled = true;
 	}
 
-    public void GetDrunk()
+    public void GetDrunk(int value)
     {
         prevDrunkenness = drunkenness;
-        newDrunkenness += rumStrength;
+        newDrunkenness += value;
         drunkTimer = 0;
     }
 
-    public void SoberUp()
+    public void SoberUp(int value)
     {
         prevDrunkenness = drunkenness;
-        newDrunkenness -= waterStrength;
+        newDrunkenness -= value;
         drunkTimer = 0;
     }
 }
