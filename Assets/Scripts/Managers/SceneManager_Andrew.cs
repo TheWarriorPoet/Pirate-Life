@@ -81,6 +81,11 @@ public class SceneManager_Andrew : SceneManager_Base {
                 hearts[i].SetActive(false);
             }
         }
+
+        foreach (Upgrade u in _myGameManager._allUpgrades)
+        {
+            u.UpgradeUpdate();
+        }
     }
 
     public void AddLife(int a_Lives)

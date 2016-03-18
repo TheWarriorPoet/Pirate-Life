@@ -16,6 +16,7 @@ public class PickupScript : MonoBehaviour
     private Transform objectTransform = null;
     private SceneManager_Andrew _mySceneManager = null;
 	private AudioClip soundEffect;
+	public int itemValue;
     private bool MagneticCoin = false;
     public float magnetSpeed = 20.0f;
     public float magnetRadius = 50.0f;
@@ -50,10 +51,10 @@ public class PickupScript : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-        if (MagneticCoin && pickupType == PickupType.COIN && playerTransform != null && Vector3.Distance(playerTransform.position, objectTransform.position) <= magnetRadius)
+        /*if (MagneticCoin && pickupType == PickupType.COIN && playerTransform != null && Vector3.Distance(playerTransform.position, objectTransform.position) <= magnetRadius)
         {
             objectTransform.position = Vector3.MoveTowards(objectTransform.position, playerTransform.position, magnetSpeed * Time.deltaTime);
-        }
+        }*/
     }
 
 	void OnTriggerEnter(Collider Other)
@@ -68,16 +69,16 @@ public class PickupScript : MonoBehaviour
 				case PickupType.COIN:
 					if (_mySceneManager != null)
                     {
-                        _mySceneManager.AddCoins(1);
+                        _mySceneManager.AddCoins(itemValue);
                     }
 					break;
 				case PickupType.RUM:
 					Debug.Log("Picked up rum");
-					player.GetDrunk();
+					player.GetDrunk(itemValue);
 					break;
 				case PickupType.WATER:
 					Debug.Log("Picked up water");
-					player.SoberUp();
+					player.SoberUp(itemValue);
 					break;
 			}
 			Destroy(gameObject);

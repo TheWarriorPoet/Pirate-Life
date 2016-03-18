@@ -1,20 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerFootstepsAudio : MonoBehaviour {
-
+public class PlayerFootstepsAudio : MonoBehaviour
+{
 	public AudioClip[] footsteps;
 	AudioSource audioSource;
 	Player player;
 
-	// Use this for initialization
-	void Start () {
+	void Start()
+	{
 		audioSource = GetComponent<AudioSource>();
 		player = GetComponentInParent<Player>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+	void Update()
+	{
 	
 	}
 
@@ -26,7 +26,7 @@ public class PlayerFootstepsAudio : MonoBehaviour {
 
 	void FootstepsWalk()
 	{
-		if (player.drunkenness >= 50 || player.jumping || player.falling)
+		if (player.drunkenness >= 50 || player.jumping)
 		{
 			return;
 		}
@@ -37,7 +37,7 @@ public class PlayerFootstepsAudio : MonoBehaviour {
 
 	void FootstepsRun()
 	{
-		if (player.drunkenness < 50 || player.jumping || player.falling)
+		if (player.drunkenness < 50 || player.jumping)
 		{
 			return;
 		}
