@@ -8,6 +8,7 @@ public class SavePrefabScript : MonoBehaviour
 {
 	public GameObject MapPiece;
 	public InputField IF;
+	public string Destination;
 	// Use this for initialization
 	void Start () {
 		
@@ -26,13 +27,14 @@ public class SavePrefabScript : MonoBehaviour
 			MapPiece.transform.GetChild (MapPiece.transform.childCount - 1).parent = null;
 		}
 		MapPiece.name = IF.text;
-		UnityEditor.PrefabUtility.CreatePrefab ("Assets/Prefabs/LevelObjects/" + MapPiece.name + ".prefab", MapPiece);
+		UnityEditor.PrefabUtility.CreatePrefab (Destination + MapPiece.name + ".prefab", MapPiece);
 		MapPiece.name = "MapPiece";
 
 		if (MapPiece.GetComponent<LevelGen> () != null) {
 			MapPiece.tag = "LevelGen";
 			MapPiece.name = "LevelGenerator";
 		}
+		MapPiece.GetComponent<MapPiece> ().BuildPiece ();
 	}
 }
 

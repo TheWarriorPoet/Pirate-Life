@@ -1,18 +1,35 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class MapPiece : MonoBehaviour {
-	public GameObject LeftLane, MiddleLane, RightLane;
-	public Vector3 LeftLaneOffset = new Vector3(-3,0,0),MiddleLaneOffset = new Vector3(0,0,0), RightLaneOffset = new Vector3(3,0,0);
-	private GameObject objL, objM, objR;
+	public List<GameObject> Lanes;
+	public List<Vector3> LaneOffsets;
+	public List<GameObject> Collectables;
+	public List<GameObject> Obstacles;
+	private List<GameObject> objs = new List<GameObject> ();
 	// Use this for initialization
 	void Start () {
-		objL = (GameObject)GameObject.Instantiate(LeftLane,gameObject.transform.position + (gameObject.transform.rotation * LeftLaneOffset),gameObject.transform.rotation);
-		objL.transform.SetParent (gameObject.transform);
-		objM = (GameObject)GameObject.Instantiate(MiddleLane,gameObject.transform.position + MiddleLaneOffset,gameObject.transform.rotation);
-		objM.transform.SetParent (gameObject.transform);
-		objR = (GameObject)GameObject.Instantiate(RightLane,gameObject.transform.position + (gameObject.transform.rotation * RightLaneOffset),gameObject.transform.rotation);
-		objR.transform.SetParent (gameObject.transform);
+
+		foreach (GameObject obj in objs) {
+			Destroy (obj);
+		}
+
+		objs.Clear ();
+		objs.Add((GameObject)GameObject.Instantiate(Lanes[0],gameObject.transform.position + (gameObject.transform.rotation * LaneOffsets[0]),gameObject.transform.rotation));
+		objs.Add((GameObject)GameObject.Instantiate(Lanes[1],gameObject.transform.position + LaneOffsets[1],gameObject.transform.rotation));
+		objs.Add((GameObject)GameObject.Instantiate(Lanes[2],gameObject.transform.position + (gameObject.transform.rotation * LaneOffsets[2]),gameObject.transform.rotation));
+
+		objs.Add((GameObject)GameObject.Instantiate(Collectables[0],gameObject.transform.position + (gameObject.transform.rotation * LaneOffsets[0]),gameObject.transform.rotation));
+		objs.Add((GameObject)GameObject.Instantiate(Collectables[1],gameObject.transform.position + LaneOffsets[1],gameObject.transform.rotation));
+		objs.Add((GameObject)GameObject.Instantiate(Collectables[2],gameObject.transform.position + (gameObject.transform.rotation * LaneOffsets[2]),gameObject.transform.rotation));
+
+		objs.Add((GameObject)GameObject.Instantiate(Obstacles[0],gameObject.transform.position + (gameObject.transform.rotation * LaneOffsets[0]),gameObject.transform.rotation));
+		objs.Add((GameObject)GameObject.Instantiate(Obstacles[1],gameObject.transform.position + LaneOffsets[1],gameObject.transform.rotation));
+		objs.Add((GameObject)GameObject.Instantiate(Obstacles[2],gameObject.transform.position + (gameObject.transform.rotation * LaneOffsets[2]),gameObject.transform.rotation));
+
+		foreach (GameObject obj in objs) {
+			obj.transform.SetParent (gameObject.transform);
+		}
 		//GetComponent<PickupLayout> ().RebuildCollectables ();
 	}
 	
@@ -23,15 +40,27 @@ public class MapPiece : MonoBehaviour {
 
 	public void BuildPiece()
 	{
-		Destroy (objL);
-		Destroy (objM);
-		Destroy (objR);
-		objL = (GameObject)GameObject.Instantiate(LeftLane,gameObject.transform.position + (gameObject.transform.rotation * LeftLaneOffset),gameObject.transform.rotation);
-		objL.transform.SetParent (gameObject.transform);
-		objM = (GameObject)GameObject.Instantiate(MiddleLane,gameObject.transform.position + MiddleLaneOffset,gameObject.transform.rotation);
-		objM.transform.SetParent (gameObject.transform);
-		objR = (GameObject)GameObject.Instantiate(RightLane,gameObject.transform.position + (gameObject.transform.rotation * RightLaneOffset),gameObject.transform.rotation);
-		objR.transform.SetParent (gameObject.transform);
+
+		foreach (GameObject obj in objs) {
+			Destroy (obj);
+		}
+
+		objs.Clear ();
+		objs.Add((GameObject)GameObject.Instantiate(Lanes[0],gameObject.transform.position + (gameObject.transform.rotation * LaneOffsets[0]),gameObject.transform.rotation));
+		objs.Add((GameObject)GameObject.Instantiate(Lanes[1],gameObject.transform.position + LaneOffsets[1],gameObject.transform.rotation));
+		objs.Add((GameObject)GameObject.Instantiate(Lanes[2],gameObject.transform.position + (gameObject.transform.rotation * LaneOffsets[2]),gameObject.transform.rotation));
+
+		objs.Add((GameObject)GameObject.Instantiate(Collectables[0],gameObject.transform.position + (gameObject.transform.rotation * LaneOffsets[0]),gameObject.transform.rotation));
+		objs.Add((GameObject)GameObject.Instantiate(Collectables[1],gameObject.transform.position + LaneOffsets[1],gameObject.transform.rotation));
+		objs.Add((GameObject)GameObject.Instantiate(Collectables[2],gameObject.transform.position + (gameObject.transform.rotation * LaneOffsets[2]),gameObject.transform.rotation));
+
+		objs.Add((GameObject)GameObject.Instantiate(Obstacles[0],gameObject.transform.position + (gameObject.transform.rotation * LaneOffsets[0]),gameObject.transform.rotation));
+		objs.Add((GameObject)GameObject.Instantiate(Obstacles[1],gameObject.transform.position + LaneOffsets[1],gameObject.transform.rotation));
+		objs.Add((GameObject)GameObject.Instantiate(Obstacles[2],gameObject.transform.position + (gameObject.transform.rotation * LaneOffsets[2]),gameObject.transform.rotation));
+
+		foreach (GameObject obj in objs) {
+			obj.transform.SetParent (gameObject.transform);
+		}
 	}
 
 }

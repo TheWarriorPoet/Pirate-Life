@@ -11,6 +11,7 @@ public class PieceBuilderScript : MonoBehaviour {
 
 	public LaneEditor lE;
 	// Use this for initialization
+	/*
 	void Start () {
 		pieceList = GetComponent<MapPieceList> ();
 	}
@@ -33,6 +34,7 @@ public class PieceBuilderScript : MonoBehaviour {
 		DestroyImmediate (lE.lanePiece.MiddleLane.GetComponent<PickupLayout> (),true);
 		lE.lanePiece.MiddleLane.AddComponent<PickupLayout> ();
 		*/
+	/*
 		try
 		{
 		mapPiece.LeftLaneOffset = new Vector3 (float.Parse(LX.text), float.Parse(LY.text), float.Parse(LZ.text));
@@ -46,4 +48,5 @@ public class PieceBuilderScript : MonoBehaviour {
 			mapPiece.RightLaneOffset = new Vector3 (3, 0, 0);
 		}
 	}
+	*/
 }
