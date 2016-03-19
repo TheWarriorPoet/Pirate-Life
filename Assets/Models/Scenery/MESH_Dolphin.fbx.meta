@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 747528fc7ea854a47b68736b8e1e395e
-timeCreated: 1456824898
+guid: 99a2cee2e4085c94a9612ae2812184ea
+timeCreated: 1458371669
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
@@ -9,10 +9,10 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: MESH_T_New
+    4300000: MESH_Dolphin
   materials:
     importMaterials: 0
-    materialName: 1
+    materialName: 0
     materialSearch: 1
   animations:
     legacyGenerateAnimations: 4

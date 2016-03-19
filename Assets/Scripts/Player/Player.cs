@@ -37,12 +37,12 @@ public class Player : MonoBehaviour
     private AudioClip jumpSound, deckSound, landSound, splashSound, smackSound;
     // Controls
     private bool actionLeft, actionRight, actionJump;
-	private float jumpVelocity, jumpSpeed;
-	public Vector3 velocity;
+	private float jumpVelocity, jumpSpeed, runSpeed;
+	private Vector3 velocity;
 	List<Vector3> arc = new List<Vector3>();
 	// Drunkenness
 	private int prevDrunkenness;
-    private int newDrunkenness;
+	private int newDrunkenness;
     private float drunkTimer;
     // Lane Switching
     private float laneVelocity;
@@ -225,7 +225,7 @@ public class Player : MonoBehaviour
                         cornerStart = transform.position;// cornerPoint + -transform.forward * Vector3.Distance(transform.position, cornerPoint);
                     }
 
-                    turnTimer += Time.deltaTime;
+                    turnTimer += (runSpeed * Time.deltaTime) / 10.0f;
 
                     // Position
                     Vector3 point1 = Vector3.Lerp(cornerStart, cornerPoint, turnTimer);
@@ -364,7 +364,7 @@ public class Player : MonoBehaviour
 		transform.Find("Pirate_Character").localEulerAngles = new Vector3(0, 0, -laneVelocity * (1.0f + drunkenness / 20.0f));
 
 		// Running
-		float runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
+		runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
 
 		velocity = transform.forward * runSpeed;
 
@@ -459,16 +459,12 @@ public class Player : MonoBehaviour
 		if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
         {
 			// Avoid flying
-			if (jumping)
+			if (!jumping)
 			{
-				AudioSource.PlayClipAtPoint(landSound, transform.position);
-				anim.Play("Falling");
-				jumping = false;
+				cornerPoint = collider.gameObject.transform.position;
+
+				playerMode = PlayerMode.TURNING;
 			}
-
-            cornerPoint = collider.gameObject.transform.position;
-
-            playerMode = PlayerMode.TURNING;
         }
     }
 
