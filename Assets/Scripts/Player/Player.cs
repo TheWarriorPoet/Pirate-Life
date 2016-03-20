@@ -502,7 +502,7 @@ public class Player : MonoBehaviour
         transform.position = startingPosition;
         transform.rotation = startingRotation;
 
-		mainCamera.transform.position = transform.position + cameraPosition; // new Vector3(0, 3.75f, -4.5f);
+		mainCamera.transform.position = cameraPosition; // new Vector3(0, 3.75f, -4.5f);
 		mainCamera.transform.rotation = cameraRotation; // Quaternion.Euler(15, 0, 0);
 
 		currentLane = 0;
