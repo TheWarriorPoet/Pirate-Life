@@ -25,6 +25,8 @@ public class Player : MonoBehaviour
 	public float deadzone = 0.8f;
 	[Header("Object Linking")]
 	public LevelGen lg;
+	[Header("Debugging")]
+	public Vector3 velocity;
 
 	private Camera mainCamera;
 	private Animator anim;
@@ -38,7 +40,6 @@ public class Player : MonoBehaviour
     // Controls
     private bool actionLeft, actionRight, actionJump;
 	private float jumpVelocity, jumpSpeed, runSpeed;
-	private Vector3 velocity;
 	List<Vector3> arc = new List<Vector3>();
 	// Drunkenness
 	private int prevDrunkenness;

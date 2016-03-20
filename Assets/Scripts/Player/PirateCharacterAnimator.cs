@@ -46,6 +46,7 @@ public class PirateCharacterAnimator : MonoBehaviour {
 
         foreach (Rigidbody RB in CharRbs)
         {
+			RB.velocity = PiratePlayer.velocity * 0.75f; // Add player velocity for comedic effect
             RB.isKinematic = false;
             RB.detectCollisions = true;
             Debug.Log(RB.name + "Got listed");
