@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
 	public LevelGen lg;
 	[Header("Debugging")]
 	public Vector3 velocity;
+	public bool isGrounded;
 
 	private Camera mainCamera;
 	private Animator anim;
@@ -148,7 +149,7 @@ public class Player : MonoBehaviour
             actionRight = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) && controller.isGrounded)
+        if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) && controller.isGrounded)
         {
             actionJump = true;
         }
@@ -324,6 +325,8 @@ public class Player : MonoBehaviour
 		//{
 		//	KillCharacter();
 		//}
+
+		isGrounded = controller.isGrounded;
 	}
 
     void Movement()
@@ -442,17 +445,20 @@ public class Player : MonoBehaviour
 			KillCharacter();
 		}
 
-		if (jumping && !controller.isGrounded)
+		if (jumping && !controller.isGrounded && collision.moveDirection.y < 0)
 		{
 			if (!ragdolled)
 			{
 				AudioSource.PlayClipAtPoint(landSound, transform.position);
 				anim.Play("Falling");
+				jumping = false;
 			}
 		}
 
-		jumpVelocity = 0;
-		jumping = false;
+		if (collision.moveDirection.y < 0)
+		{
+			jumpVelocity = -0.1f;
+		}
 	}
 
     void OnTriggerEnter(Collider collider)
@@ -460,6 +466,7 @@ public class Player : MonoBehaviour
 		if (collider.gameObject.layer == LayerMask.NameToLayer("GameWater") && !ragdolled)
 		{
 			AudioSource.PlayClipAtPoint(splashSound, transform.position);
+			velocity = Vector3.zero;
 			KillCharacter();
 		}
 
