@@ -58,6 +58,9 @@ public class Player : MonoBehaviour
 	Vector2 touchDelta, touchPrevious;
     private bool swiping;
 	Text debugText; // Quick and dirty debugging
+	// Camera
+	Vector3 cameraPosition;
+	Quaternion cameraRotation;
 
 	private static Player _instance = null;
     public static Player instance
@@ -89,6 +92,9 @@ public class Player : MonoBehaviour
 		smackSound = (AudioClip)Resources.Load("Sounds/player_smack");
 		deckSound = (AudioClip)Resources.Load("Sounds/deck_jump");
 		landSound = (AudioClip)Resources.Load("Sounds/player_land");
+
+		cameraPosition = mainCamera.transform.position;
+		cameraRotation = mainCamera.transform.rotation;
 
 		ResetCharacter();
     }
@@ -496,8 +502,8 @@ public class Player : MonoBehaviour
         transform.position = startingPosition;
         transform.rotation = startingRotation;
 
-		mainCamera.transform.position = transform.position + new Vector3(0, 3.75f, -4.5f);
-		mainCamera.transform.rotation = Quaternion.Euler(15, 0, 0);
+		mainCamera.transform.position = transform.position + cameraPosition; // new Vector3(0, 3.75f, -4.5f);
+		mainCamera.transform.rotation = cameraRotation; // Quaternion.Euler(15, 0, 0);
 
 		currentLane = 0;
         laneVelocity = 0;
