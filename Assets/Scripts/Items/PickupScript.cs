@@ -17,9 +17,6 @@ public class PickupScript : MonoBehaviour
     private SceneManager_Andrew _mySceneManager = null;
 	private AudioClip soundEffect;
 	public int itemValue;
-    private bool MagneticCoin = false;
-    public float magnetSpeed = 20.0f;
-    public float magnetRadius = 50.0f;
 	// Use this for initialization
 	void Start()
 	{
@@ -28,10 +25,7 @@ public class PickupScript : MonoBehaviour
         player = temp.GetComponent<Player>();
         playerTransform = temp.transform;
         _mySceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager_Andrew>();
-        if (_mySceneManager != null && pickupType == PickupType.COIN && _mySceneManager.magneticCoins)
-        {
-            MagneticCoin = true;
-        }
+
 
 		// Set sound effect
 		switch (pickupType)
@@ -47,14 +41,11 @@ public class PickupScript : MonoBehaviour
 				break;
 		}
 	}
-	
-	// Update is called once per frame
-	void Update()
-	{
-        /*if (MagneticCoin && pickupType == PickupType.COIN && playerTransform != null && Vector3.Distance(playerTransform.position, objectTransform.position) <= magnetRadius)
-        {
-            objectTransform.position = Vector3.MoveTowards(objectTransform.position, playerTransform.position, magnetSpeed * Time.deltaTime);
-        }*/
+
+    // Update is called once per frame
+    void Update()
+    {
+
     }
 
 	void OnTriggerEnter(Collider Other)

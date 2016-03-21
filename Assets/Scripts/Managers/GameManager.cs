@@ -3,6 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using UnityEngine.UI;
+
+public enum UpgradeType
+{
+    NullValue,
+    CoinAttractRange,
+    CoinAttractSpeed,
+}
+[System.Serializable]
+public struct UpgradeValue
+{
+    public UpgradeType upgradeType;
+    public float value;
+}
 
 [System.Serializable]
 public struct HighScore
@@ -12,14 +26,27 @@ public struct HighScore
     public string date;
 }
 
+[System.Serializable]
+public class UpgradeStruct
+{
+    public string name;
+    public string description;
+    public Sprite icon;
+    public List<UpgradeValue> upgradeValues;
+    public Upgrade upgradeScript;
+    public bool Active;
+    public int BoostsAvailable;
+    public float LastsFor;
+    public int CoinCost;
+}
+
 public class GameManager : MonoBehaviour
 {
 	public Player player;
     public int m_CoinScore;
     public List<HighScore> HighScores = new List<HighScore>();
-    public bool magneticCoins = false;
-    public List<Upgrade> _allUpgrades = new List<Upgrade>();
-
+    public List<UpgradeStruct> _allUpgrades = new List<UpgradeStruct>();
+    public bool PlayerReset = false;
     /// <summary>
     /// This needs to be connected once we have new track sections generating. 
     /// Whenever a new section of track is deployed, some upgrades need to reset their lists of affected objects

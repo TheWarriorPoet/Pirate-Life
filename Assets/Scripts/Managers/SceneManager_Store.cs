@@ -13,11 +13,6 @@ public class SceneManager_Store : SceneManager_Base {
 	// Use this for initialization
 	void Start () {
 		soundEffect = (AudioClip)Resources.Load("Sounds/store_buy");
-
-		if (_myGameManager.magneticCoins)
-		{
-			MagneticButton.interactable = false;
-		}
 	}
 	
 	// Update is called once per frame
@@ -33,16 +28,17 @@ public class SceneManager_Store : SceneManager_Base {
 		}
 	}
 
-    public void PurchaseMagneticCoin(int cost)
+    public void Purchase(string UpgradeName)
     {
-        if(_myGameManager != null && _myGameManager.m_CoinScore >= cost)
+        if (_myGameManager != null)
         {
-			AudioSource.PlayClipAtPoint(soundEffect, Vector3.zero);
-			_myGameManager.magneticCoins = true;
-            _myGameManager.m_CoinScore -= cost;
-            if (MagneticButton != null)
+            foreach (UpgradeStruct us in _myGameManager._allUpgrades)
             {
-                MagneticButton.interactable = false;
+                if (us.name == UpgradeName && _myGameManager.m_CoinScore >= us.CoinCost)
+                {
+                    _myGameManager.AddCoins(-us.CoinCost);
+                    us.Active = true;
+                }
             }
         }
     }

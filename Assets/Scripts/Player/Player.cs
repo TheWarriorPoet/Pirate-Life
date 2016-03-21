@@ -64,6 +64,8 @@ public class Player : MonoBehaviour
 	Vector3 cameraPosition;
 	Quaternion cameraRotation;
 
+    private GameManager _gameManager = null;
+
 	private static Player _instance = null;
     public static Player instance
     {
@@ -78,7 +80,8 @@ public class Player : MonoBehaviour
     }
     void Start()
     {
-		anim = GetComponentInChildren<Animator>();
+        _gameManager = GameManager.instance;
+        anim = GetComponentInChildren<Animator>();
 		mainCamera = GetComponentInChildren<Camera>();
 		ragdoll = GetComponentInChildren<PirateCharacterAnimator>();
 		sceneManager = SceneManager_Andrew.instance;
@@ -535,7 +538,9 @@ public class Player : MonoBehaviour
 		anim.Play("Movement");
 
 		controller.enabled = true;
-	}
+
+        _gameManager.PlayerReset = true;
+    }
 
     public void GetDrunk(int value)
     {

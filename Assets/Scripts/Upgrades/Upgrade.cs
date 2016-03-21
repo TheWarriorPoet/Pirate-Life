@@ -2,9 +2,8 @@
 using System.Collections;
 
 public abstract class Upgrade : MonoBehaviour {
-    public bool UpgradeActive = false;
     protected Player _ScenePlayer = null;
-
+    protected UpgradeStruct _UpgradeInfo;
 	// Update is called once per frame
 	public abstract void UpgradeUpdate ();
 }
