@@ -163,6 +163,38 @@ public class GameManager : MonoBehaviour
             m_CoinScore = 0;
         }
     }
+
+    public float ReturnHighestUpgradeValue(UpgradeType upgradeType)
+    {
+        float returnValue = 0.0f;
+        foreach (UpgradeStruct us in _allUpgrades)
+        {
+            foreach (UpgradeValue uv in us.upgradeValues)
+            {
+                if (uv.upgradeType == upgradeType && uv.value > returnValue)
+                {
+                    returnValue = uv.value;
+                }
+            }
+        }
+        return returnValue;
+    }
+
+    public float ReturnLowestUpgradeValue(UpgradeType upgradeType)
+    {
+        float returnValue = 0.0f;
+        foreach (UpgradeStruct us in _allUpgrades)
+        {
+            foreach (UpgradeValue uv in us.upgradeValues)
+            {
+                if (uv.upgradeType == upgradeType && uv.value < returnValue)
+                {
+                    returnValue = uv.value;
+                }
+            }
+        }
+        return returnValue;
+    }
 }
 
 [System.Serializable]
