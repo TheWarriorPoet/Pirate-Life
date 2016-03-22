@@ -11,6 +11,13 @@ public enum UpgradeType
     CoinAttractRange,
     CoinAttractSpeed,
 }
+
+public enum UpgradeBoostGold
+{
+    Upgrade,
+    Boost,
+    Gold
+}
 [System.Serializable]
 public struct UpgradeValue
 {
@@ -38,6 +45,8 @@ public class UpgradeStruct
     public int BoostsAvailable;
     public float LastsFor;
     public int CoinCost;
+    public int MoneyCost;
+    public UpgradeBoostGold type;
 }
 
 public class GameManager : MonoBehaviour

@@ -8,6 +8,7 @@ public class Purchase : MonoBehaviour {
     public Text TitleShadow = null;
     public Text Cost = null;
     public Text CostShadow = null;
+    public Image CoinImage = null;
 	// Use this for initialization
 	void Start () {
         _myGameManager = GameManager.instance;
@@ -28,8 +29,18 @@ public class Purchase : MonoBehaviour {
         }
         if (Cost != null && CostShadow != null)
         {
-            Cost.text = us.CoinCost.ToString();
-            CostShadow.text = us.CoinCost.ToString();
+            switch (us.type) {
+                case UpgradeBoostGold.Gold:
+                    Cost.text = "$" + (us.MoneyCost / 100.0f).ToString();
+                    CostShadow.text = "$" + (us.MoneyCost / 100.0f).ToString();
+                    CoinImage.enabled = false;
+                    break;
+                case UpgradeBoostGold.Boost:
+                case UpgradeBoostGold.Upgrade:
+                    Cost.text = us.CoinCost.ToString();
+                    CostShadow.text = us.CoinCost.ToString();
+                    break;
+            }
         }
     }
 
