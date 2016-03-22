@@ -79,7 +79,8 @@ public class SceneManager_Andrew : SceneManager_Base {
 
         foreach (UpgradeStruct u in _myGameManager._allUpgrades)
         {
-            u.upgradeScript.UpgradeUpdate();
+            if (u.upgradeScript != null)
+                u.upgradeScript.UpgradeUpdate();
         }
     }
 
