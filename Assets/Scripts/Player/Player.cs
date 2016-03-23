@@ -189,7 +189,7 @@ public class Player : MonoBehaviour
 
 				touchPrevious = tch.position;
 
-				debugText.text = "TOUCH DEBUGGING\nX: " + touchDelta.x + "\nY: " + touchDelta.y + "";
+				debugText.text = "TOUCH DEBUGGING\nX: " + touchTotal.x + "\nY: " + touchTotal.y + "";
 			}
 		}
 		else
