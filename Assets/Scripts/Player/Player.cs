@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
 	public int currentLane;
 	public bool jumping, isTurning;
 	[Header("Touch Settings")]
-	public float deadzone = 0.8f;
+	public float deadzone;
 	[Header("Object Linking")]
 	public LevelGen lg;
 	[Header("Debugging")]
@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
     private float turnTimer;
     private float turnDegree;
 	// Touch
-	Vector2 touchDelta, touchPrevious;
+	Vector2 touchDelta, touchPrevious, touchTotal;
     private bool swiping;
 	Text debugText; // Quick and dirty debugging
 	// Camera
@@ -170,18 +170,19 @@ public class Player : MonoBehaviour
 				swiping = true;
 				Touch tch = Input.GetTouch(0);
 				touchDelta = (touchPrevious - tch.position).normalized;
+				touchTotal += touchDelta;
 
-				if (touchDelta.x > deadzone)
+				if (touchTotal.x > deadzone)
 				{
 					actionRight = true;
 				}
 
-				if (touchDelta.x < deadzone)
+				if (touchTotal.x < -deadzone)
 				{
 					actionLeft = true;
 				}
 
-				if (touchDelta.y > deadzone && controller.isGrounded)
+				if (touchTotal.y > deadzone && controller.isGrounded)
 				{
 					actionJump = true;
 				}
@@ -194,6 +195,9 @@ public class Player : MonoBehaviour
 		else
 		{
 			swiping = false;
+			touchTotal = Vector2.zero;
+			touchDelta = Vector2.zero;
+			touchPrevious = Vector2.zero;
 		}
 	}
 
