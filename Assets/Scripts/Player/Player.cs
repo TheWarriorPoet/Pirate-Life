@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
 	public bool jumping, isTurning;
 	[Header("Touch Settings")]
 	public float deadzone;
+	public float swipeLength;
 	[Header("Object Linking")]
 	public LevelGen lg;
 	[Header("Debugging")]
@@ -58,7 +59,7 @@ public class Player : MonoBehaviour
     private float turnDegree;
 	// Touch
 	Vector2 touchDelta, touchPrevious, touchTotal;
-    private bool swiping;
+    private bool swiped;
 	Text debugText; // Quick and dirty debugging
 	// Camera
 	Vector3 cameraPosition;
@@ -165,40 +166,61 @@ public class Player : MonoBehaviour
     {
 		if (Input.touchCount > 0)
 		{
-			if (!swiping)
+			if (!swiped)
 			{
-				swiping = true;
 				Touch tch = Input.GetTouch(0);
 				touchDelta = (touchPrevious - tch.position).normalized;
-				touchTotal += touchDelta;
 
-				if (touchTotal.x > deadzone)
+				// Deadzone
+				if (Mathf.Abs(touchDelta.x) > deadzone)
 				{
-					actionRight = true;
+					touchTotal.x += touchDelta.x;
+				}
+				else if (Mathf.Abs(touchDelta.y) > deadzone)
+				{
+					touchTotal.y += touchDelta.y;
 				}
 
-				if (touchTotal.x < -deadzone)
+				// Actions
+				if (touchTotal.x > swipeLength)
 				{
 					actionLeft = true;
+					ResetTouchData();
 				}
 
-				if (touchTotal.y > deadzone && controller.isGrounded)
+				if (touchTotal.x < -swipeLength)
 				{
-					actionJump = true;
+					actionRight = true;
+					ResetTouchData();
+				}
+
+				if (touchTotal.y < -swipeLength)
+				{
+					if (controller.isGrounded)
+					{
+						actionJump = true;
+					}
+					ResetTouchData();
 				}
 
 				touchPrevious = tch.position;
-
-				debugText.text = "TOUCH DEBUGGING\nX: " + touchTotal.x + "\nY: " + touchTotal.y + "";
 			}
 		}
 		else
 		{
-			swiping = false;
-			touchTotal = Vector2.zero;
-			touchDelta = Vector2.zero;
-			touchPrevious = Vector2.zero;
+			ResetTouchData();
+			swiped = false;
 		}
+
+		debugText.text = "TOUCH DEBUGGING\nX: " + touchTotal.x + "\nY: " + touchTotal.y + "";
+	}
+
+	void ResetTouchData()
+	{
+		swiped = true;
+		touchTotal = Vector2.zero;
+		touchDelta = Vector2.zero;
+		touchPrevious = Vector2.zero;
 	}
 
     void Action()
@@ -544,7 +566,10 @@ public class Player : MonoBehaviour
 		controller.enabled = true;
 
         _gameManager.PlayerReset = true;
-    }
+
+		ResetTouchData();
+		swiped = false;
+	}
 
     public void GetDrunk(int value)
     {
