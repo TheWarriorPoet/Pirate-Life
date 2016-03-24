@@ -22,7 +22,8 @@ public class Player : MonoBehaviour
 	public int currentLane;
 	public bool jumping, isTurning;
 	[Header("Touch Settings")]
-	public float deadzone;
+	public float angleDeadzone;
+	public float swipeDeadzone;
 	public float swipeLength;
 	[Header("Object Linking")]
 	public LevelGen lg;
@@ -166,53 +167,62 @@ public class Player : MonoBehaviour
     {
 		if (Input.touchCount > 0)
 		{
+			debugText.text = "TOUCH DEBUGGING";
+
 			if (!swiped)
 			{
 				Touch tch = Input.GetTouch(0);
-				touchDelta = (touchPrevious - tch.position).normalized;
+				touchDelta = touchPrevious - tch.position;
 
-				// Deadzone
-				if (Mathf.Abs(touchDelta.x) > deadzone)
-				{
-					touchTotal.x += touchDelta.x;
-				}
-				else if (Mathf.Abs(touchDelta.y) > deadzone)
-				{
-					touchTotal.y += touchDelta.y;
-				}
+				debugText.text += "\nLength: " + touchDelta.magnitude + "\nDeadzone: " + (Screen.width * swipeDeadzone);
 
-				// Actions
-				if (touchTotal.x > swipeLength)
+				if (touchDelta.magnitude > (Screen.width * swipeDeadzone))
 				{
-					actionLeft = true;
-					ResetTouchData();
-				}
+					touchDelta.Normalize();
 
-				if (touchTotal.x < -swipeLength)
-				{
-					actionRight = true;
-					ResetTouchData();
-				}
-
-				if (touchTotal.y < -swipeLength)
-				{
-					if (controller.isGrounded)
+					// Deadzone
+					if (Mathf.Abs(touchDelta.x) > angleDeadzone)
 					{
-						actionJump = true;
+						touchTotal.x += touchDelta.x;
 					}
-					ResetTouchData();
+					else if (Mathf.Abs(touchDelta.y) > angleDeadzone)
+					{
+						touchTotal.y += touchDelta.y;
+					}
+
+					// Actions
+					if (touchTotal.x > swipeLength)
+					{
+						actionLeft = true;
+						ResetTouchData();
+					}
+
+					if (touchTotal.x < -swipeLength)
+					{
+						actionRight = true;
+						ResetTouchData();
+					}
+
+					if (touchTotal.y < -swipeLength)
+					{
+						if (controller.isGrounded)
+						{
+							actionJump = true;
+						}
+						ResetTouchData();
+					}
 				}
 
 				touchPrevious = tch.position;
 			}
+
+			debugText.text += "\nX: " + touchTotal.x + "\nY: " + touchTotal.y;
 		}
 		else
 		{
 			ResetTouchData();
 			swiped = false;
 		}
-
-		debugText.text = "TOUCH DEBUGGING\nX: " + touchTotal.x + "\nY: " + touchTotal.y + "";
 	}
 
 	void ResetTouchData()
