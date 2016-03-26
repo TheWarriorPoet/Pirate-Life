@@ -25,3 +25,6 @@ ProjectSettings/ProjectSettings.asset
 ProjectSettings/ProjectVersion.txt
 
 ProjectSettings/GraphicsSettings.asset
+Assets/Images/LevelEditor.meta
+Assets/Images/LevelEditor/Materials.meta
+Assets/Prefabs/LevelEditor.meta
