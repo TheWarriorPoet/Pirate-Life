@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 56a7f3e6cd119b34abdf1d26f97828a7
-timeCreated: 1458879650
+timeCreated: 1458900478
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,9 +9,9 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Mesh_Sign
+    4300000: MESH_Signpost
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
   animations:
