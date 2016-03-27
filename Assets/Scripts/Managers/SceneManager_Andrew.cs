@@ -7,8 +7,9 @@ public class SceneManager_Andrew : SceneManager_Base {
     public GameObject m_PlayerObject = null;
     public GameObject m_GameOverText = null;
     public float m_Distance = 0;
+	public UnityEngine.UI.Text m_DistanceCounter = null;
 
-    public UnityEngine.UI.Text m_CoinCounter = null;
+	public UnityEngine.UI.Text m_CoinCounter = null;
     public int coinCount = 0;
 
 
@@ -82,7 +83,13 @@ public class SceneManager_Andrew : SceneManager_Base {
             if (u.upgradeScript != null)
                 u.upgradeScript.UpgradeUpdate();
         }
-    }
+
+		// Distance
+		if (m_DistanceCounter != null)
+		{
+			m_DistanceCounter.text = (int) m_Distance + "m";
+		}
+	}
 
     public void AddLife(int a_Lives)
     {
