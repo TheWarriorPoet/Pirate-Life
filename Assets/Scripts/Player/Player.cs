@@ -515,6 +515,7 @@ public class Player : MonoBehaviour
 			if (!jumping)
 			{
 				cornerPoint = collider.gameObject.transform.position;
+				cornerPoint.y = transform.position.y;
 
 				playerMode = PlayerMode.TURNING;
 			}
