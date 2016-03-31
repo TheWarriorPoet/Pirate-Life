@@ -17,7 +17,6 @@ public class PickupScript : MonoBehaviour
     private Transform objectTransform = null;
     private SceneManager_Andrew _mySceneManager = null;
 	private AudioClip soundEffect;
-	private bool faded;
 	public int itemValue;
 	// Use this for initialization
 	void Start()
@@ -47,23 +46,20 @@ public class PickupScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		if (!faded)
-		{
-			Vector3 directionToTarget = transform.position - player.transform.position;
-			float angle = Vector3.Angle(player.transform.forward, directionToTarget);
+		Vector3 directionToTarget = transform.position - player.transform.position;
+		float angle = Vector3.Angle(player.transform.forward, directionToTarget);
 
-			if (Mathf.Abs(angle) > 90 && Mathf.Abs(angle) < 270)
-			{
-				SetAlpha(0.5f);
-				faded = true;
-				//Debug.Log("target is in front of me");
-			}
+		if (Mathf.Abs(angle) > 90 && Mathf.Abs(angle) < 270)
+		{
+			SetAlpha(0.5f);
+			//Debug.Log("target is in front of me");
 		}
-		//if (Mathf.Abs(angle) < 90 || Mathf.Abs(angle) > 270)
-		//{
-		//	SetAlpha(1.0f);
-		//	//Debug.Log("target is behind me");
-		//}
+
+		if (Mathf.Abs(angle) < 90 || Mathf.Abs(angle) > 270)
+		{
+			SetAlpha(1.0f);
+			//Debug.Log("target is behind me");
+		}
 	}
 
 	void OnTriggerEnter(Collider Other)
