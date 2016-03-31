@@ -98,7 +98,7 @@ public class PickupScript : MonoBehaviour
 	{
 		//if (value < 1.0f)
 		//{
-			renderer.material.shader = Shader.Find("Transparent/Diffuse");
+			//renderer.material.shader = Shader.Find("Transparent/Diffuse");
 			Color c = renderer.material.color;
 			c.a = value;
 			renderer.material.color = c;
