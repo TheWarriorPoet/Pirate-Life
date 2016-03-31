@@ -33,6 +33,7 @@ public class Player : MonoBehaviour
 
 	private Camera mainCamera;
 	private Animator anim;
+	private ParticleSystem particleBubbles;
 	private PirateCharacterAnimator ragdoll;
 	private SceneManager_Andrew sceneManager = null;
     private Vector3 startingPosition = Vector3.zero;
@@ -84,6 +85,7 @@ public class Player : MonoBehaviour
     {
         _gameManager = GameManager.instance;
         anim = GetComponentInChildren<Animator>();
+		particleBubbles = GetComponentInChildren<ParticleSystem>();
 		mainCamera = GetComponentInChildren<Camera>();
 		ragdoll = GetComponentInChildren<PirateCharacterAnimator>();
 		sceneManager = SceneManager_Andrew.instance;
@@ -399,6 +401,13 @@ public class Player : MonoBehaviour
             drunkTimer += Time.deltaTime / drunkDelay;
             drunkenness = (int)Mathf.Lerp(prevDrunkenness, newDrunkenness, drunkTimer);
         }
+		else
+		{
+			if (particleBubbles.gameObject.activeInHierarchy)
+			{
+				particleBubbles.gameObject.SetActive(false);
+			}
+		}
 
         // Lane Hopping
         float laneDelay = Mathf.Lerp(minLaneDelay, maxLaneDelay, drunkenness / 100.0f);
@@ -584,7 +593,9 @@ public class Player : MonoBehaviour
 
     public void GetDrunk(int value)
     {
-        prevDrunkenness = drunkenness;
+		particleBubbles.gameObject.SetActive(true);
+
+		prevDrunkenness = drunkenness;
         newDrunkenness += value;
         drunkTimer = 0;
     }
