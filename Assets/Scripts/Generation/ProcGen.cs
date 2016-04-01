@@ -7,25 +7,32 @@ public class ProcGen : MonoBehaviour {
 	public float PieceLength = 50;
 	//public GameObject CornerBlock; //This is to check if the block is a corner, and to start layering the track around the corner
 	public List<GameObject> SectionList;
-	public GameObject LCorner, RCorner;
+	public GameObject LCorner, RCorner, StartPiece;
 	private List<GameObject> SectionQueue = new List<GameObject> ();
 	private List<GameObject> objList = new List<GameObject>();
 	private Vector3 TrackPos = new Vector3(0,0,0);
 	// Use this for initialization
 	void Start () {
 
-
 		Random.seed = (int)System.DateTime.Now.Ticks;
 		for (int i = 0; i < 2; ++i) {
 			SectionQueue.Add (SectionList [Random.Range (0, SectionList.Count - 1)]);
-			BuildSection (SectionQueue [SectionQueue.Count - 1]);
 		}
-		//RebuildMap ();
+		RebuildMap ();
 	}
 
 	// Update is called once per frame
 	void Update () {
 
+	}
+
+	private void AddStartPiece()
+	{
+		GameObject obj = (GameObject)GameObject.Instantiate (StartPiece, TrackPos, Quaternion.Euler (0, TrackDirection, 0));
+		obj.GetComponent<Transform> ().rotation.Set (0, TrackDirection, 0, 0);
+		obj.transform.SetParent (gameObject.transform);
+		objList.Add (obj);
+		TrackPos.z += PieceLength;
 	}
 
 	private void AddCorner()
@@ -61,10 +68,10 @@ public class ProcGen : MonoBehaviour {
 
 		SectionQueue.Add (SectionList [Random.Range (0, SectionList.Count - 1)]);
 		BuildSection(SectionQueue [SectionQueue.Count - 1]);
-		for (int i = 0; i < SectionQueue [0].GetComponent<SectionGen> ().PieceList.Count; ++i) {
+		for (int i = 0; i < SectionQueue [0].GetComponent<SectionGen> ().PieceList.Count + 1; ++i) {
 			Destroy (objList [i]);
 		}
-		objList.RemoveRange (0, SectionQueue[0].GetComponent<SectionGen> ().PieceList.Count);
+		objList.RemoveRange (0, SectionQueue[0].GetComponent<SectionGen> ().PieceList.Count + 1);
 		Destroy(SectionQueue[0]);
 		SectionQueue.RemoveAt (0);
 	}
@@ -132,6 +139,7 @@ public class ProcGen : MonoBehaviour {
 		objList.Clear ();
 		TrackPos = new Vector3 (0, 0, 0);
 		TrackDirection = 0;
+		AddStartPiece ();
 		for (int i = 0; i < SectionQueue.Count; i += 1) {
 			for (int x = 0; x < SectionQueue [i].GetComponent<SectionGen> ().PieceList.Count; ++x) {
 				//Creates Rotation for newly spawned map pieces
@@ -178,7 +186,6 @@ public class ProcGen : MonoBehaviour {
 				break;
 			}
 		}
-		TrackDirection = 0;
 	}
 
 }
