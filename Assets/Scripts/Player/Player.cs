@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
 	public float swipeDeadzone;
 	public float swipeLength;
 	[Header("Object Linking")]
-	public LevelGen lg;
+	public ProcGen lg;
 	[Header("Debugging")]
 	public Vector3 velocity;
 	public bool isGrounded;
@@ -92,7 +92,7 @@ public class Player : MonoBehaviour
         startingRotation = transform.rotation;
         startingPosition = transform.position;
         controller = GetComponent<CharacterController>();
-        lg = GameObject.FindGameObjectWithTag("LevelGen").GetComponent<LevelGen>();
+		lg = GameObject.FindGameObjectWithTag("LevelGen").GetComponent<ProcGen>();
 		debugText = GameObject.Find("DEBUG").GetComponent<Text>(); // Quick and dirty debugging
 
 
