@@ -61,7 +61,7 @@ public class Player : MonoBehaviour
     private float turnDegree;
 	// Touch
 	Vector2 touchDelta, touchPrevious, touchTotal;
-    private bool swiped;
+	//private bool swiped;
 	Text debugText; // Quick and dirty debugging
 	// Camera
 	Vector3 cameraPosition;
@@ -169,14 +169,14 @@ public class Player : MonoBehaviour
     {
 		if (Input.touchCount > 0)
 		{
-			debugText.text = "TOUCH DEBUGGING";
+			//debugText.text = "TOUCH DEBUGGING";
 
-			if (!swiped)
-			{
+			//if (!swiped)
+			//{
 				Touch tch = Input.GetTouch(0);
 				touchDelta = touchPrevious - tch.position;
 
-				debugText.text += "\nLength: " + touchDelta.magnitude + "\nDeadzone: " + (Screen.width * swipeDeadzone);
+				//debugText.text += "\nLength: " + touchDelta.magnitude + "\nDeadzone: " + (Screen.width * swipeDeadzone);
 
 				if (touchDelta.magnitude > (Screen.width * swipeDeadzone))
 				{
@@ -216,20 +216,20 @@ public class Player : MonoBehaviour
 				}
 
 				touchPrevious = tch.position;
-			}
+			//}
 
-			debugText.text += "\nX: " + touchTotal.x + "\nY: " + touchTotal.y;
+			//debugText.text += "\nX: " + touchTotal.x + "\nY: " + touchTotal.y;
 		}
 		else
 		{
 			ResetTouchData();
-			swiped = false;
+			//swiped = false;
 		}
 	}
 
 	void ResetTouchData()
 	{
-		swiped = true;
+		//swiped = true;
 		touchTotal = Vector2.zero;
 		touchDelta = Vector2.zero;
 		touchPrevious = Vector2.zero;
@@ -403,10 +403,7 @@ public class Player : MonoBehaviour
         }
 		else
 		{
-			if (particleBubbles.gameObject.activeInHierarchy)
-			{
-				particleBubbles.gameObject.SetActive(false);
-			}
+			StopParticles();
 		}
 
         // Lane Hopping
@@ -474,6 +471,8 @@ public class Player : MonoBehaviour
 		controller.enabled = false;
 		ragdoll.GoToRagdoll();
 		ragdolled = true;
+
+		StopParticles();
 
 		if (sceneManager.m_Lives <= 0)
 		{
@@ -588,7 +587,15 @@ public class Player : MonoBehaviour
         _gameManager.PlayerReset = true;
 
 		ResetTouchData();
-		swiped = false;
+		//swiped = false;
+	}
+
+	void StopParticles()
+	{
+		if (particleBubbles.gameObject.activeInHierarchy)
+		{
+			particleBubbles.gameObject.SetActive(false);
+		}
 	}
 
     public void GetDrunk(int value)
