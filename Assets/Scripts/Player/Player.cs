@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
 	// Touch
 	Vector2 touchDelta, touchPrevious, touchTotal;
 	//private bool swiped;
-	Text debugText; // Quick and dirty debugging
+	//Text debugText; // Quick and dirty debugging
 	// Camera
 	Vector3 cameraPosition;
 	Quaternion cameraRotation;
@@ -93,7 +93,7 @@ public class Player : MonoBehaviour
         startingPosition = transform.position;
         controller = GetComponent<CharacterController>();
 		lg = GameObject.FindGameObjectWithTag("LevelGen").GetComponent<ProcGen>();
-		debugText = GameObject.Find("DEBUG").GetComponent<Text>(); // Quick and dirty debugging
+		//debugText = GameObject.Find("DEBUG").GetComponent<Text>(); // Quick and dirty debugging
 
 
 		jumpSound = (AudioClip)Resources.Load("Sounds/player_jump");
