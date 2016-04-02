@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Octopus : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
+public class Octopus : MonoBehaviour
+{
+	void Start()
+	{
 	
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+	void Update()
+	{
 	
 	}
 }
