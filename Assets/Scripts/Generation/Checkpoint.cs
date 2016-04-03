@@ -4,6 +4,7 @@ using System.Collections;
 public class Checkpoint : MonoBehaviour {
 	public Player player;
 	public ProcGen pG;
+	private bool hasReached = false;
 	// Use this for initialization
 	void Start () {
 		player = GameObject.FindGameObjectWithTag ("Player").GetComponent<Player> ();
@@ -18,7 +19,10 @@ public class Checkpoint : MonoBehaviour {
 	public void OnTriggerEnter(Collider Other)
 	{
 		if (Other.gameObject.tag == "Player") {
-			pG.TransitionSections ();
+			if (!hasReached) {
+				pG.TransitionSections ();
+				hasReached = true;
+			}
 		}
 	}
 }
