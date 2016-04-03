@@ -1,96 +1,17 @@
 fileFormatVersion: 2
 guid: 2b0c6e9a394c605478c5272378151dff
-timeCreated: 1458885003
+timeCreated: 1459684524
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: Be_A_Leg_End
-    100002: Be_B_Leg_End
-    100004: Be_Body_ROOT
-    100006: Be_C_Leg_End
-    100008: Be_D_Leg_End
-    100010: Be_E_Leg_End
-    100012: Be_F_Leg_End
-    100014: Be_G_Leg_End
-    100016: Be_H_Leg_End
-    100018: Be_Head_BackEND
-    100020: Bn_A_Leg_BASE
-    100022: Bn_A_Leg_End
-    100024: Bn_A_Leg_MID
-    100026: Bn_B_Leg_Base
-    100028: Bn_B_Leg_End
-    100030: Bn_B_Leg_Mid
-    100032: Bn_Body_Base
-    100034: Bn_C_Leg_Base
-    100036: Bn_C_Leg_End
-    100038: Bn_C_Leg_Mid
-    100040: Bn_D_Leg_Base
-    100042: Bn_D_Leg_End
-    100044: Bn_D_Leg_Mid
-    100046: Bn_E_Leg_Base
-    100048: Bn_E_Leg_End
-    100050: Bn_E_Leg_Mid
-    100052: Bn_F_Leg_Base
-    100054: Bn_F_Leg_End
-    100056: Bn_F_Leg_Mid
-    100058: Bn_G_Leg_Base
-    100060: Bn_G_Leg_End
-    100062: Bn_G_Leg_Mid
-    100064: Bn_H_Leg_Base
-    100066: Bn_H_Leg_End
-    100068: Bn_H_Leg_Mid
-    100070: Bn_Head_Back
-    100072: Bn_Head_Base
-    100074: Bn_Head_Mid
-    100076: MESH_Octopus
-    100078: //RootNode
-    400000: Be_A_Leg_End
-    400002: Be_B_Leg_End
-    400004: Be_Body_ROOT
-    400006: Be_C_Leg_End
-    400008: Be_D_Leg_End
-    400010: Be_E_Leg_End
-    400012: Be_F_Leg_End
-    400014: Be_G_Leg_End
-    400016: Be_H_Leg_End
-    400018: Be_Head_BackEND
-    400020: Bn_A_Leg_BASE
-    400022: Bn_A_Leg_End
-    400024: Bn_A_Leg_MID
-    400026: Bn_B_Leg_Base
-    400028: Bn_B_Leg_End
-    400030: Bn_B_Leg_Mid
-    400032: Bn_Body_Base
-    400034: Bn_C_Leg_Base
-    400036: Bn_C_Leg_End
-    400038: Bn_C_Leg_Mid
-    400040: Bn_D_Leg_Base
-    400042: Bn_D_Leg_End
-    400044: Bn_D_Leg_Mid
-    400046: Bn_E_Leg_Base
-    400048: Bn_E_Leg_End
-    400050: Bn_E_Leg_Mid
-    400052: Bn_F_Leg_Base
-    400054: Bn_F_Leg_End
-    400056: Bn_F_Leg_Mid
-    400058: Bn_G_Leg_Base
-    400060: Bn_G_Leg_End
-    400062: Bn_G_Leg_Mid
-    400064: Bn_H_Leg_Base
-    400066: Bn_H_Leg_End
-    400068: Bn_H_Leg_Mid
-    400070: Bn_Head_Back
-    400072: Bn_Head_Base
-    400074: Bn_Head_Mid
-    400076: MESH_Octopus
-    400078: //RootNode
-    2300000: MESH_Octopus
-    3300000: MESH_Octopus
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
     4300000: MESH_Octopus
-    9500000: //RootNode
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
   animations:
@@ -132,7 +53,7 @@ ModelImporter:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
-  importAnimation: 0
+  importAnimation: 1
   copyAvatar: 0
   humanDescription:
     human: []
@@ -144,10 +65,10 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    rootMotionBoneName: Be_Body_ROOT
+    rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
