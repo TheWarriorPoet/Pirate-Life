@@ -72,7 +72,7 @@ public class ProcGen : MonoBehaviour {
 			Destroy (objList [i]);
 		}
 		objList.RemoveRange (0, SectionQueue[0].GetComponent<SectionGen> ().PieceList.Count + 1);
-		Destroy(SectionQueue[0]);
+		DestroyImmediate(SectionQueue[0]);
 		SectionQueue.RemoveAt (0);
 	}
 
