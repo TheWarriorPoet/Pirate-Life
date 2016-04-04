@@ -8,7 +8,8 @@ public class Player : MonoBehaviour
     public enum PlayerMode
     {
         RUNNING,
-        TURNING
+        TURNING,
+		SLIPPING
     }
 
 	[Header("Player Settings")]
@@ -19,6 +20,7 @@ public class Player : MonoBehaviour
     public float minJumpHeight, maxJumpHeight;
     public float minLaneDelay, maxLaneDelay;
     public float laneDistance;
+	public float slipDuration;
 	public int currentLane;
 	public bool jumping, isTurning;
 	[Header("Touch Settings")]
@@ -49,6 +51,8 @@ public class Player : MonoBehaviour
 	private int prevDrunkenness;
 	private int newDrunkenness;
     private float drunkTimer;
+	// Slipping
+	private float slipTimer;
     // Lane Switching
     private float laneVelocity;
     private float lanePosition;
@@ -240,8 +244,8 @@ public class Player : MonoBehaviour
         switch (playerMode)
         {
             case PlayerMode.RUNNING:
-
-                if (actionLeft)
+				if (anim.speed < 1) anim.speed = 1;
+				if (actionLeft)
                 {
                     previousLane = currentLane;
                     currentLane--;
@@ -265,8 +269,8 @@ public class Player : MonoBehaviour
                 break;
 
             case PlayerMode.TURNING:
-
-                if (isTurning)
+				if (anim.speed < 1) anim.speed = 1;
+				if (isTurning)
                 {
 					// Calculate curve
 					if (cornerStart == Vector3.zero)
@@ -313,7 +317,18 @@ public class Player : MonoBehaviour
                     isTurning = true;
                 }
                 break;
-        }
+			case PlayerMode.SLIPPING:
+
+				if (anim.speed > 0) anim.speed = 0.1f;
+				slipTimer += Time.deltaTime;
+				if (slipTimer >= slipDuration)
+				{
+					anim.speed = 1;
+					slipTimer = 0;
+					playerMode = PlayerMode.RUNNING;
+				}
+				break;
+		}
 
         actionLeft = false;
         actionRight = false;
@@ -517,6 +532,11 @@ public class Player : MonoBehaviour
 			KillCharacter();
 		}
 
+		if (collider.gameObject.layer == LayerMask.NameToLayer("Hazard") && !ragdolled)
+		{
+			playerMode = PlayerMode.SLIPPING;
+		}
+
 		if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
         {
 			// Avoid flying
@@ -575,6 +595,7 @@ public class Player : MonoBehaviour
 
         drunkenness = 0;
         drunkTimer = 0;
+		slipTimer = 0;
         prevDrunkenness = 0;
         newDrunkenness = 0;
 
@@ -585,6 +606,8 @@ public class Player : MonoBehaviour
 		controller.enabled = true;
 
         _gameManager.PlayerReset = true;
+
+		playerMode = PlayerMode.RUNNING;
 
 		ResetTouchData();
 		//swiped = false;
