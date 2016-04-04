@@ -502,7 +502,7 @@ public class Player : MonoBehaviour
 			}
 		}
 
-		if (collision.moveDirection.y < 0)
+		if (collision.moveDirection.y < 0 && !jumping)
 		{
 			jumpVelocity = -0.1f;
 		}
