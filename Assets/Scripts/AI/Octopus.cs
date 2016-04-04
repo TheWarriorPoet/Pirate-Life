@@ -78,7 +78,7 @@ public class Octopus : MonoBehaviour
 			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime / turnDelay);
 
 			// Movement
-			Vector2 move = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
+			Vector3 move = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
 			move.y = transform.position.y; // Retain Y position
 			transform.position = move;
 
