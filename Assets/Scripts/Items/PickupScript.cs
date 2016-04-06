@@ -28,6 +28,9 @@ public class PickupScript : MonoBehaviour
         _mySceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager_Andrew>();
 		renderer = GetComponent<Renderer>();
 
+		// Rotate randomly
+		transform.Rotate(new Vector3(0, Random.Range(0.0f, 360.0f), 0));
+
 		// Set sound effect
 		switch (pickupType)
 		{
