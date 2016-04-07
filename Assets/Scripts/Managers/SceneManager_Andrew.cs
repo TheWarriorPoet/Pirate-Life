@@ -129,4 +129,14 @@ public class SceneManager_Andrew : SceneManager_Base {
             m_CoinCounter.text = "x " + coinCount;
         }
     }
+
+	public void ToggleSound()
+	{
+		AudioListener.volume = AudioListener.volume == 0 ? 1 : 0;
+	}
+
+	public void TogglePause()
+	{
+		Time.timeScale = Time.timeScale == 0 ? 1 : 0;
+	}
 }
