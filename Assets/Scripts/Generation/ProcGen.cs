@@ -7,7 +7,7 @@ public class ProcGen : MonoBehaviour {
 	public float PieceLength = 50;
 	//public GameObject CornerBlock; //This is to check if the block is a corner, and to start layering the track around the corner
 	public List<GameObject> SectionList;
-	public GameObject LCorner, RCorner, StartPiece;
+	public GameObject Corner, StartPiece;
 	private List<GameObject> SectionQueue = new List<GameObject> ();
 	private List<GameObject> objList = new List<GameObject>();
 	private Vector3 TrackPos = new Vector3(0,0,0);
@@ -42,7 +42,7 @@ public class ProcGen : MonoBehaviour {
 		int i = Random.Range (0, 99);
 		GameObject obj;
 		if (i <= 50) {
-			obj = (GameObject)GameObject.Instantiate (RCorner, TrackPos, Quaternion.Euler (0, TrackDirection, 0));
+			obj = (GameObject)GameObject.Instantiate (Corner, TrackPos, Quaternion.Euler (0, TrackDirection, 0)); // Left corner
 			obj.GetComponent<Transform> ().rotation.Set (0, TrackDirection, 0, 0);
 			obj.transform.SetParent (gameObject.transform);
 			objList.Add (obj);
@@ -51,7 +51,7 @@ public class ProcGen : MonoBehaviour {
 				TrackDirection = 270;
 			}
 		} else {
-			obj = (GameObject)GameObject.Instantiate (LCorner, TrackPos, Quaternion.Euler (0, TrackDirection, 0));
+			obj = (GameObject)GameObject.Instantiate (Corner, TrackPos, Quaternion.Euler (0, TrackDirection - 90.0f, 0)); // Right corner
 			obj.GetComponent<Transform> ().rotation.Set (0, TrackDirection, 0, 0);
 			obj.transform.SetParent (gameObject.transform);
 			objList.Add (obj);
