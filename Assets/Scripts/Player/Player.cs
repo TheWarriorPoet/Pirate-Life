@@ -359,11 +359,6 @@ public class Player : MonoBehaviour
             newDrunkenness = 0;
         }
 
-        if (cornerPoint != Vector3.zero)
-        {
-            cornerPoint.y = transform.position.y;
-        }
-
         if (turnDegree >= 360)
         {
             turnDegree = 0;
@@ -527,20 +522,24 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-		if (collider.gameObject.layer == LayerMask.NameToLayer("GameWater") && !ragdolled)
+		if (collider.gameObject.layer == LayerMask.NameToLayer("GameWater"))
 		{
 			AudioSource.PlayClipAtPoint(splashSound, transform.position);
 			velocity = Vector3.zero;
 			KillCharacter();
 		}
 
-		if (collider.gameObject.layer == LayerMask.NameToLayer("Hazard") && !ragdolled)
+		if (collider.gameObject.layer == LayerMask.NameToLayer("Hazard"))
 		{
 			playerMode = PlayerMode.SLIPPING;
+			Debug.Log("Slipped!");
 		}
+    }
 
+	void OnTriggerStay(Collider collider)
+	{
 		if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
-        {
+		{
 			// Avoid flying
 			if (!jumping)
 			{
@@ -549,8 +548,8 @@ public class Player : MonoBehaviour
 
 				playerMode = PlayerMode.TURNING;
 			}
-        }
-    }
+		}
+	}
 
     void OnTriggerExit(Collider collider)
     {

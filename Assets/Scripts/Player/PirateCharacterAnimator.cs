@@ -40,8 +40,7 @@ public class PirateCharacterAnimator : MonoBehaviour {
 
     public void GoToRagdoll()
     {
-
-        Rigidbody[] CharRbs = gameObject.GetComponentsInChildren<Rigidbody>();
+		Rigidbody[] CharRbs = gameObject.GetComponentsInChildren<Rigidbody>();
         PlayerAnimator.enabled = false;
 
         foreach (Rigidbody RB in CharRbs)
