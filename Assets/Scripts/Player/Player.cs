@@ -534,10 +534,7 @@ public class Player : MonoBehaviour
 			playerMode = PlayerMode.SLIPPING;
 			Debug.Log("Slipped!");
 		}
-    }
 
-	void OnTriggerStay(Collider collider)
-	{
 		if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
 		{
 			// Avoid flying
