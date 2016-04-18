@@ -6,14 +6,20 @@ public class ProcGen : MonoBehaviour {
 	public int TrackDirection;
 	public float PieceLength = 50;
 	//public GameObject CornerBlock; //This is to check if the block is a corner, and to start layering the track around the corner
-	public List<GameObject> SectionList;
+	private List<GameObject> SectionList = new List<GameObject>();
+	public List<GameObject> EasySections = new List<GameObject>();
+	public List<GameObject> MedSections = new List<GameObject>();
+	public List<GameObject> HardSections = new List<GameObject>();
+	public int CurrDifficulty;
+	public int MedDifficultyScale;
+	public int MaxDifficultyScale; //How many sections the player must complete before reaching max difficult scale
 	public GameObject Corner, StartPiece;
 	private List<GameObject> SectionQueue = new List<GameObject> ();
 	private List<GameObject> objList = new List<GameObject>();
 	private Vector3 TrackPos = new Vector3(0,0,0);
 	// Use this for initialization
 	void Start () {
-
+		SectionList.AddRange (EasySections);
 		Random.seed = (int)System.DateTime.Now.Ticks;
 		for (int i = 0; i < 2; ++i) {
 			SectionQueue.Add (SectionList [Random.Range (0, SectionList.Count - 1)]);
@@ -62,8 +68,26 @@ public class ProcGen : MonoBehaviour {
 		}
 	}
 
+	private void OrganiseSections()
+	{
+		SectionList.Clear ();
+		if (CurrDifficulty >= MedDifficultyScale) {
+			SectionList.AddRange (MedSections);
+			if (CurrDifficulty >= MaxDifficultyScale) {
+				SectionList.AddRange (HardSections);
+			} else {
+				SectionList.AddRange (EasySections);
+			}
+		}
+	}
+
 	public void TransitionSections()
 	{
+		CurrDifficulty += 1;
+
+		if (CurrDifficulty == MedDifficultyScale || CurrDifficulty == MaxDifficultyScale) {
+			OrganiseSections ();
+		}
 		Random.seed = (int)System.DateTime.Now.Ticks;
 
 		SectionQueue.Add (SectionList [Random.Range (0, SectionList.Count - 1)]);
@@ -72,8 +96,8 @@ public class ProcGen : MonoBehaviour {
 			Destroy (objList [i]);
 		}
 		objList.RemoveRange (0, SectionQueue[0].GetComponent<SectionGen> ().PieceList.Count + 1);
-		DestroyImmediate(SectionQueue[0]);
 		SectionQueue.RemoveAt (0);
+
 	}
 
 
