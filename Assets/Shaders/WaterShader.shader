@@ -111,6 +111,13 @@
 			half4 frag (v2f i) : COLOR
 			{
 				float2 p = i.uv , c1 = p, c2 = p;
+
+				c1.x -= _WorldSpaceCameraPos.x * 0.025;
+				c1.y -= _WorldSpaceCameraPos.z * 0.025;
+
+				c2.x -= _WorldSpaceCameraPos.x * 0.025;
+				c2.y -= _WorldSpaceCameraPos.z * 0.025;
+
 				float cc1 = coli(c1);
 
 				c2.x += 1000.0 / _Delta;
@@ -122,9 +129,6 @@
 
 				c1.x += dx;
 				c1.y = -(c1.y+dy);
-
-				c1.x -= _WorldSpaceCameraPos.x * 0.0375;
-				c1.y += _WorldSpaceCameraPos.z * 0.0375;
 
 				float alpha = 1.+dot(dx,dy)* _Intence;
 				return tex2D(_MainTex, c1);
