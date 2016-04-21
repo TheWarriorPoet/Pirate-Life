@@ -72,6 +72,10 @@ public class Player : MonoBehaviour
 	// Camera
 	Vector3 cameraPosition;
 	Quaternion cameraRotation;
+    // Crash Particles
+    public GameObject CrateShrapnelEmitter = null;
+    // Player Mesh
+
 
     private GameManager _gameManager = null;
 
@@ -248,6 +252,7 @@ public class Player : MonoBehaviour
         switch (playerMode)
         {
             case PlayerMode.RUNNING:
+            case PlayerMode.CRASHING:
 				if (anim.speed < 1) anim.speed = 1;
 				if (actionLeft)
                 {
@@ -499,12 +504,67 @@ public class Player : MonoBehaviour
 		}
 	}
 
+
+    IEnumerator CrateCrashing()
+    {
+        float timer = 0.0f;
+        Renderer[] allRenderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer r in allRenderers)
+        {
+            Vector4 alpha = r.material.color;
+            alpha.z = 0.5f;
+            r.material.color = alpha;
+        }
+        for (int i = 0; i < 8; ++i) {
+            while (timer < 0.3f)
+            {
+                timer += Time.deltaTime;
+                yield return null;
+            }
+            timer = 0.0f;
+            foreach (Renderer r in allRenderers)
+            {
+                r.enabled = !r.enabled;
+            }
+        }
+        foreach (Renderer r in allRenderers)
+        {
+            Vector4 alpha = r.material.color;
+            alpha.z = 1.0f;
+            r.material.color = alpha;
+            r.enabled = true;
+        }
+        playerMode = PlayerMode.RUNNING;
+        yield return null;
+    }
+
     void OnControllerColliderHit(ControllerColliderHit collision)
     {
         if (sceneManager != null && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle") && !ragdolled)
         {
-			AudioSource.PlayClipAtPoint(smackSound, transform.position);
-			KillCharacter();
+            if (playerMode == PlayerMode.CRASHING)
+            {
+                return;
+            }
+            else if (drunkenness >= 50)
+            {
+                foreach (GameObject go in GetComponentInChildren<NearbyCrates>().CratesAhead)
+                {
+                    go.SetActive(false);
+                }
+
+                AudioSource.PlayClipAtPoint(smackSound, transform.position);
+                SoberUp(50);
+                CrateShrapnelEmitter.transform.position = transform.position;
+                CrateShrapnelEmitter.GetComponent<ParticleSystem>().Play();
+                multiplier = 1.0f;
+                playerMode = PlayerMode.CRASHING;
+                StartCoroutine("CrateCrashing");
+            }
+            else {
+                AudioSource.PlayClipAtPoint(smackSound, transform.position);
+                KillCharacter();
+            }
 		}
 
 		if (jumping && !controller.isGrounded && collision.moveDirection.y < 0)
