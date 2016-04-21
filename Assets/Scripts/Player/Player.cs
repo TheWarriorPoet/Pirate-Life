@@ -18,10 +18,10 @@ public class Player : MonoBehaviour
     public int drunkenness;
     public float drunkDelay;
     public float minRunSpeed, maxRunSpeed;
-    public float startMinRunSpeed, startMaxRunSpeed;
     public float minJumpHeight, maxJumpHeight;
     public float minLaneDelay, maxLaneDelay;
-    public float laneDistance;
+	public float multiplier;
+	public float laneDistance;
 	public float slipDuration;
 	public int currentLane;
 	public bool jumping, isTurning;
@@ -110,9 +110,6 @@ public class Player : MonoBehaviour
 
 		cameraPosition = mainCamera.transform.position;
 		cameraRotation = mainCamera.transform.rotation;
-
-        startMaxRunSpeed = maxRunSpeed;
-        startMinRunSpeed = minRunSpeed;
 
 		ResetCharacter();
     }
@@ -439,7 +436,7 @@ public class Player : MonoBehaviour
 		// Running
 		runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
 
-		velocity = transform.forward * runSpeed;
+		velocity = transform.forward * runSpeed * multiplier;
 
 		if (sceneManager != null)
         {
@@ -603,10 +600,9 @@ public class Player : MonoBehaviour
         prevDrunkenness = 0;
         newDrunkenness = 0;
 
-        minRunSpeed = startMinRunSpeed;
-        maxRunSpeed = startMaxRunSpeed;
+		multiplier = 1.0f;
 
-        lg.RebuildMap();
+		lg.RebuildMap();
 
 		anim.Play("Movement");
 

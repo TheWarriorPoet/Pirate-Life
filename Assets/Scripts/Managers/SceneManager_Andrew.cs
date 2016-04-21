@@ -60,8 +60,7 @@ public class SceneManager_Andrew : SceneManager_Base {
             if (timer >= DifficultyIncreaseTimer)
             {
                 timer = 0.0f;
-                GamePlayer.minRunSpeed *= DifficultyMultiplier;
-                GamePlayer.maxRunSpeed *= DifficultyMultiplier;
+                GamePlayer.multiplier *= DifficultyMultiplier;
                 Debug.Log("Difficulty Increased");
             }
             yield return null;
