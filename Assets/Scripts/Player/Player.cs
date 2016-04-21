@@ -678,15 +678,17 @@ public class Player : MonoBehaviour
 
 	void StopParticles()
 	{
-		if (particleBubbles.gameObject.activeInHierarchy)
+		if (particleBubbles.isPlaying)//particleBubbles.gameObject.activeInHierarchy)
 		{
-			particleBubbles.gameObject.SetActive(false);
+			//particleBubbles.gameObject.SetActive(false);
+			particleBubbles.Stop();
 		}
 	}
 
     public void GetDrunk(int value)
     {
-		particleBubbles.gameObject.SetActive(true);
+		//particleBubbles.gameObject.SetActive(true);
+		particleBubbles.Play();
 
 		prevDrunkenness = drunkenness;
         newDrunkenness += value;
