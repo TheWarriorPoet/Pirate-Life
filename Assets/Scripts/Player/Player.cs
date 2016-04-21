@@ -428,7 +428,7 @@ public class Player : MonoBehaviour
 		controller.Move(vel);
 
 		// Leaning
-		transform.Find("Pirate_Character").localEulerAngles = new Vector3(0, 0, -laneVelocity * (1.0f + drunkenness / 20.0f));
+		anim.gameObject.transform.localEulerAngles = new Vector3(0, 0, -laneVelocity * (1.0f + drunkenness / 20.0f));
 
 		// Running
 		runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
