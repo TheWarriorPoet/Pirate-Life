@@ -20,7 +20,12 @@ public class SceneManager_Andrew : SceneManager_Base {
 
     public GameObject[] hearts;
 
-	private static SceneManager_Andrew _instance = null;
+    //Difficulty Increase
+    public float DifficultyIncreaseTimer = 30.0f;
+    public float DifficultyMultiplier = 1.1f;
+    private Player GamePlayer = null;
+
+    private static SceneManager_Andrew _instance = null;
     public static SceneManager_Andrew instance
     {
         get
@@ -42,27 +47,46 @@ public class SceneManager_Andrew : SceneManager_Base {
 	{
 		drunkRect = drunkMask.GetComponent<RectTransform>();
 		drunkWidth = drunkRect.sizeDelta.x;
+        GamePlayer = Player.instance;
+        StartCoroutine("DifficultyCoroutine");
 	}
-	
-	// Update is called once per frame
-	void Update()
+
+    IEnumerator DifficultyCoroutine()
+    {
+        float timer = 0.0f;
+        while (true)
+        {
+            timer += Time.deltaTime;
+            if (timer >= DifficultyIncreaseTimer)
+            {
+                timer = 0.0f;
+                GamePlayer.minRunSpeed *= DifficultyMultiplier;
+                GamePlayer.maxRunSpeed *= DifficultyMultiplier;
+                Debug.Log("Difficulty Increased");
+            }
+            yield return null;
+        }
+    }
+
+    // Update is called once per frame
+    void Update()
 	{
 		// GUI
-		Player p = m_PlayerObject.GetComponent<Player>();
+		//Player p = m_PlayerObject.GetComponent<Player>();
 
 		// Drunk Meter
-		drunkText.text = p.drunkenness.ToString() + "% Drunk";
+		drunkText.text = GamePlayer.drunkenness.ToString() + "% Drunk";
 
 		Vector2 newSize;
 
 		newSize = drunkRect.sizeDelta;
-		newSize.x = drunkWidth * p.drunkenness / 100.0f;
+		newSize.x = drunkWidth * GamePlayer.drunkenness / 100.0f;
 		drunkRect.sizeDelta = newSize;
 
 		Vector2 newPos;
 
 		newPos = drunkRect.localPosition;
-		newPos.x = -drunkWidth * (1.0f - p.drunkenness / 100.0f) / 2;
+		newPos.x = -drunkWidth * (1.0f - GamePlayer.drunkenness / 100.0f) / 2;
 		drunkRect.localPosition = newPos;
 
 		// Lives
@@ -117,6 +141,7 @@ public class SceneManager_Andrew : SceneManager_Base {
             _myGameManager.AddHighScore((int)m_Distance);
         }
         else Debug.Log("GameManager is null");
+        StopAllCoroutines();
         Application.LoadLevel("Main Menu");
         //SceneManager.LoadScene("Main Menu");
     }

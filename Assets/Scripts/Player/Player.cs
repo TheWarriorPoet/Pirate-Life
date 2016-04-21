@@ -9,7 +9,8 @@ public class Player : MonoBehaviour
     {
         RUNNING,
         TURNING,
-		SLIPPING
+		SLIPPING,
+        CRASHING
     }
 
 	[Header("Player Settings")]
@@ -17,6 +18,7 @@ public class Player : MonoBehaviour
     public int drunkenness;
     public float drunkDelay;
     public float minRunSpeed, maxRunSpeed;
+    public float startMinRunSpeed, startMaxRunSpeed;
     public float minJumpHeight, maxJumpHeight;
     public float minLaneDelay, maxLaneDelay;
     public float laneDistance;
@@ -108,6 +110,9 @@ public class Player : MonoBehaviour
 
 		cameraPosition = mainCamera.transform.position;
 		cameraRotation = mainCamera.transform.rotation;
+
+        startMaxRunSpeed = maxRunSpeed;
+        startMinRunSpeed = minRunSpeed;
 
 		ResetCharacter();
     }
@@ -598,6 +603,9 @@ public class Player : MonoBehaviour
         prevDrunkenness = 0;
         newDrunkenness = 0;
 
+        minRunSpeed = startMinRunSpeed;
+        maxRunSpeed = startMaxRunSpeed;
+
         lg.RebuildMap();
 
 		anim.Play("Movement");
@@ -608,7 +616,7 @@ public class Player : MonoBehaviour
 
 		playerMode = PlayerMode.RUNNING;
 
-		ResetTouchData();
+        ResetTouchData();
 		//swiped = false;
 	}
 
