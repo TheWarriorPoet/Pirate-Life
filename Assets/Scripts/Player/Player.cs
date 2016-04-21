@@ -299,7 +299,8 @@ public class Player : MonoBehaviour
                         laneVelocity = 0;
                         lanePosition = 0;
 
-                        isTurning = false;
+						//isTurning = false;
+						playerMode = PlayerMode.RUNNING;
                     }
                 }
 
