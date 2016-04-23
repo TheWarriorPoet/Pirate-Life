@@ -11,13 +11,14 @@ public enum PickupType
 public class PickupScript : MonoBehaviour
 {
 	public PickupType pickupType;
+	public AudioClip soundEffect;
+	public int itemValue;
 	private Player player;
-	private Renderer renderer;
+	private Renderer render;
 	private Transform playerTransform = null;
     private Transform objectTransform = null;
     private SceneManager_Andrew _mySceneManager = null;
-	private AudioClip soundEffect;
-	public int itemValue;
+	
 	// Use this for initialization
 	void Start()
 	{
@@ -26,24 +27,10 @@ public class PickupScript : MonoBehaviour
         player = temp.GetComponent<Player>();
         playerTransform = temp.transform;
         _mySceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager_Andrew>();
-		renderer = GetComponent<Renderer>();
+		render = GetComponent<Renderer>();
 
 		// Rotate randomly
 		transform.Rotate(new Vector3(0, Random.Range(0.0f, 360.0f), 0));
-
-		// Set sound effect
-		switch (pickupType)
-		{
-			case PickupType.COIN:
-				soundEffect = (AudioClip) Resources.Load("Sounds/player_coin");
-				break;
-			case PickupType.RUM:
-				soundEffect = (AudioClip)Resources.Load("Sounds/player_drink");
-				break;
-			case PickupType.WATER:
-				soundEffect = (AudioClip)Resources.Load("Sounds/player_drink");
-				break;
-		}
 	}
 
     // Update is called once per frame
@@ -69,7 +56,12 @@ public class PickupScript : MonoBehaviour
 	{
 		if (Other.gameObject.layer == LayerMask.NameToLayer("Player"))
 		{
-			AudioSource.PlayClipAtPoint(soundEffect, transform.position);
+			if (soundEffect != null)
+			{
+				AudioSource.PlayClipAtPoint(soundEffect, transform.position);
+			}
+
+			Debug.Log("Picked up " + name);
 
 			// Insert Reaction Code here
 			switch (pickupType)
@@ -81,11 +73,9 @@ public class PickupScript : MonoBehaviour
                     }
 					break;
 				case PickupType.RUM:
-					Debug.Log("Picked up rum");
 					player.GetDrunk(itemValue);
 					break;
 				case PickupType.WATER:
-					Debug.Log("Picked up water");
 					player.SoberUp(itemValue);
 					break;
 			}
@@ -95,16 +85,8 @@ public class PickupScript : MonoBehaviour
 
 	void SetAlpha(float value)
 	{
-		//if (value < 1.0f)
-		//{
-			//renderer.material.shader = Shader.Find("Transparent/Diffuse");
-			Color c = renderer.material.color;
-			c.a = value;
-			renderer.material.color = c;
-		//}
-		//else
-		//{
-		//	renderer.material.shader = Shader.Find("Mobile/Diffuse");
-		//}
+		Color c = render.material.color;
+		c.a = value;
+		render.material.color = c;
 	}
 }
