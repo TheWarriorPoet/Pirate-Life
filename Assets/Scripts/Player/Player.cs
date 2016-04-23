@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
 	public float swipeLength;
 	[Header("Object Linking")]
 	public ProcGen lg;
+	public GameObject splashPrefab;
 	[Header("Debugging")]
 	public Vector3 velocity;
 	public bool isGrounded;
@@ -587,6 +588,9 @@ public class Player : MonoBehaviour
     {
 		if (collider.gameObject.layer == LayerMask.NameToLayer("GameWater"))
 		{
+			Vector3 offset = new Vector3(0, 1, 0);
+			Instantiate(splashPrefab, transform.position + offset, transform.rotation);
+
 			AudioSource.PlayClipAtPoint(splashSound, transform.position);
 			velocity = Vector3.zero;
 			KillCharacter();
