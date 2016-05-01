@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
     public List<HighScore> HighScores = new List<HighScore>();
     public List<UpgradeStruct> _allUpgrades = new List<UpgradeStruct>();
     public bool PlayerReset = false;
+    public bool dataReset = false;
     /// <summary>
     /// This needs to be connected once we have new track sections generating. 
     /// Whenever a new section of track is deployed, some upgrades need to reset their lists of affected objects
@@ -79,7 +80,12 @@ public class GameManager : MonoBehaviour
     {
         //System.Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
         DontDestroyOnLoad(this);
+#if UNITY_EDITOR
+        if (!dataReset)
+            Load();
+#else
         Load();
+#endif
     }
 
     // Use this for initialization
