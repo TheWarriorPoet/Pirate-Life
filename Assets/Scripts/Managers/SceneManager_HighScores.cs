@@ -5,20 +5,20 @@ using System.Collections;
 
 public class SceneManager_HighScores : SceneManager_Base {
     public Text Dates = null;
-    public Text Names = null;
+   // public Text Names = null;
     public Text Distances = null;
 	// Use this for initialization
 	void Start () {
-        if (Dates != null && Names != null && Distances != null)
+        if (Dates != null && Distances != null)
         {
-            Dates.text = "DATES\n";
-            Names.text = "NAMES\n";
-            Distances.text = "DISTANCE\n";
+            //Dates.text = "DATES\n";
+            //Names.text = "NAMES\n";
+            //Distances.text = "DISTANCE\n";
             if (_myGameManager != null)
             {
                 foreach (HighScore hs in _myGameManager.GetHighScores())
                 {
-                    Names.text += hs.name + "\n";
+                    //Names.text += hs.name + "\n";
                     Dates.text += hs.date + "\n";
                     Distances.text += hs.distance + "m\n";
                 }
