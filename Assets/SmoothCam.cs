@@ -10,6 +10,8 @@ public class SmoothCam : MonoBehaviour
 	Vector3 posOffset;
 	Quaternion rotOffset;
 	Camera cam;
+	Vector3 targetPos;
+	Quaternion targetRot;
 
 	void Start()
 	{
@@ -22,20 +24,26 @@ public class SmoothCam : MonoBehaviour
 		transform.parent = null;
 	}
 
-	void Update()
+	void FixedUpdate()
 	{
 		// Position
-		transform.position = player.transform.position;
+		targetPos = player.transform.position;
 
 		// Rotate
 		Vector3 rot = transform.rotation.eulerAngles;
 		float yRot = player.transform.rotation.eulerAngles.y;
 		rot.y = yRot;
-		transform.rotation = Quaternion.Euler(rot);
+		targetRot = Quaternion.Euler(rot);
 
 		// Offset
-		transform.position += posOffset.z * transform.forward;
-		transform.position += posOffset.y * transform.up;
+		targetPos += posOffset.z * transform.forward;
+		targetPos += posOffset.y * transform.up;
+
+		// Move smoothly to target
+		transform.position = Vector3.Lerp(transform.position, targetPos, positionSpeed * Time.deltaTime);
+		//transform.position = targetPos;
+		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
+		//transform.rotation = targetRot;
 
 		// Camera effects
 		cam.fieldOfView = 60.0f + player.drunkenness / 5.0f;
@@ -43,5 +51,8 @@ public class SmoothCam : MonoBehaviour
 		Vector3 cameraLean = cam.transform.localEulerAngles;
 		cameraLean.z = player.GetLaneVelocity() * player.drunkenness / 75.0f;
 		cam.transform.localEulerAngles = cameraLean;
+
+		// Debug
+		Debug.DrawLine(player.transform.position, targetPos);
 	}
 }

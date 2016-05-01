@@ -120,7 +120,6 @@ public class Player : MonoBehaviour
         if (!dead && !ragdolled)
         {
             Controls();
-            Action();
             Limits();
 
 			if (!jumping && controller.isGrounded)
@@ -146,6 +145,7 @@ public class Player : MonoBehaviour
 	{
 		if (!dead && !ragdolled)
 		{
+			Action();
 			Movement();
 		}
 	}
