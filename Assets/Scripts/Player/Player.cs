@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     public float minRunSpeed, maxRunSpeed;
     public float minJumpHeight, maxJumpHeight;
     public float minLaneDelay, maxLaneDelay;
+    private float prevMultiplier = 1.0f;
 	public float multiplier;
 	public float laneDistance;
 	public float slipDuration;
@@ -535,6 +536,7 @@ public class Player : MonoBehaviour
             r.material.color = alpha;
             r.enabled = true;
         }
+        multiplier = prevMultiplier;
         playerMode = PlayerMode.RUNNING;
         yield return null;
     }
@@ -558,6 +560,7 @@ public class Player : MonoBehaviour
                 SoberUp(50);
                 CrateShrapnelEmitter.transform.position = transform.position;
                 CrateShrapnelEmitter.GetComponent<ParticleSystem>().Play();
+                prevMultiplier = multiplier;
                 multiplier = 1.0f;
                 playerMode = PlayerMode.CRASHING;
                 StartCoroutine("CrateCrashing");
