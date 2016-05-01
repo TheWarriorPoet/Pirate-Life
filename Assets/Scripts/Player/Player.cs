@@ -71,9 +71,6 @@ public class Player : MonoBehaviour
 	Vector2 touchDelta, touchPrevious, touchTotal;
 	//private bool swiped;
 	//Text debugText; // Quick and dirty debugging
-	// Camera
-	Vector3 cameraPosition;
-	Quaternion cameraRotation;
     // Crash Particles
     public GameObject CrateShrapnelEmitter = null;
     // Player Mesh
@@ -107,15 +104,11 @@ public class Player : MonoBehaviour
 		lg = GameObject.FindGameObjectWithTag("LevelGen").GetComponent<ProcGen>();
 		//debugText = GameObject.Find("DEBUG").GetComponent<Text>(); // Quick and dirty debugging
 
-
 		jumpSound = (AudioClip)Resources.Load("Sounds/player_jump");
         splashSound = (AudioClip)Resources.Load("Sounds/player_splash");
 		smackSound = (AudioClip)Resources.Load("Sounds/player_smack");
 		deckSound = (AudioClip)Resources.Load("Sounds/deck_jump");
 		landSound = (AudioClip)Resources.Load("Sounds/player_land");
-
-		cameraPosition = mainCamera.transform.position;
-		cameraRotation = mainCamera.transform.rotation;
 
 		ResetCharacter();
     }
@@ -489,7 +482,6 @@ public class Player : MonoBehaviour
 	{
 		sceneManager.Die();
 
-		mainCamera.transform.SetParent(null);
 		controller.enabled = false;
 		ragdoll.GoToRagdoll();
 		ragdolled = true;
@@ -635,8 +627,6 @@ public class Player : MonoBehaviour
 
     public void ResetCharacter()
     {
-		mainCamera.transform.SetParent(transform);
-
 		if (ragdolled)
 		{
 			ragdoll.ResetRagdoll();
@@ -645,9 +635,6 @@ public class Player : MonoBehaviour
 
         transform.position = startingPosition;
         transform.rotation = startingRotation;
-
-		mainCamera.transform.position = cameraPosition; // new Vector3(0, 3.75f, -4.5f);
-		mainCamera.transform.rotation = cameraRotation; // Quaternion.Euler(15, 0, 0);
 
 		currentLane = 0;
         laneVelocity = 0;
@@ -708,4 +695,9 @@ public class Player : MonoBehaviour
         newDrunkenness -= value;
         drunkTimer = 0;
     }
+
+	public float GetLaneVelocity()
+	{
+		return laneVelocity;
+	}
 }
