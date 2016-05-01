@@ -403,13 +403,6 @@ public class Player : MonoBehaviour
 			Debug.DrawLine(arc[i], arc[i] - transform.up, Color.grey);
 		}
 
-		// Camera effects
-		mainCamera.fieldOfView = 60.0f + drunkenness / 5.0f;
-
-		Vector3 cameraLean = mainCamera.transform.localEulerAngles;
-		cameraLean.z = laneVelocity * drunkenness / 75.0f;
-		mainCamera.transform.localEulerAngles = cameraLean;
-
 		// Drunkenness
 		if (drunkenness != newDrunkenness)
         {

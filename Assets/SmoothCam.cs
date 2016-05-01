@@ -3,6 +3,9 @@ using System.Collections;
 
 public class SmoothCam : MonoBehaviour
 {
+	public float rotationSpeed;
+	public float positionSpeed;
+
 	Player player;
 	Vector3 posOffset;
 	Quaternion rotOffset;
@@ -21,7 +24,18 @@ public class SmoothCam : MonoBehaviour
 
 	void Update()
 	{
-		transform.position = player.transform.position + posOffset;
+		// Position
+		transform.position = player.transform.position;
+
+		// Rotate
+		Vector3 rot = transform.rotation.eulerAngles;
+		float yRot = player.transform.rotation.eulerAngles.y;
+		rot.y = yRot;
+		transform.rotation = Quaternion.Euler(rot);
+
+		// Offset
+		transform.position += posOffset.z * transform.forward;
+		transform.position += posOffset.y * transform.up;
 
 		// Camera effects
 		cam.fieldOfView = 60.0f + player.drunkenness / 5.0f;
