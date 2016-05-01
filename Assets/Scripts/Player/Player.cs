@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     public float minRunSpeed, maxRunSpeed;
     public float minJumpHeight, maxJumpHeight;
     public float minLaneDelay, maxLaneDelay;
+    private float prevMultiplier = 1.0f;
 	public float multiplier;
 	public float laneDistance;
 	public float slipDuration;
@@ -70,9 +71,6 @@ public class Player : MonoBehaviour
 	Vector2 touchDelta, touchPrevious, touchTotal;
 	//private bool swiped;
 	//Text debugText; // Quick and dirty debugging
-	// Camera
-	Vector3 cameraPosition;
-	Quaternion cameraRotation;
     // Crash Particles
     public GameObject CrateShrapnelEmitter = null;
     // Player Mesh
@@ -106,15 +104,11 @@ public class Player : MonoBehaviour
 		lg = GameObject.FindGameObjectWithTag("LevelGen").GetComponent<ProcGen>();
 		//debugText = GameObject.Find("DEBUG").GetComponent<Text>(); // Quick and dirty debugging
 
-
 		jumpSound = (AudioClip)Resources.Load("Sounds/player_jump");
         splashSound = (AudioClip)Resources.Load("Sounds/player_splash");
 		smackSound = (AudioClip)Resources.Load("Sounds/player_smack");
 		deckSound = (AudioClip)Resources.Load("Sounds/deck_jump");
 		landSound = (AudioClip)Resources.Load("Sounds/player_land");
-
-		cameraPosition = mainCamera.transform.position;
-		cameraRotation = mainCamera.transform.rotation;
 
 		ResetCharacter();
     }
@@ -409,13 +403,6 @@ public class Player : MonoBehaviour
 			Debug.DrawLine(arc[i], arc[i] - transform.up, Color.grey);
 		}
 
-		// Camera effects
-		mainCamera.fieldOfView = 60.0f + drunkenness / 5.0f;
-
-		Vector3 cameraLean = mainCamera.transform.localEulerAngles;
-		cameraLean.z = laneVelocity * drunkenness / 75.0f;
-		mainCamera.transform.localEulerAngles = cameraLean;
-
 		// Drunkenness
 		if (drunkenness != newDrunkenness)
         {
@@ -488,7 +475,6 @@ public class Player : MonoBehaviour
 	{
 		sceneManager.Die();
 
-		mainCamera.transform.SetParent(null);
 		controller.enabled = false;
 		ragdoll.GoToRagdoll();
 		ragdolled = true;
@@ -535,6 +521,7 @@ public class Player : MonoBehaviour
             r.material.color = alpha;
             r.enabled = true;
         }
+        multiplier = prevMultiplier;
         playerMode = PlayerMode.RUNNING;
         yield return null;
     }
@@ -558,6 +545,7 @@ public class Player : MonoBehaviour
                 SoberUp(50);
                 CrateShrapnelEmitter.transform.position = transform.position;
                 CrateShrapnelEmitter.GetComponent<ParticleSystem>().Play();
+                prevMultiplier = multiplier;
                 multiplier = 1.0f;
                 playerMode = PlayerMode.CRASHING;
                 StartCoroutine("CrateCrashing");
@@ -632,8 +620,6 @@ public class Player : MonoBehaviour
 
     public void ResetCharacter()
     {
-		mainCamera.transform.SetParent(transform);
-
 		if (ragdolled)
 		{
 			ragdoll.ResetRagdoll();
@@ -642,9 +628,6 @@ public class Player : MonoBehaviour
 
         transform.position = startingPosition;
         transform.rotation = startingRotation;
-
-		mainCamera.transform.position = cameraPosition; // new Vector3(0, 3.75f, -4.5f);
-		mainCamera.transform.rotation = cameraRotation; // Quaternion.Euler(15, 0, 0);
 
 		currentLane = 0;
         laneVelocity = 0;
@@ -705,4 +688,9 @@ public class Player : MonoBehaviour
         newDrunkenness -= value;
         drunkTimer = 0;
     }
+
+	public float GetLaneVelocity()
+	{
+		return laneVelocity;
+	}
 }
