@@ -69,7 +69,7 @@ public class Player : MonoBehaviour
     private float turnDegree;
 	// Touch
 	Vector2 touchDelta, touchPrevious, touchTotal;
-	//private bool swiped;
+	private bool swiped;
 	//Text debugText; // Quick and dirty debugging
     // Crash Particles
     public GameObject CrateShrapnelEmitter = null;
@@ -181,8 +181,8 @@ public class Player : MonoBehaviour
 		{
 			//debugText.text = "TOUCH DEBUGGING";
 
-			//if (!swiped)
-			//{
+			if (!swiped)
+			{
 				Touch tch = Input.GetTouch(0);
 				touchDelta = touchPrevious - tch.position;
 
@@ -226,20 +226,20 @@ public class Player : MonoBehaviour
 				}
 
 				touchPrevious = tch.position;
-			//}
+			}
 
 			//debugText.text += "\nX: " + touchTotal.x + "\nY: " + touchTotal.y;
 		}
 		else
 		{
 			ResetTouchData();
-			//swiped = false;
+			swiped = false;
 		}
 	}
 
 	void ResetTouchData()
 	{
-		//swiped = true;
+		swiped = true;
 		touchTotal = Vector2.zero;
 		touchDelta = Vector2.zero;
 		touchPrevious = Vector2.zero;
@@ -674,7 +674,7 @@ public class Player : MonoBehaviour
 		playerMode = PlayerMode.RUNNING;
 
         ResetTouchData();
-		//swiped = false;
+		swiped = false;
 
 		mainCamera.ResetCam();
 	}
