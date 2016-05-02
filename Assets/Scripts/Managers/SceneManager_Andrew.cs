@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-//using UnityEngine.SceneManagement;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SceneManager_Andrew : SceneManager_Base {
     public int m_Lives = 3;
@@ -28,6 +29,11 @@ public class SceneManager_Andrew : SceneManager_Base {
     //Pause
     public GameObject PauseMenu = null;
 
+    //Game Over Menu
+    public GameObject GameOverMenu = null;
+    public Text DistanceText = null;
+    public Text DistanceTextShadow = null;
+
     private static SceneManager_Andrew _instance = null;
     public static SceneManager_Andrew instance
     {
@@ -54,6 +60,10 @@ public class SceneManager_Andrew : SceneManager_Base {
         if (PauseMenu != null)
         {
             PauseMenu.SetActive(false);
+        }
+        if (GameOverMenu != null)
+        {
+            GameOverMenu.SetActive(false);
         }
         StartCoroutine("DifficultyCoroutine");
 	}
@@ -131,11 +141,12 @@ public class SceneManager_Andrew : SceneManager_Base {
         m_Lives--;
         if (m_Lives == 0)
         {
-            if (m_GameOverText != null)
+            /*if (m_GameOverText != null)
             {
                 m_GameOverText.SetActive(true);
             }
-            Invoke("GameOver", 2.0f);
+            Invoke("GameOver", 2.0f);*/
+            GameOver();
         }
     }
 
@@ -147,9 +158,20 @@ public class SceneManager_Andrew : SceneManager_Base {
             _myGameManager.AddHighScore((int)m_Distance);
         }
         else Debug.Log("GameManager is null");
+        if (GameOverMenu != null)
+        {
+            GameOverMenu.SetActive(true);
+            if (DistanceText != null) DistanceText.text = (int)m_Distance + "m";
+            if (DistanceTextShadow != null) DistanceTextShadow.text = (int)m_Distance + "m";
+        }
+    }
+
+    public void LoadMainMenu()
+    {
         StopAllCoroutines();
-        Application.LoadLevel("Main Menu");
-        //SceneManager.LoadScene("Main Menu");
+        Time.timeScale = 1;
+        //Application.LoadLevel("Main Menu");
+        SceneManager.LoadScene("Main Menu");
     }
 
     public void AddCoins(int a_iNumberOfCoins)
@@ -174,4 +196,9 @@ public class SceneManager_Andrew : SceneManager_Base {
             PauseMenu.SetActive(!PauseMenu.activeSelf);
         }
 	}
+
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene("Main Game");
+    }
 }
