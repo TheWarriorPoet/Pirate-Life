@@ -13,7 +13,8 @@ public class ProcGen : MonoBehaviour {
 	public int CurrDifficulty;
 	public int MedDifficultyScale;
 	public int MaxDifficultyScale; //How many sections the player must complete before reaching max difficult scale
-	public GameObject Corner, StartPiece;
+	public GameObject Corner, StartPiece, ShipObj;
+	public int ShipSpawnChance;
 	private List<GameObject> SectionQueue = new List<GameObject> ();
 	private List<GameObject> objList = new List<GameObject>();
 	private Vector3 TrackPos = new Vector3(0,0,0);
@@ -66,6 +67,7 @@ public class ProcGen : MonoBehaviour {
 				TrackDirection = 0;
 			}
 		}
+
 	}
 
 	private void OrganiseSections()
@@ -111,6 +113,20 @@ public class ProcGen : MonoBehaviour {
 			obj.GetComponent<Transform> ().rotation.Set (0, TrackDirection, 0, 0);
 			obj.transform.SetParent (gameObject.transform);
 			objList.Add (obj);
+
+
+			if (Random.Range (1, 100) <= ShipSpawnChance) {
+				float offset = 10;
+				float Rot = 1;
+				if (Random.Range (0, 100) > 50) {
+					offset = -offset;
+				}
+				if (Random.Range (0, 100) > 50) {
+					Rot = -1;
+				}
+				GameObject ship = (GameObject)GameObject.Instantiate (ShipObj, obj.transform.position + offset *obj.transform.right,Quaternion.Euler(0, (TrackDirection -90) * Rot, 0));
+				ship.transform.parent = obj.transform;
+			}
 
 			//Adjusts the Position of the next block position based on what direction we're heading in
 			switch (TrackDirection) 
@@ -172,6 +188,19 @@ public class ProcGen : MonoBehaviour {
 				obj.GetComponent<Transform> ().rotation.Set (0, TrackDirection, 0, 0);
 				obj.transform.SetParent (gameObject.transform);
 				objList.Add (obj);
+
+				if (Random.Range (1, 100) <= ShipSpawnChance) {
+					float offset = 10;
+					float Rot = 1;
+					if (Random.Range (0, 100) > 50) {
+						offset = -offset;
+					}
+					if (Random.Range (0, 100) > 50) {
+						Rot = -1;
+					}
+					GameObject ship = (GameObject)GameObject.Instantiate (ShipObj, obj.transform.position + offset *obj.transform.right,Quaternion.Euler(0, (TrackDirection -90) * Rot, 0));
+					ship.transform.parent = obj.transform;
+				}
 
 				//Adjusts the Position of the next block position based on what direction we're heading in
 				switch (TrackDirection) {
