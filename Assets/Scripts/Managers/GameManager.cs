@@ -78,8 +78,11 @@ public class GameManager : MonoBehaviour
     }
     void Awake()
     {
+        if (_instance) DestroyImmediate(gameObject);
+        else
+            DontDestroyOnLoad(this);
+
         //System.Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
-        DontDestroyOnLoad(this);
 #if UNITY_EDITOR
         if (!dataReset)
             Load();
