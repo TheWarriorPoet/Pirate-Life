@@ -6,7 +6,9 @@ public class Pelican : MonoBehaviour
 	public GameObject pukePrefab;
 	public float activateRadius, pukeDistance, pukeDuration;
 	public bool hasPuked;
+
 	Player player;
+	GameObject pukedObject;
 	ParticleSystem vomit;
 	float pukeTimer;
 
@@ -47,10 +49,18 @@ public class Pelican : MonoBehaviour
 		RaycastHit hit;
 		if (Physics.Raycast(target, -transform.up, out hit, 10))
 		{
-			Instantiate(pukePrefab, hit.point, Quaternion.identity);
+			pukedObject = (GameObject)Instantiate(pukePrefab, hit.point, Quaternion.identity);
 			Debug.Log("PUKE!");
 			hasPuked = true;
 			vomit.gameObject.SetActive(true);
+		}
+	}
+
+	void OnDisable()
+	{
+		if (pukedObject != null)
+		{
+			Destroy(pukedObject);
 		}
 	}
 }

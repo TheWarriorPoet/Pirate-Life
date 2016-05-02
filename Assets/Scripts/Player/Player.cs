@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
 	public Vector3 velocity;
 	public bool isGrounded;
 
-	private Camera mainCamera;
+	private SmoothCam mainCamera;
 	private Animator anim;
 	private ParticleSystem particleBubbles;
 	private PirateCharacterAnimator ragdoll;
@@ -69,7 +69,7 @@ public class Player : MonoBehaviour
     private float turnDegree;
 	// Touch
 	Vector2 touchDelta, touchPrevious, touchTotal;
-	//private bool swiped;
+	private bool swiped;
 	//Text debugText; // Quick and dirty debugging
     // Crash Particles
     public GameObject CrateShrapnelEmitter = null;
@@ -95,7 +95,7 @@ public class Player : MonoBehaviour
         _gameManager = GameManager.instance;
         anim = GetComponentInChildren<Animator>();
 		particleBubbles = GetComponentInChildren<ParticleSystem>();
-		mainCamera = GetComponentInChildren<Camera>();
+		mainCamera = FindObjectOfType<SmoothCam>();
 		ragdoll = GetComponentInChildren<PirateCharacterAnimator>();
 		sceneManager = SceneManager_Andrew.instance;
         startingRotation = transform.rotation;
@@ -143,9 +143,12 @@ public class Player : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		if (!dead && !ragdolled)
+		if (!ragdolled)
 		{
-			Action();
+			if (!dead)
+			{
+				Action();
+			}
 			Movement();
 		}
 	}
@@ -178,8 +181,8 @@ public class Player : MonoBehaviour
 		{
 			//debugText.text = "TOUCH DEBUGGING";
 
-			//if (!swiped)
-			//{
+			if (!swiped)
+			{
 				Touch tch = Input.GetTouch(0);
 				touchDelta = touchPrevious - tch.position;
 
@@ -223,20 +226,20 @@ public class Player : MonoBehaviour
 				}
 
 				touchPrevious = tch.position;
-			//}
+			}
 
 			//debugText.text += "\nX: " + touchTotal.x + "\nY: " + touchTotal.y;
 		}
 		else
 		{
 			ResetTouchData();
-			//swiped = false;
+			swiped = false;
 		}
 	}
 
 	void ResetTouchData()
 	{
-		//swiped = true;
+		swiped = true;
 		touchTotal = Vector2.zero;
 		touchDelta = Vector2.zero;
 		touchPrevious = Vector2.zero;
@@ -414,30 +417,33 @@ public class Player : MonoBehaviour
 			StopParticles();
 		}
 
-        // Lane Hopping
-        float laneDelay = Mathf.Lerp(minLaneDelay, maxLaneDelay, drunkenness / 100.0f);
+		if (!dead)
+		{
+			// Lane Hopping
+			float laneDelay = Mathf.Lerp(minLaneDelay, maxLaneDelay, drunkenness / 100.0f);
 
-        lanePosition = Mathf.SmoothDamp(lanePosition, currentLane, ref laneVelocity, laneDelay);
+			lanePosition = Mathf.SmoothDamp(lanePosition, currentLane, ref laneVelocity, laneDelay);
 
-		Vector3 vel = transform.right * (laneVelocity * laneDistance) * Time.deltaTime;
+			Vector3 vel = transform.right * (laneVelocity * laneDistance) * Time.deltaTime;
 
-		controller.Move(vel);
+			controller.Move(vel);
 
-		// Leaning
-		anim.gameObject.transform.localEulerAngles = new Vector3(0, 0, -laneVelocity * (1.0f + drunkenness / 20.0f));
+			// Leaning
+			anim.gameObject.transform.localEulerAngles = new Vector3(0, 0, -laneVelocity * (1.0f + drunkenness / 20.0f));
 
-		// Running
-		runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
+			// Running
+			runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
 
-		velocity = transform.forward * runSpeed * multiplier;
+			velocity = transform.forward * runSpeed * multiplier;
 
-		if (sceneManager != null)
-        {
-            sceneManager.m_Distance += runSpeed * Time.deltaTime;
-        }
+			if (sceneManager != null)
+			{
+				sceneManager.m_Distance += runSpeed * Time.deltaTime;
+			}
+		}
 
-        // Jumping
-        float jumpHeight = Mathf.Lerp(minJumpHeight, maxJumpHeight, drunkenness / 100.0f);
+		// Jumping
+		float jumpHeight = Mathf.Lerp(minJumpHeight, maxJumpHeight, drunkenness / 100.0f);
 
 		/*
 		s = jumpHeight
@@ -471,13 +477,18 @@ public class Player : MonoBehaviour
 
 	}
 
-	void KillCharacter()
+	void KillCharacter(bool causeRagdoll)
 	{
 		sceneManager.Die();
 
-		controller.enabled = false;
-		ragdoll.GoToRagdoll();
-		ragdolled = true;
+		mainCamera.followPlayer = false;
+
+		if (causeRagdoll)
+		{
+			controller.enabled = false;
+			ragdoll.GoToRagdoll();
+			ragdolled = true;
+		}
 
 		StopParticles();
 
@@ -522,7 +533,8 @@ public class Player : MonoBehaviour
             r.enabled = true;
         }
         multiplier = prevMultiplier;
-        playerMode = PlayerMode.RUNNING;
+        if (playerMode == PlayerMode.CRASHING)
+            playerMode = PlayerMode.RUNNING;
         yield return null;
     }
 
@@ -552,7 +564,7 @@ public class Player : MonoBehaviour
             }
             else {
                 AudioSource.PlayClipAtPoint(smackSound, transform.position);
-                KillCharacter();
+                KillCharacter(true);
             }
 		}
 
@@ -581,7 +593,7 @@ public class Player : MonoBehaviour
 
 			AudioSource.PlayClipAtPoint(splashSound, transform.position);
 			velocity = Vector3.zero;
-			KillCharacter();
+			KillCharacter(false);
 		}
 
 		if (collider.gameObject.layer == LayerMask.NameToLayer("Hazard"))
@@ -626,6 +638,8 @@ public class Player : MonoBehaviour
 			ragdolled = false;
 		}
 
+		mainCamera.followPlayer = true;
+
         transform.position = startingPosition;
         transform.rotation = startingRotation;
 
@@ -660,7 +674,9 @@ public class Player : MonoBehaviour
 		playerMode = PlayerMode.RUNNING;
 
         ResetTouchData();
-		//swiped = false;
+		swiped = false;
+
+		mainCamera.ResetCam();
 	}
 
 	void StopParticles()
