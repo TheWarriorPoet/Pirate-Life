@@ -25,6 +25,9 @@ public class SceneManager_Andrew : SceneManager_Base {
     public float DifficultyMultiplier = 1.1f;
     private Player GamePlayer = null;
 
+    //Pause
+    public GameObject PauseMenu = null;
+
     private static SceneManager_Andrew _instance = null;
     public static SceneManager_Andrew instance
     {
@@ -48,6 +51,10 @@ public class SceneManager_Andrew : SceneManager_Base {
 		drunkRect = drunkMask.GetComponent<RectTransform>();
 		drunkWidth = drunkRect.sizeDelta.x;
         GamePlayer = Player.instance;
+        if (PauseMenu != null)
+        {
+            PauseMenu.SetActive(false);
+        }
         StartCoroutine("DifficultyCoroutine");
 	}
 
@@ -162,5 +169,9 @@ public class SceneManager_Andrew : SceneManager_Base {
 	public void TogglePause()
 	{
 		Time.timeScale = Time.timeScale == 0 ? 1 : 0;
+        if (PauseMenu != null)
+        {
+            PauseMenu.SetActive(!PauseMenu.activeSelf);
+        }
 	}
 }
