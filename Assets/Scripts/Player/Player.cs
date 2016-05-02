@@ -522,7 +522,8 @@ public class Player : MonoBehaviour
             r.enabled = true;
         }
         multiplier = prevMultiplier;
-        playerMode = PlayerMode.RUNNING;
+        if (playerMode == PlayerMode.CRASHING)
+            playerMode = PlayerMode.RUNNING;
         yield return null;
     }
 
