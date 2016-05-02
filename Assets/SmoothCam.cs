@@ -5,6 +5,7 @@ public class SmoothCam : MonoBehaviour
 {
 	public float rotationSpeed;
 	public float positionSpeed;
+	public bool followPlayer;
 
 	Player player;
 	Vector3 posOffset;
@@ -15,6 +16,7 @@ public class SmoothCam : MonoBehaviour
 
 	void Start()
 	{
+		followPlayer = true;
 		cam = GetComponent<Camera>();
 		player = FindObjectOfType<Player>();
 
@@ -25,6 +27,30 @@ public class SmoothCam : MonoBehaviour
 	}
 
 	void FixedUpdate()
+	{
+		if (followPlayer)
+		{
+			CalculateTarget();
+
+			// Move smoothly to target
+			transform.position = Vector3.Lerp(transform.position, targetPos, positionSpeed * Time.deltaTime);
+			//transform.position = targetPos;
+			transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
+			//transform.rotation = targetRot;
+
+			// Camera effects
+			cam.fieldOfView = 60.0f + player.drunkenness / 5.0f;
+
+			Vector3 cameraLean = cam.transform.localEulerAngles;
+			cameraLean.z = player.GetLaneVelocity() * player.drunkenness / 75.0f;
+			cam.transform.localEulerAngles = cameraLean;
+
+			// Debug
+			Debug.DrawLine(player.transform.position, targetPos);
+		}
+	}
+
+	void CalculateTarget()
 	{
 		// Position
 		targetPos = player.transform.position;
@@ -38,21 +64,13 @@ public class SmoothCam : MonoBehaviour
 		// Offset
 		targetPos += posOffset.z * transform.forward;
 		targetPos += posOffset.y * transform.up;
+	}
 
-		// Move smoothly to target
-		transform.position = Vector3.Lerp(transform.position, targetPos, positionSpeed * Time.deltaTime);
-		//transform.position = targetPos;
-		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
-		//transform.rotation = targetRot;
+	public void ResetCam()
+	{
+		CalculateTarget();
 
-		// Camera effects
-		cam.fieldOfView = 60.0f + player.drunkenness / 5.0f;
-
-		Vector3 cameraLean = cam.transform.localEulerAngles;
-		cameraLean.z = player.GetLaneVelocity() * player.drunkenness / 75.0f;
-		cam.transform.localEulerAngles = cameraLean;
-
-		// Debug
-		Debug.DrawLine(player.transform.position, targetPos);
+		transform.position = targetPos;
+		transform.rotation = targetRot;
 	}
 }
