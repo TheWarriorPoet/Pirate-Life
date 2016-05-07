@@ -546,7 +546,7 @@ public class Player : MonoBehaviour
             {
                 return;
             }
-            else if (drunkenness >= 50)
+            else if (drunkenness >= 75)
             {
                 foreach (GameObject go in GetComponentInChildren<NearbyCrates>().CratesAhead)
                 {
@@ -554,7 +554,7 @@ public class Player : MonoBehaviour
                 }
 
                 AudioSource.PlayClipAtPoint(smackSound, transform.position);
-                SoberUp(50);
+                SoberUp(75);
                 CrateShrapnelEmitter.transform.position = transform.position;
                 CrateShrapnelEmitter.GetComponent<ParticleSystem>().Play();
                 prevMultiplier = multiplier;
