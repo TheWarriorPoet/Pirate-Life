@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
     private Quaternion startingRotation = Quaternion.identity;
     private CharacterController controller;
     private bool dead = false, ragdolled = false;
-    private AudioClip jumpSound, deckSound, landSound, splashSound, smackSound;
+    private AudioClip jumpSound, deckSound, landSound, splashSound, smackSound, skidSound;
     // Controls
     private bool actionLeft, actionRight, actionJump;
 	private float jumpVelocity, jumpSpeed, runSpeed;
@@ -109,6 +109,7 @@ public class Player : MonoBehaviour
 		smackSound = (AudioClip)Resources.Load("Sounds/player_smack");
 		deckSound = (AudioClip)Resources.Load("Sounds/deck_jump");
 		landSound = (AudioClip)Resources.Load("Sounds/player_land");
+		skidSound = (AudioClip)Resources.Load("Sounds/player_skid");
 
 		ResetCharacter();
     }
@@ -249,9 +250,9 @@ public class Player : MonoBehaviour
     {
         switch (playerMode)
         {
-            case PlayerMode.RUNNING:
-            case PlayerMode.CRASHING:
-				if (anim.speed < 1) anim.speed = 1;
+			case PlayerMode.CRASHING:
+			case PlayerMode.RUNNING:
+				if (anim.speed > 1) anim.speed = 1;
 				if (actionLeft)
                 {
                     previousLane = currentLane;
@@ -276,7 +277,7 @@ public class Player : MonoBehaviour
                 break;
 
             case PlayerMode.TURNING:
-				if (anim.speed < 1) anim.speed = 1;
+				if (anim.speed > 1) anim.speed = 1;
 				if (isTurning)
                 {
 					// Calculate curve
@@ -327,7 +328,7 @@ public class Player : MonoBehaviour
                 break;
 			case PlayerMode.SLIPPING:
 
-				if (anim.speed > 0) anim.speed = 0.1f;
+				if (anim.speed < 4) anim.speed = 4;
 				slipTimer += Time.deltaTime;
 				if (slipTimer >= slipDuration)
 				{
@@ -474,7 +475,6 @@ public class Player : MonoBehaviour
 		}
 
 		controller.Move(velocity * Time.deltaTime);
-
 	}
 
 	void KillCharacter(bool causeRagdoll)
@@ -598,6 +598,7 @@ public class Player : MonoBehaviour
 
 		if (collider.gameObject.layer == LayerMask.NameToLayer("Hazard"))
 		{
+			AudioSource.PlayClipAtPoint(skidSound, transform.position);
 			playerMode = PlayerMode.SLIPPING;
 			Debug.Log("Slipped!");
 		}
