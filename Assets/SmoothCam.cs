@@ -14,6 +14,7 @@ public class SmoothCam : MonoBehaviour
 	Quaternion rotOffset;
 	Camera cam;
 	Vector3 targetPos;
+	float initRot = 15;
 	Quaternion targetRot;
 
 	void Start()
@@ -65,6 +66,7 @@ public class SmoothCam : MonoBehaviour
 
 		// Debug
 		Debug.DrawLine(player.transform.position, targetPos);
+
 	}
 
 	void TrackDeath()
@@ -87,7 +89,9 @@ public class SmoothCam : MonoBehaviour
 		Vector3 rot = transform.rotation.eulerAngles;
 		float yRot = player.transform.rotation.eulerAngles.y;
 		rot.y = yRot;
+		rot.x = initRot;
 		targetRot = Quaternion.Euler(rot);
+
 
 		// Offset
 		targetPos += posOffset.z * transform.forward;
