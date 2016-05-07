@@ -16,7 +16,6 @@ public class Pelican : MonoBehaviour
 	{
 		player = FindObjectOfType<Player>();
 		vomit = GetComponentInChildren<ParticleSystem>();
-		vomit.gameObject.SetActive(false);
 	}
 
 	void Update()
@@ -30,12 +29,12 @@ public class Pelican : MonoBehaviour
 			SpawnPuke();
 		}
 
-		if (hasPuked && vomit.gameObject.activeInHierarchy)
+		if (hasPuked && vomit.isPlaying)
 		{
 			pukeTimer += Time.deltaTime;
 			if (pukeTimer >= pukeDuration)
 			{
-				vomit.gameObject.SetActive(false);
+				vomit.Stop();
 			}
 		}
 	}
@@ -52,7 +51,7 @@ public class Pelican : MonoBehaviour
 			pukedObject = (GameObject)Instantiate(pukePrefab, hit.point, Quaternion.identity);
 			Debug.Log("PUKE!");
 			hasPuked = true;
-			vomit.gameObject.SetActive(true);
+			vomit.Play();
 		}
 	}
 
