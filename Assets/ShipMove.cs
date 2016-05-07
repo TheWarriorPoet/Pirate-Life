@@ -3,8 +3,9 @@ using System.Collections;
 
 public class ShipMove : MonoBehaviour {
 	public float Speed;
-	public Vector3 RotationAngle;
+	public GameObject Player;
 	Rigidbody rb;
+	public bool isReversed;
 	// Use this for initialization
 	void Start () {
 		
@@ -13,7 +14,13 @@ public class ShipMove : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		transform.Rotate (RotationAngle * Time.deltaTime);
+		Vector3 playerPos = Player.transform.position;
+		playerPos.y = transform.position.y;
+		if (isReversed) {
+			transform.rotation = Quaternion.FromToRotation (Vector3.right, transform.position - playerPos); 
+		} else {
+			transform.rotation = Quaternion.FromToRotation (Vector3.right, playerPos - transform.position); 
+		}
 		transform.position += (transform.forward * (Speed * Time.deltaTime));
 	}
 }

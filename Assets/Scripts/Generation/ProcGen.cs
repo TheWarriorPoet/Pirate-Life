@@ -125,6 +125,7 @@ public class ProcGen : MonoBehaviour {
 					Rot = -1;
 				}
 				GameObject ship = (GameObject)GameObject.Instantiate (ShipObj, obj.transform.position + offset *obj.transform.right,Quaternion.Euler(0, (TrackDirection -90) * Rot, 0));
+				ship.transform.position -= new Vector3 (0, 3, 0);
 				ship.transform.parent = obj.transform;
 			}
 
@@ -199,6 +200,7 @@ public class ProcGen : MonoBehaviour {
 						Rot = -1;
 					}
 					GameObject ship = (GameObject)GameObject.Instantiate (ShipObj, obj.transform.position + offset *obj.transform.right,Quaternion.Euler(0, (TrackDirection -90) * Rot, 0));
+					ship.transform.position -= new Vector3 (0, 3, 0);
 					ship.transform.parent = obj.transform;
 				}
 
