@@ -9,13 +9,12 @@ public class SmoothCam : MonoBehaviour
 	public GameObject deathTarget;
 	public bool deathCam;
 
-	Player player;
-	Vector3 posOffset;
-	Quaternion rotOffset;
-	Camera cam;
-	Vector3 targetPos;
-	float initRot = 15;
-	Quaternion targetRot;
+	public Player player;
+	public Vector3 posOffset;
+	public Quaternion rotOffset;
+	public Camera cam;
+	public Vector3 targetPos;
+	public Quaternion targetRot;
 
 	void Start()
 	{
@@ -23,10 +22,19 @@ public class SmoothCam : MonoBehaviour
 		cam = GetComponent<Camera>();
 		player = FindObjectOfType<Player>();
 
+		transform.parent = null;
+
 		posOffset = transform.position - player.transform.position;
 		rotOffset = transform.rotation;
+	}
 
-		transform.parent = null;
+	void Update()
+	{
+		// Debug
+		if (Input.GetKeyDown(KeyCode.C))
+		{
+			ResetCam();
+		}
 	}
 
 	void FixedUpdate()
@@ -40,12 +48,6 @@ public class SmoothCam : MonoBehaviour
 		else if (deathCam)
 		{
 			TrackDeath();
-		}
-
-		// Debug
-		if (Input.GetKeyDown(KeyCode.C))
-		{
-			ResetCam();
 		}
 	}
 
@@ -65,8 +67,8 @@ public class SmoothCam : MonoBehaviour
 		cam.transform.localEulerAngles = cameraLean;
 
 		// Debug
-		Debug.DrawLine(player.transform.position, targetPos);
-
+		Debug.DrawLine(player.transform.position, targetPos, Color.yellow);
+		Debug.DrawLine(targetPos, transform.position, Color.magenta);
 	}
 
 	void TrackDeath()
@@ -89,12 +91,11 @@ public class SmoothCam : MonoBehaviour
 		Vector3 rot = transform.rotation.eulerAngles;
 		float yRot = player.transform.rotation.eulerAngles.y;
 		rot.y = yRot;
-		rot.x = initRot;
+		rot.x = rotOffset.eulerAngles.x;
 		targetRot = Quaternion.Euler(rot);
 
-
 		// Offset
-		targetPos += posOffset.z * transform.forward;
+		targetPos += posOffset.z * player.transform.forward;
 		targetPos += posOffset.y * transform.up;
 	}
 
@@ -102,7 +103,7 @@ public class SmoothCam : MonoBehaviour
 	{
 		CalculateTarget();
 
-		transform.position = targetPos;
-		transform.rotation = targetRot;
+		transform.position = player.transform.position + posOffset;
+		transform.rotation = rotOffset;
 	}
 }
