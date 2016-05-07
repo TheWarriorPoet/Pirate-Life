@@ -13,6 +13,7 @@ public class PickupScript : MonoBehaviour
 	public PickupType pickupType;
 	public AudioClip soundEffect;
 	public int itemValue;
+	public GameObject particleSystem;
 	private Player player;
 	private Renderer render;
 	private Transform playerTransform = null;
@@ -66,12 +67,13 @@ public class PickupScript : MonoBehaviour
 			// Insert Reaction Code here
 			switch (pickupType)
 			{
-				case PickupType.COIN:
-					if (_mySceneManager != null)
-                    {
-                        _mySceneManager.AddCoins(itemValue);
-                    }
-					break;
+			case PickupType.COIN:
+				if (_mySceneManager != null) {
+					_mySceneManager.AddCoins (itemValue);
+				}
+				GameObject obj = (GameObject)GameObject.Instantiate (particleSystem, transform.position, Quaternion.identity);
+				obj.transform.parent = Other.transform;	
+				break;
 				case PickupType.RUM:
 					player.GetDrunk(itemValue);
 					break;
