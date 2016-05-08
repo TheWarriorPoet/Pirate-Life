@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
     }
     void Awake()
     {
+        Screen.SetResolution(576, 1024, false);
         if (_instance) DestroyImmediate(gameObject);
         else
             DontDestroyOnLoad(this);
