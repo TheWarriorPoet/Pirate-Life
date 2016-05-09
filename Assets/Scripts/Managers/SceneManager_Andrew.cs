@@ -183,11 +183,6 @@ public class SceneManager_Andrew : SceneManager_Base {
         }
     }
 
-	public void ToggleSound()
-	{
-		AudioListener.volume = AudioListener.volume == 0 ? 1 : 0;
-	}
-
 	public void TogglePause()
 	{
 		Time.timeScale = Time.timeScale == 0 ? 1 : 0;

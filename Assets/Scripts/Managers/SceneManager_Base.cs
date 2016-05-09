@@ -45,4 +45,9 @@ public class SceneManager_Base : MonoBehaviour {
 	{
 		Application.Quit();
 	}
+
+	public void ToggleSound()
+	{
+		AudioListener.volume = AudioListener.volume == 0 ? 1 : 0;
+	}
 }
