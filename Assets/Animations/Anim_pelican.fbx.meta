@@ -128,7 +128,7 @@ ModelImporter:
     feetSpacing: 0
     rootMotionBoneName: 
     hasTranslationDoF: 0
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: ae04cbd7ca299e54ca9cb24a394b97b8,
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: dfa6c9f8151e4c64aa8ad6324c757a7b,
     type: 3}
   animationType: 2
   humanoidOversampling: 1
