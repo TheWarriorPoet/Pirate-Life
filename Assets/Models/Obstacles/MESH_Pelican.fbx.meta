@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: dfa6c9f8151e4c64aa8ad6324c757a7b
-timeCreated: 1458887919
+guid: ae04cbd7ca299e54ca9cb24a394b97b8
+timeCreated: 1463060033
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -13,8 +13,8 @@ ModelImporter:
     100010: Bn_Head
     100012: Bn_Neck_Base
     100014: Bn_Neck_Mid
-    100016: MESH_Pelican
-    100018: //RootNode
+    100016: //RootNode
+    100018: MESH_Pelican
     400000: Be_Root
     400002: Bn_Bill_base
     400004: Bn_Bill_End
@@ -23,8 +23,8 @@ ModelImporter:
     400010: Bn_Head
     400012: Bn_Neck_Base
     400014: Bn_Neck_Mid
-    400016: MESH_Pelican
-    400018: //RootNode
+    400016: //RootNode
+    400018: MESH_Pelican
     2300000: MESH_Pelican
     3300000: MESH_Pelican
     4300000: MESH_Pelican
@@ -53,7 +53,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.008
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
@@ -72,7 +72,7 @@ ModelImporter:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
-  importAnimation: 1
+  importAnimation: 0
   copyAvatar: 0
   humanDescription:
     human: []
@@ -84,7 +84,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    rootMotionBoneName: Be_Root
+    rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
