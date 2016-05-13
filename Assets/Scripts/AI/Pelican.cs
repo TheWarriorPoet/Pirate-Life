@@ -30,8 +30,8 @@ public class Pelican : MonoBehaviour
 
 		if (!hasPuked && distance < activateRadius)
 		{
-			//SpawnPuke();
-			anim.speed = 1;
+			SpawnPuke();
+			anim.speed = 4;
 		}
 
 		if (hasPuked && vomit.isPlaying)
@@ -40,6 +40,7 @@ public class Pelican : MonoBehaviour
 			if (pukeTimer >= pukeDuration)
 			{
 				vomit.Stop();
+				anim.speed = 0;
 			}
 		}
 	}
