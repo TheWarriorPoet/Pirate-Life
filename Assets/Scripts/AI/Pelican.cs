@@ -10,12 +10,16 @@ public class Pelican : MonoBehaviour
 	Player player;
 	GameObject pukedObject;
 	ParticleSystem vomit;
+	Animator anim;
 	float pukeTimer;
 
 	void Start()
 	{
 		player = FindObjectOfType<Player>();
-		vomit = GetComponentInChildren<ParticleSystem>();
+		anim = GetComponent<Animator>();
+		vomit = transform.parent.gameObject.GetComponentInChildren<ParticleSystem>();
+
+		anim.speed = 0;
 	}
 
 	void Update()
@@ -26,7 +30,8 @@ public class Pelican : MonoBehaviour
 
 		if (!hasPuked && distance < activateRadius)
 		{
-			SpawnPuke();
+			//SpawnPuke();
+			anim.speed = 1;
 		}
 
 		if (hasPuked && vomit.isPlaying)
@@ -39,7 +44,7 @@ public class Pelican : MonoBehaviour
 		}
 	}
 
-	void SpawnPuke()
+	public void SpawnPuke()
 	{
 		Vector3 target = (transform.position + transform.up) - transform.right * pukeDistance;
 
