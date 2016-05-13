@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 7cc5587418ed6504cbfb110aadaf3ea1
-timeCreated: 1458989917
+timeCreated: 1463127775
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -29,10 +29,9 @@ ModelImporter:
     400018: Bn_Tail
     400020: MESH_Seagull
     400022: //RootNode
-    2300000: MESH_Seagull
-    3300000: MESH_Seagull
     4300000: MESH_Seagull
     9500000: //RootNode
+    13700000: MESH_Seagull
   materials:
     importMaterials: 0
     materialName: 0
