@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: dfa6c9f8151e4c64aa8ad6324c757a7b
-timeCreated: 1463060541
+timeCreated: 1463124847
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -25,10 +25,9 @@ ModelImporter:
     400014: Bn_Neck_Mid
     400016: MESH_Pelican
     400018: //RootNode
-    2300000: MESH_Pelican
-    3300000: MESH_Pelican
     4300000: MESH_Pelican
     9500000: //RootNode
+    13700000: MESH_Pelican
   materials:
     importMaterials: 0
     materialName: 0

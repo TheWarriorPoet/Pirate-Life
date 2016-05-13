@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 4dc865228521321419fb16f2fcff7732
-timeCreated: 1463059071
+timeCreated: 1463125154
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -26,7 +26,7 @@ ModelImporter:
     7400000: Pelican
     9500000: //RootNode
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
   animations:
@@ -58,7 +58,7 @@ ModelImporter:
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
-      loopBlend: 1
+      loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
