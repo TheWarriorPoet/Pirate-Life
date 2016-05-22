@@ -12,10 +12,44 @@ public class SceneManager_Store : SceneManager_Base {
     private AudioClip soundEffect;
 
 	private int coinCount;
-     
-	// Use this for initialization
-	void Start () {
+    // Singleton Instance to provide simple access through other scripts
+    private static SceneManager_Store _instance = null;
+    public static SceneManager_Store instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = (SceneManager_Store)FindObjectOfType(typeof(SceneManager_Store));
+            }
+            return _instance;
+        }
+    }
+    // Use this for initialization
+    void Start () {
 		soundEffect = (AudioClip)Resources.Load("Sounds/store_buy");
+        UpdateButtons();
+        UpgradeButtonParent.SetActive(false);
+        BoostsButtonParent.SetActive(false);
+        GoldButtonParent.SetActive(true);
+        ScrollView.content = GoldButtonParent.GetComponent<RectTransform>();
+    }
+	
+	// Update is called once per frame
+	void Update () {
+		if (coinCount != _myGameManager.m_CoinScore)
+		{
+			coinCount = _myGameManager.m_CoinScore;
+
+			if (m_CoinCounter != null && _myGameManager != null)
+			{
+				m_CoinCounter.text = "x " + _myGameManager.m_CoinScore;
+			}
+		}
+	}
+
+    public void UpdateButtons()
+    {
         if (_myGameManager != null)
         {
             int TotalUpgradeCount = 0;
@@ -72,24 +106,7 @@ public class SceneManager_Store : SceneManager_Base {
                 }
             }
         }
-        UpgradeButtonParent.SetActive(false);
-        BoostsButtonParent.SetActive(false);
-        GoldButtonParent.SetActive(true);
-        ScrollView.content = GoldButtonParent.GetComponent<RectTransform>();
     }
-	
-	// Update is called once per frame
-	void Update () {
-		if (coinCount != _myGameManager.m_CoinScore)
-		{
-			coinCount = _myGameManager.m_CoinScore;
-
-			if (m_CoinCounter != null && _myGameManager != null)
-			{
-				m_CoinCounter.text = "x " + _myGameManager.m_CoinScore;
-			}
-		}
-	}
 
     public void SwitchView(string view)
     {

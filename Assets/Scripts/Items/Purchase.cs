@@ -10,9 +10,11 @@ public class Purchase : MonoBehaviour {
     public Text Cost = null;
     public Text CostShadow = null;
     public Image CoinImage = null;
+    private SceneManager_Store _storeSceneManager = null;
 	// Use this for initialization
 	void Start () {
         _myGameManager = GameManager.instance;
+        _storeSceneManager = SceneManager_Store.instance;
 	}
 	
 	// Update is called once per frame
@@ -39,8 +41,21 @@ public class Purchase : MonoBehaviour {
                     break;
                 case UpgradeBoostGold.Boost:
                 case UpgradeBoostGold.Upgrade:
-                    Cost.text = us.CoinCost.ToString();
-                    CostShadow.text = us.CoinCost.ToString();
+                    if (us.Active)
+                    {
+                        Cost.text = "Active";
+                        CostShadow.text = "Active";
+                    }
+                    else if (us.Purchased)
+                    {
+                        Cost.text = "Bought";
+                        CostShadow.text = "Bought";
+                    }
+                    else
+                    {
+                        Cost.text = us.CoinCost.ToString();
+                        CostShadow.text = us.CoinCost.ToString();
+                    }
                     break;
             }
         }
@@ -65,7 +80,6 @@ public class Purchase : MonoBehaviour {
                             {
                                 _myGameManager.AddCoins(-us.CoinCost);
                                 us.Active = true;
-                                us.Purchased = true;
                                 us.BoostsAvailable += _upgrade.BoostsPerPurchase;
                                 break;
                             }
@@ -77,12 +91,32 @@ public class Purchase : MonoBehaviour {
                     {
                         foreach (UpgradeStruct us in _myGameManager._allUpgrades)
                         {
-                            if (us.name == _upgrade.name)
+                            if (us.name == _upgrade.name && !us.Purchased)
                             {
                                 _myGameManager.AddCoins(-us.CoinCost);
-                                us.Active = true;
                                 us.Purchased = true;
+                                foreach (UpgradeStruct us2 in _myGameManager._allUpgrades)
+                                {
+                                    if (us2.type == UpgradeBoostGold.Upgrade && us2.Purchased && us2.Active)
+                                    {
+                                        us2.Active = false;
+                                    }
+                                }
+                                us.Active = true;
+                                _storeSceneManager.UpdateButtons();
                                 break;
+                            }
+                            else if (us.name == _upgrade.name && us.Purchased)
+                            {
+                                foreach (UpgradeStruct us2 in _myGameManager._allUpgrades)
+                                {
+                                    if (us2.type == UpgradeBoostGold.Upgrade && us2.Purchased && us2.Active)
+                                    {
+                                        us2.Active = false;
+                                    }
+                                }
+                                us.Active = true;
+                                _storeSceneManager.UpdateButtons();
                             }
                         }
                     }
