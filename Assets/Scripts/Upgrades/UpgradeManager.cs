@@ -7,6 +7,7 @@ public class UpgradeManager : MonoBehaviour {
     //public List<UpgradeStruct> ActiveUpgrades = new List<UpgradeStruct>();
     public List<UpgradeStruct> ActiveBoosts = new List<UpgradeStruct>();
     public Renderer PlayerRenderer = null;
+    public Renderer ParrotRenderer = null;
 
     private UpgradeStruct _activeUpgrade = null;
     private GameManager _gameManager = null;
@@ -17,7 +18,14 @@ public class UpgradeManager : MonoBehaviour {
         {
             foreach (UpgradeStruct us in _gameManager._allUpgrades)
             {
-                if (us.Active)
+                if (us.name == "Pirate's Parrot" && us.Purchased)
+                {
+                    if (ParrotRenderer != null)
+                    {
+                        ParrotRenderer.enabled = true;
+                    }
+                }
+                else if (us.Active)
                 {
                     if (us.type == UpgradeBoostGold.Upgrade)
                     {

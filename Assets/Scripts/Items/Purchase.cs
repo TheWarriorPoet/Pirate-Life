@@ -99,7 +99,10 @@ public class Purchase : MonoBehaviour {
                                 {
                                     if (us2.type == UpgradeBoostGold.Upgrade && us2.Purchased && us2.Active)
                                     {
-                                        us2.Active = false;
+                                        if (us.name != "Pirate's Parrot")
+                                        {
+                                            us2.Active = false;
+                                        }
                                     }
                                 }
                                 us.Active = true;
@@ -112,7 +115,10 @@ public class Purchase : MonoBehaviour {
                                 {
                                     if (us2.type == UpgradeBoostGold.Upgrade && us2.Purchased && us2.Active)
                                     {
-                                        us2.Active = false;
+                                        if (us.name != "Pirate's Parrot")
+                                        {
+                                            us2.Active = false;
+                                        }
                                     }
                                 }
                                 us.Active = true;
