@@ -42,11 +42,24 @@ public class UpgradeStruct
     public List<UpgradeValue> upgradeValues;
     public Upgrade upgradeScript;
     public bool Active;
+    public bool Purchased;
+    public int BoostsPerPurchase;
     public int BoostsAvailable;
     public float LastsFor;
     public int CoinCost;
     public int MoneyCost;
     public UpgradeBoostGold type;
+    public Material upgradeMaterial;
+}
+
+[System.Serializable]
+public class UpgradeSaveVersion
+{
+    public string name;
+    public List<UpgradeValue> upgradeValues;
+    public bool Active;
+    public bool Purchased;
+    public int BoostsAvailable;
 }
 
 public class GameManager : MonoBehaviour
@@ -125,7 +138,7 @@ public class GameManager : MonoBehaviour
         {
             HighScore temp = new HighScore();
             temp.distance = a_distanceScore;
-            temp.date = System.DateTime.Now.ToString("dd\\/MM\\/yyyy h\\:mm tt");
+            temp.date = System.DateTime.Now.Date.ToString("dd\\/MM\\/yyyy");
             temp.name = "Default";
             HighScores.Add(temp);
             HighScores.Sort((s1, s2) => s2.distance.CompareTo(s1.distance));
@@ -141,7 +154,7 @@ public class GameManager : MonoBehaviour
                 {
                     HighScore temp = new HighScore();
                     temp.distance = a_distanceScore;
-                    temp.date = System.DateTime.Now.ToString("dd\\/MM\\/yyyy h\\:mm tt");
+                    temp.date = System.DateTime.Now.Date.ToString("dd\\/MM\\/yyyy");
                     temp.name = "Default";
                     HighScores[i] = temp;
                     return;
@@ -157,13 +170,24 @@ public class GameManager : MonoBehaviour
 
     public void Save()
     {
+        Debug.Log("Saving Data");
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Application.persistentDataPath + "/PL.dat");
         SaveData DataForSaving = new SaveData();
         foreach (HighScore hs in HighScores) { DataForSaving.SDHighScores.Add(hs); }
+        foreach (UpgradeStruct us in _allUpgrades) {
+            UpgradeSaveVersion USV = new UpgradeSaveVersion();
+            USV.name = us.name;
+            USV.Active = us.Active;
+            USV.BoostsAvailable = us.BoostsAvailable;
+            USV.Purchased = us.Purchased;
+            USV.upgradeValues = us.upgradeValues;
+            DataForSaving.SDAllUpgrades.Add(USV);
+        }
         DataForSaving.CoinScore = m_CoinScore;
         bf.Serialize(file, DataForSaving);
         file.Close();
+        Debug.Log("Save Complete");
     }
 
     public void Load()
@@ -176,6 +200,19 @@ public class GameManager : MonoBehaviour
             file.Close();
             HighScores = data.SDHighScores;
             m_CoinScore = data.CoinScore;
+            foreach (UpgradeSaveVersion USV in data.SDAllUpgrades)
+            {
+                foreach (UpgradeStruct US in _allUpgrades)
+                {
+                    if (US.name == USV.name)
+                    {
+                        US.Active = USV.Active;
+                        US.BoostsAvailable = USV.BoostsAvailable;
+                        US.Purchased = USV.Purchased;
+                        US.upgradeValues = USV.upgradeValues;
+                    }
+                }
+            }
         }
         else
         {
@@ -220,5 +257,6 @@ public class GameManager : MonoBehaviour
 class SaveData
 {
     public List<HighScore> SDHighScores = new List<HighScore>();
+    public List<UpgradeSaveVersion> SDAllUpgrades = new List<UpgradeSaveVersion>();
     public int CoinScore;
 }
