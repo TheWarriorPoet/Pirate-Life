@@ -65,7 +65,7 @@ public class UpgradeStruct
 public class UpgradeSaveVersion
 {
     public string name;
-    public List<UpgradeValue> upgradeValues;
+    //public List<UpgradeValue> upgradeValues;
     public bool Active;
     public bool Purchased;
     public int BoostsAvailable;
@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour
         else
             DontDestroyOnLoad(this);
 
-        //System.Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
+        System.Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
 #if UNITY_EDITOR
         if (!dataReset)
             Load();
@@ -190,7 +190,7 @@ public class GameManager : MonoBehaviour
             USV.Active = us.Active;
             USV.BoostsAvailable = us.BoostsAvailable;
             USV.Purchased = us.Purchased;
-            USV.upgradeValues = us.upgradeValues;
+            //USV.upgradeValues = us.upgradeValues;
             DataForSaving.SDAllUpgrades.Add(USV);
         }
         DataForSaving.CoinScore = m_CoinScore;
@@ -218,7 +218,7 @@ public class GameManager : MonoBehaviour
                         US.Active = USV.Active;
                         US.BoostsAvailable = USV.BoostsAvailable;
                         US.Purchased = USV.Purchased;
-                        US.upgradeValues = USV.upgradeValues;
+                        //US.upgradeValues = USV.upgradeValues;
                     }
                 }
             }

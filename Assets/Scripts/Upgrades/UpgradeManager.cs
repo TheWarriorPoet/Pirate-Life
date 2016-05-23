@@ -6,8 +6,9 @@ using System.Collections.Generic;
 public class UpgradeManager : MonoBehaviour {
     //public List<UpgradeStruct> ActiveUpgrades = new List<UpgradeStruct>();
     public List<UpgradeStruct> ActiveBoosts = new List<UpgradeStruct>();
-    public Renderer PlayerRenderer = null;
-    public Renderer ParrotRenderer = null;
+    public Material BlankMaterial = null;
+    private Renderer PlayerRenderer = null;
+    private Renderer ParrotRenderer = null;
 
     private Material BaseMaterial = null;
     private Material BackDecoration = null;
@@ -36,13 +37,14 @@ public class UpgradeManager : MonoBehaviour {
         _gameManager = GameManager.instance;
         PlayerRenderer = GameObject.FindGameObjectWithTag("PirateMesh").GetComponent<Renderer>();
         ParrotRenderer = GameObject.FindGameObjectWithTag("Parrot").GetComponent<Renderer>();
-        if (PlayerRenderer != null)
+        var PlayerMaterials = PlayerRenderer.materials;
+        if (PlayerRenderer != null && PlayerRenderer.materials.Length == 5)
         {
-            BaseMaterial = PlayerRenderer.materials[0];
-            BackDecoration = PlayerRenderer.materials[1];
-            HatMaterial = PlayerRenderer.materials[2];
-            FeatherMaterial = PlayerRenderer.materials[3];
-            PantsMaterial = PlayerRenderer.materials[4];
+            //PlayerMaterials[0] = BlankMaterial;
+            PlayerMaterials[1] = BlankMaterial;
+            PlayerMaterials[2] = BlankMaterial;
+            PlayerMaterials[3] = BlankMaterial;
+            //PlayerMaterials[4] = BlankMaterial;
         }
         if (_gameManager != null)
         {
@@ -64,20 +66,20 @@ public class UpgradeManager : MonoBehaviour {
                         switch (us.upgradeValues[0].upgradeType)
                         {
                             case UpgradeType.BackMaterial:
-                                BackDecoration = us.upgradeMaterial;
-                                BackDecoration.color = us.upgradeValues[0].color;
+                                PlayerMaterials[1] = us.upgradeMaterial;
+                                PlayerMaterials[1].color = us.upgradeValues[0].color;
                                 break;
                             case UpgradeType.HatMaterial:
-                                HatMaterial = us.upgradeMaterial;
-                                HatMaterial.color = us.upgradeValues[0].color;
+                                PlayerMaterials[2] = us.upgradeMaterial;
+                                PlayerMaterials[2].color = us.upgradeValues[0].color;
                                 break;
                             case UpgradeType.FeatherMaterial:
-                                FeatherMaterial = us.upgradeMaterial;
-                                HatMaterial.color = us.upgradeValues[0].color;
+                                PlayerMaterials[3] = us.upgradeMaterial;
+                                PlayerMaterials[3].color = us.upgradeValues[0].color;
                                 break;
                             case UpgradeType.PantsMaterial:
-                                PantsMaterial = us.upgradeMaterial;
-                                PantsMaterial.color = us.upgradeValues[0].color;
+                                PlayerMaterials[4] = us.upgradeMaterial;
+                                PlayerMaterials[4].color = us.upgradeValues[0].color;
                                 break;
                             case UpgradeType.ParrotUpgrade:
                                 if (ParrotRenderer != null)
@@ -86,8 +88,8 @@ public class UpgradeManager : MonoBehaviour {
                                 }
                                 break;
                             case UpgradeType.BodyMaterial:
-                                BaseMaterial = us.upgradeMaterial;
-                                BaseMaterial.color = us.upgradeValues[0].color;
+                                PlayerMaterials[0] = us.upgradeMaterial;
+                                PlayerMaterials[0].color = us.upgradeValues[0].color;
                                 break;
                         }
                     }
@@ -104,6 +106,7 @@ public class UpgradeManager : MonoBehaviour {
                     }
                 }
             }
+            PlayerRenderer.materials = PlayerMaterials;
         }
         /*if (PlayerRenderer != null && _activeUpgrade != null)
         {
@@ -124,6 +127,14 @@ public class UpgradeManager : MonoBehaviour {
         {
             if (us.BoostsAvailable > 0)
                 us.BoostsAvailable--;
+        }
+    }
+
+    public void DeactivateParrot()
+    {
+        if (ParrotRenderer != null)
+        {
+            ParrotRenderer.enabled = false;
         }
     }
 }

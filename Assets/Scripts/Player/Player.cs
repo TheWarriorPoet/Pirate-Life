@@ -549,7 +549,8 @@ public class Player : MonoBehaviour
             r.material.color = alpha;
             r.enabled = true;
         }
-        UpgradeManager.instance.ParrotRenderer.enabled = _parrotActive;
+        if (!_parrotActive)
+            UpgradeManager.instance.DeactivateParrot();
 
         multiplier = prevMultiplier;
         if (playerMode == PlayerMode.CRASHING)
