@@ -97,12 +97,9 @@ public class Purchase : MonoBehaviour {
                                 us.Purchased = true;
                                 foreach (UpgradeStruct us2 in _myGameManager._allUpgrades)
                                 {
-                                    if (us2.type == UpgradeBoostGold.Upgrade && us2.Purchased && us2.Active)
+                                    if (us2.type == UpgradeBoostGold.Upgrade && us2.upgradeValues[0].upgradeType == us.upgradeValues[0].upgradeType && us2.Purchased && us2.Active)
                                     {
-                                        if (us.name != "Pirate's Parrot")
-                                        {
-                                            us2.Active = false;
-                                        }
+                                        us2.Active = false;
                                     }
                                 }
                                 us.Active = true;
@@ -113,15 +110,12 @@ public class Purchase : MonoBehaviour {
                             {
                                 foreach (UpgradeStruct us2 in _myGameManager._allUpgrades)
                                 {
-                                    if (us2.type == UpgradeBoostGold.Upgrade && us2.Purchased && us2.Active)
+                                    if (us2.type == UpgradeBoostGold.Upgrade && us2.upgradeValues[0].upgradeType == us.upgradeValues[0].upgradeType && us2.Purchased && us2.Active)
                                     {
-                                        if (us.name != "Pirate's Parrot")
-                                        {
-                                            us2.Active = false;
-                                        }
+                                        us2.Active = false;
                                     }
                                 }
-                                us.Active = true;
+                                us.Active = !us.Active;
                                 _storeSceneManager.UpdateButtons();
                             }
                         }

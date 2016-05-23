@@ -14,7 +14,9 @@ public enum UpgradeType
     HatMaterial,
     HatColour,
     FeatherMaterial,
-    PantsMaterial
+    PantsMaterial,
+    BodyMaterial,
+    ParrotUpgrade
 }
 
 public enum UpgradeBoostGold
@@ -57,7 +59,6 @@ public class UpgradeStruct
     public int MoneyCost;
     public UpgradeBoostGold type;
     public Material upgradeMaterial;
-    public UpgradeType upgradeType;
 }
 
 [System.Serializable]

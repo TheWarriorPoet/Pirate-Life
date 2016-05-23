@@ -61,7 +61,7 @@ public class UpgradeManager : MonoBehaviour {
                     {
                         //ActiveUpgrades.Add(us);
                         //_activeUpgrade = us;
-                        switch (us.upgradeType)
+                        switch (us.upgradeValues[0].upgradeType)
                         {
                             case UpgradeType.BackMaterial:
                                 BackDecoration = us.upgradeMaterial;
@@ -78,6 +78,16 @@ public class UpgradeManager : MonoBehaviour {
                             case UpgradeType.PantsMaterial:
                                 PantsMaterial = us.upgradeMaterial;
                                 PantsMaterial.color = us.upgradeValues[0].color;
+                                break;
+                            case UpgradeType.ParrotUpgrade:
+                                if (ParrotRenderer != null)
+                                {
+                                    ParrotRenderer.enabled = true;
+                                }
+                                break;
+                            case UpgradeType.BodyMaterial:
+                                BaseMaterial = us.upgradeMaterial;
+                                BaseMaterial.color = us.upgradeValues[0].color;
                                 break;
                         }
                     }

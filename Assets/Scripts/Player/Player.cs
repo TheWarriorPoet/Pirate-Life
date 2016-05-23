@@ -74,7 +74,7 @@ public class Player : MonoBehaviour
     // Crash Particles
     public GameObject CrateShrapnelEmitter = null;
     // Player Mesh
-
+    private bool _parrotActive = false;
 
     private GameManager _gameManager = null;
 
@@ -93,6 +93,20 @@ public class Player : MonoBehaviour
     void Start()
     {
         _gameManager = GameManager.instance;
+        if(_gameManager != null)
+        {
+            foreach (UpgradeStruct us in _gameManager._allUpgrades)
+            {
+                if (us.upgradeValues[0].upgradeType == UpgradeType.ParrotUpgrade)
+                {
+                    if (us.Purchased)
+                    {
+                        _parrotActive = true;
+                    }
+                    break;
+                }
+            }
+        }
         anim = GetComponentInChildren<Animator>();
 		particleBubbles = GetComponentInChildren<ParticleSystem>();
 		mainCamera = FindObjectOfType<SmoothCam>();
@@ -522,7 +536,10 @@ public class Player : MonoBehaviour
             timer = 0.0f;
             foreach (Renderer r in allRenderers)
             {
-                r.enabled = !r.enabled;
+                if (r.gameObject.tag != "Parrot")
+                    r.enabled = !r.enabled;
+                else if (r.gameObject.tag == "Parrot" && _parrotActive)
+                    r.enabled = !r.enabled;
             }
         }
         foreach (Renderer r in allRenderers)
@@ -532,6 +549,8 @@ public class Player : MonoBehaviour
             r.material.color = alpha;
             r.enabled = true;
         }
+        UpgradeManager.instance.ParrotRenderer.enabled = _parrotActive;
+
         multiplier = prevMultiplier;
         if (playerMode == PlayerMode.CRASHING)
             playerMode = PlayerMode.RUNNING;
