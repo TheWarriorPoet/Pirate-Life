@@ -9,7 +9,13 @@ public class UpgradeManager : MonoBehaviour {
     public Renderer PlayerRenderer = null;
     public Renderer ParrotRenderer = null;
 
-    private UpgradeStruct _activeUpgrade = null;
+    private Material BaseMaterial = null;
+    private Material BackDecoration = null;
+    private Material HatMaterial = null;
+    private Material FeatherMaterial = null;
+    private Material PantsMaterial = null;
+
+    //private UpgradeStruct _activeUpgrade = null;
     private GameManager _gameManager = null;
 
     // Singleton Instance to provide simple access through other scripts
@@ -30,6 +36,14 @@ public class UpgradeManager : MonoBehaviour {
         _gameManager = GameManager.instance;
         PlayerRenderer = GameObject.FindGameObjectWithTag("PirateMesh").GetComponent<Renderer>();
         ParrotRenderer = GameObject.FindGameObjectWithTag("Parrot").GetComponent<Renderer>();
+        if (PlayerRenderer != null)
+        {
+            BaseMaterial = PlayerRenderer.materials[0];
+            BackDecoration = PlayerRenderer.materials[1];
+            HatMaterial = PlayerRenderer.materials[2];
+            FeatherMaterial = PlayerRenderer.materials[3];
+            PantsMaterial = PlayerRenderer.materials[4];
+        }
         if (_gameManager != null)
         {
             foreach (UpgradeStruct us in _gameManager._allUpgrades)
@@ -46,7 +60,26 @@ public class UpgradeManager : MonoBehaviour {
                     if (us.type == UpgradeBoostGold.Upgrade)
                     {
                         //ActiveUpgrades.Add(us);
-                        _activeUpgrade = us;
+                        //_activeUpgrade = us;
+                        switch (us.upgradeType)
+                        {
+                            case UpgradeType.BackMaterial:
+                                BackDecoration = us.upgradeMaterial;
+                                BackDecoration.color = us.upgradeValues[0].color;
+                                break;
+                            case UpgradeType.HatMaterial:
+                                HatMaterial = us.upgradeMaterial;
+                                HatMaterial.color = us.upgradeValues[0].color;
+                                break;
+                            case UpgradeType.FeatherMaterial:
+                                FeatherMaterial = us.upgradeMaterial;
+                                HatMaterial.color = us.upgradeValues[0].color;
+                                break;
+                            case UpgradeType.PantsMaterial:
+                                PantsMaterial = us.upgradeMaterial;
+                                PantsMaterial.color = us.upgradeValues[0].color;
+                                break;
+                        }
                     }
                     else if (us.type == UpgradeBoostGold.Boost)
                     {
@@ -62,11 +95,12 @@ public class UpgradeManager : MonoBehaviour {
                 }
             }
         }
-        if (PlayerRenderer != null && _activeUpgrade != null)
+        /*if (PlayerRenderer != null && _activeUpgrade != null)
         {
             Debug.Log("Upgrade: " + _activeUpgrade.name);
             PlayerRenderer.material = _activeUpgrade.upgradeMaterial;
-        }
+            
+        }*/
     }
 	
 	// Update is called once per frame
