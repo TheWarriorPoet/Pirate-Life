@@ -4,11 +4,12 @@ using System.Collections;
 public class SplashParticle : MonoBehaviour
 {
 	ParticleSystem ps;
+	public Vector3 rotationOffset;
 
 	void Start()
 	{
 		ps = GetComponent<ParticleSystem>();
-		transform.rotation = Quaternion.Euler(-90, 0, 0);
+		transform.rotation = Quaternion.Euler(rotationOffset);
 	}
 
 	void Update()
