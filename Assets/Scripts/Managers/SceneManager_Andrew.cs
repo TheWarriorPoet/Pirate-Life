@@ -34,6 +34,8 @@ public class SceneManager_Andrew : SceneManager_Base {
     public Text DistanceText = null;
     public Text DistanceTextShadow = null;
 
+    private UpgradeManager _upgradeManager = null;
+
     private static SceneManager_Andrew _instance = null;
     public static SceneManager_Andrew instance
     {
@@ -64,6 +66,11 @@ public class SceneManager_Andrew : SceneManager_Base {
         if (GameOverMenu != null)
         {
             GameOverMenu.SetActive(false);
+        }
+        _upgradeManager = UpgradeManager.instance;
+        if (_upgradeManager != null)
+        {
+            _upgradeManager.DecreaseActiveBoosts();
         }
         StartCoroutine("DifficultyCoroutine");
 	}

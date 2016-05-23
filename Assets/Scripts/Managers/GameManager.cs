@@ -41,6 +41,7 @@ public class UpgradeStruct
     public Sprite icon;
     public List<UpgradeValue> upgradeValues;
     public Upgrade upgradeScript;
+    public string upgradeGOName;
     public bool Active;
     public bool Purchased;
     public int BoostsPerPurchase;

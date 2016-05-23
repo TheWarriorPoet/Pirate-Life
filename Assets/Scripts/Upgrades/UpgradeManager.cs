@@ -11,9 +11,25 @@ public class UpgradeManager : MonoBehaviour {
 
     private UpgradeStruct _activeUpgrade = null;
     private GameManager _gameManager = null;
-	// Use this for initialization
-	void Start () {
+
+    // Singleton Instance to provide simple access through other scripts
+    private static UpgradeManager _instance = null;
+    public static UpgradeManager instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = (UpgradeManager)FindObjectOfType(typeof(UpgradeManager));
+            }
+            return _instance;
+        }
+    }
+    // Use this for initialization
+    void Awake () {
         _gameManager = GameManager.instance;
+        PlayerRenderer = GameObject.FindGameObjectWithTag("PirateMesh").GetComponent<Renderer>();
+        ParrotRenderer = GameObject.FindGameObjectWithTag("Parrot").GetComponent<Renderer>();
         if (_gameManager != null)
         {
             foreach (UpgradeStruct us in _gameManager._allUpgrades)
@@ -46,8 +62,9 @@ public class UpgradeManager : MonoBehaviour {
                 }
             }
         }
-        if (PlayerRenderer != null)
+        if (PlayerRenderer != null && _activeUpgrade != null)
         {
+            Debug.Log("Upgrade: " + _activeUpgrade.name);
             PlayerRenderer.material = _activeUpgrade.upgradeMaterial;
         }
     }
@@ -56,4 +73,13 @@ public class UpgradeManager : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    public void DecreaseActiveBoosts()
+    {
+        foreach (UpgradeStruct us in ActiveBoosts)
+        {
+            if (us.BoostsAvailable > 0)
+                us.BoostsAvailable--;
+        }
+    }
 }
