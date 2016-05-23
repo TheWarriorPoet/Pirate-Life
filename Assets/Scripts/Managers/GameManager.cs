@@ -10,6 +10,11 @@ public enum UpgradeType
     NullValue,
     CoinAttractRange,
     CoinAttractSpeed,
+    BackMaterial,
+    HatMaterial,
+    HatColour,
+    FeatherMaterial,
+    PantsMaterial
 }
 
 public enum UpgradeBoostGold
@@ -23,6 +28,7 @@ public struct UpgradeValue
 {
     public UpgradeType upgradeType;
     public float value;
+    public Color color;
 }
 
 [System.Serializable]
@@ -51,6 +57,7 @@ public class UpgradeStruct
     public int MoneyCost;
     public UpgradeBoostGold type;
     public Material upgradeMaterial;
+    public UpgradeType upgradeType;
 }
 
 [System.Serializable]
