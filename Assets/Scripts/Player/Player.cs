@@ -675,6 +675,7 @@ public class Player : MonoBehaviour
         turnDegree = 0;
 
         jumping = false;
+		jumpVelocity = 0.0f;
 
         drunkenness = 0;
         drunkTimer = 0;
