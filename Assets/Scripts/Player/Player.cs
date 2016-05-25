@@ -566,7 +566,7 @@ public class Player : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit collision)
     {
-        if (sceneManager != null && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle") && !ragdolled)
+        if (sceneManager != null && collision.gameObject.CompareTag("Smashable") && !ragdolled)
         {
             if (playerMode == PlayerMode.CRASHING)
             {
@@ -585,12 +585,19 @@ public class Player : MonoBehaviour
                 prevMultiplier = multiplier;
                 multiplier = 1.0f;
                 playerMode = PlayerMode.CRASHING;
-                StartCoroutine("CrateCrashing");
+				StartCoroutine("CrateCrashing");
             }
-            else {
-                AudioSource.PlayClipAtPoint(smackSound, transform.position);
-                KillCharacter(true);
-            }
+		}
+
+		if (sceneManager != null && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+		{
+			if (collision.gameObject.CompareTag("Smashable") && playerMode == PlayerMode.CRASHING)
+			{
+				return;
+			}
+
+			AudioSource.PlayClipAtPoint(smackSound, transform.position);
+			KillCharacter(true);
 		}
 
 		if (jumping && !controller.isGrounded && collision.moveDirection.y < 0)
