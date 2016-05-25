@@ -33,15 +33,14 @@ public class Player : MonoBehaviour
 	public float swipeLength;
 	[Header("Object Linking")]
 	public ProcGen lg;
-	public GameObject splashPrefab;
-	public GameObject smashPrefab;
+	public GameObject splashPrefab, smashPrefab, drunkEffect, soberEffect;
 	[Header("Debugging")]
 	public Vector3 velocity;
 	public bool isGrounded;
 
 	private SmoothCam mainCamera;
 	private Animator anim;
-	private ParticleSystem particleBubbles;
+	private ParticleSystem drunkParticles, soberParticles;
 	private PirateCharacterAnimator ragdoll;
 	private SceneManager_Andrew sceneManager = null;
     private Vector3 startingPosition = Vector3.zero;
@@ -108,8 +107,17 @@ public class Player : MonoBehaviour
             }
         }
         anim = GetComponentInChildren<Animator>();
-		particleBubbles = GetComponentInChildren<ParticleSystem>();
 		mainCamera = FindObjectOfType<SmoothCam>();
+
+		// Effects
+		Vector3 offset = transform.up * 2 + transform.forward * 0.35f;
+		GameObject drunkObj = (GameObject)Instantiate(drunkEffect, transform.position + offset, transform.rotation);
+		drunkObj.transform.parent = transform;
+		drunkParticles = drunkObj.GetComponent<ParticleSystem>();
+		GameObject soberObj = (GameObject)Instantiate(soberEffect, transform.position + offset, transform.rotation);
+		soberObj.transform.parent = transform;
+		soberParticles = soberObj.GetComponent<ParticleSystem>();
+
 		ragdoll = GetComponentInChildren<PirateCharacterAnimator>();
 		sceneManager = SceneManager_Andrew.instance;
         startingRotation = transform.rotation;
@@ -715,17 +723,20 @@ public class Player : MonoBehaviour
 
 	void StopParticles()
 	{
-		if (particleBubbles.isPlaying)//particleBubbles.gameObject.activeInHierarchy)
+		if (drunkParticles.isPlaying)
 		{
-			//particleBubbles.gameObject.SetActive(false);
-			particleBubbles.Stop();
+			drunkParticles.Stop();
+		}
+
+		if (soberParticles.isPlaying)
+		{
+			soberParticles.Stop();
 		}
 	}
 
     public void GetDrunk(int value)
     {
-		//particleBubbles.gameObject.SetActive(true);
-		particleBubbles.Play();
+		drunkParticles.Play();
 
 		prevDrunkenness = drunkenness;
         newDrunkenness += value;
@@ -734,7 +745,9 @@ public class Player : MonoBehaviour
 
     public void SoberUp(int value)
     {
-        prevDrunkenness = drunkenness;
+		soberParticles.Play();
+
+		prevDrunkenness = drunkenness;
         newDrunkenness -= value;
         drunkTimer = 0;
     }
