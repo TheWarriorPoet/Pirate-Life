@@ -9,12 +9,12 @@ public class SmoothCam : MonoBehaviour
 	public GameObject deathTarget;
 	public bool deathCam;
 
-	public Player player;
-	public Vector3 posOffset;
-	public Quaternion rotOffset;
-	public Camera cam;
-	public Vector3 targetPos;
-	public Quaternion targetRot;
+	Player player;
+	Vector3 posOffset;
+	Quaternion rotOffset;
+	Camera cam;
+	Vector3 targetPos;
+	Quaternion targetRot;
 
 	void Start()
 	{
