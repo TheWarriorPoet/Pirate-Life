@@ -16,7 +16,8 @@ public class Player : MonoBehaviour
 	[Header("Player Settings")]
 	public PlayerMode playerMode;
     public int drunkenness;
-    public float drunkDelay;
+	public int drunkSmashValue;
+	public float drunkDelay;
     public float minRunSpeed, maxRunSpeed;
     public float minJumpHeight, maxJumpHeight;
     public float minLaneDelay, maxLaneDelay;
@@ -33,6 +34,7 @@ public class Player : MonoBehaviour
 	[Header("Object Linking")]
 	public ProcGen lg;
 	public GameObject splashPrefab;
+	public GameObject smashPrefab;
 	[Header("Debugging")]
 	public Vector3 velocity;
 	public bool isGrounded;
@@ -71,8 +73,6 @@ public class Player : MonoBehaviour
 	Vector2 touchDelta, touchPrevious, touchTotal;
 	private bool swiped;
 	//Text debugText; // Quick and dirty debugging
-    // Crash Particles
-    public GameObject CrateShrapnelEmitter = null;
     // Player Mesh
     private bool _parrotActive = false;
 
@@ -523,12 +523,15 @@ public class Player : MonoBehaviour
         Renderer[] allRenderers = GetComponentsInChildren<Renderer>();
         foreach (Renderer r in allRenderers)
         {
-            Vector4 alpha = r.material.color;
-            alpha.z = 0.5f;
-            r.material.color = alpha;
-        }
+			if (r.material.HasProperty("_Color"))
+			{
+				Vector4 alpha = r.material.color;
+				alpha.w = 0.5f;
+				r.material.color = alpha;
+			}
+		}
         for (int i = 0; i < 8; ++i) {
-            while (timer < 0.3f)
+            while (timer < 0.2f)
             {
                 timer += Time.deltaTime;
                 yield return null;
@@ -544,10 +547,13 @@ public class Player : MonoBehaviour
         }
         foreach (Renderer r in allRenderers)
         {
-            Vector4 alpha = r.material.color;
-            alpha.z = 1.0f;
-            r.material.color = alpha;
-            r.enabled = true;
+			if (r.material.HasProperty("_Color"))
+			{
+				Vector4 alpha = r.material.color;
+				alpha.w = 1.0f;
+				r.material.color = alpha;
+			}
+			r.enabled = true;
         }
         if (!_parrotActive)
             UpgradeManager.instance.DeactivateParrot();
@@ -566,7 +572,7 @@ public class Player : MonoBehaviour
             {
                 return;
             }
-            else if (drunkenness >= 75)
+            else if (drunkenness >= drunkSmashValue)
             {
                 foreach (GameObject go in GetComponentInChildren<NearbyCrates>().CratesAhead)
                 {
@@ -574,9 +580,8 @@ public class Player : MonoBehaviour
                 }
 
                 AudioSource.PlayClipAtPoint(smackSound, transform.position);
-                SoberUp(75);
-                CrateShrapnelEmitter.transform.position = transform.position;
-                CrateShrapnelEmitter.GetComponent<ParticleSystem>().Play();
+                SoberUp(drunkSmashValue);
+				Instantiate(smashPrefab, transform.position + (transform.forward * 3.0f), transform.rotation);
                 prevMultiplier = multiplier;
                 multiplier = 1.0f;
                 playerMode = PlayerMode.CRASHING;
