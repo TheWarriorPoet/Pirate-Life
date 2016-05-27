@@ -286,16 +286,6 @@ public class Player : MonoBehaviour
                     previousLane = currentLane;
                     currentLane++;
                 }
-
-                if (actionJump && !jumping)
-                {
-                    AudioSource.PlayClipAtPoint(jumpSound, transform.position);
-					AudioSource.PlayClipAtPoint(deckSound, transform.position);
-					anim.Play("Jumping");
-
-					jumpVelocity = jumpSpeed;
-					jumping = true;
-				}
                 break;
 
             case PlayerMode.TURNING:
@@ -313,8 +303,10 @@ public class Player : MonoBehaviour
                     // Position
                     Vector3 point1 = Vector3.Lerp(cornerStart, cornerPoint, turnTimer);
                     Vector3 point2 = Vector3.Lerp(cornerPoint, cornerEnd, turnTimer);
+					Vector3 pos = Vector3.Lerp(point1, point2, turnTimer);
+					pos.y = transform.position.y;
 
-                    transform.position = Vector3.Lerp(point1, point2, turnTimer);
+					transform.position = pos;
 
                     // Rotation
                     //turnAngle = Mathf.LerpAngle(transform.rotation.y, turnDegree, turnTimer);
@@ -361,7 +353,18 @@ public class Player : MonoBehaviour
 				break;
 		}
 
-        actionLeft = false;
+		// Can always jump unless ragdolled
+		if (actionJump && !jumping)
+		{
+			AudioSource.PlayClipAtPoint(jumpSound, transform.position);
+			AudioSource.PlayClipAtPoint(deckSound, transform.position);
+			anim.Play("Jumping");
+
+			jumpVelocity = jumpSpeed;
+			jumping = true;
+		}
+
+		actionLeft = false;
         actionRight = false;
         actionJump = false;
     }
@@ -646,13 +649,13 @@ public class Player : MonoBehaviour
 		if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
 		{
 			// Avoid flying
-			if (!jumping)
-			{
+			//if (!jumping)
+			//{
 				cornerPoint = collider.gameObject.transform.position;
 				cornerPoint.y = transform.position.y;
 
 				playerMode = PlayerMode.TURNING;
-			}
+			//}
 		}
 	}
 
