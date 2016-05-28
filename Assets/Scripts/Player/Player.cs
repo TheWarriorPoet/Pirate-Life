@@ -35,6 +35,7 @@ public class Player : MonoBehaviour
 	public ProcGen lg;
 	public GameObject splashPrefab, smashPrefab, drunkEffect, soberEffect;
 	[Header("Debugging")]
+	public float runSpeed;
 	public Vector3 velocity;
 	public bool isGrounded;
 
@@ -50,7 +51,7 @@ public class Player : MonoBehaviour
     private AudioClip jumpSound, deckSound, landSound, splashSound, smackSound, skidSound;
     // Controls
     private bool actionLeft, actionRight, actionJump;
-	private float jumpVelocity, jumpSpeed, runSpeed;
+	private float jumpVelocity, jumpSpeed;
 	List<Vector3> arc = new List<Vector3>();
 	// Drunkenness
 	private int prevDrunkenness;
@@ -458,9 +459,10 @@ public class Player : MonoBehaviour
 			anim.gameObject.transform.localEulerAngles = new Vector3(0, 0, -laneVelocity * (1.0f + drunkenness / 20.0f));
 
 			// Running
-			runSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
+			float baseRunSpeed = Mathf.Lerp(minRunSpeed, maxRunSpeed, drunkenness / 100.0f);
+			runSpeed = baseRunSpeed * multiplier;
 
-			velocity = transform.forward * runSpeed * multiplier;
+			velocity = transform.forward * runSpeed;
 
 			if (sceneManager != null)
 			{
