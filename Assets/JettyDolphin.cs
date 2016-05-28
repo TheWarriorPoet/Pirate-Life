@@ -21,7 +21,7 @@ public class JettyDolphin : MonoBehaviour
 		{
 			transform.Rotate(0, 0, leapSpeed * Time.deltaTime);
 
-			if (transform.eulerAngles.z >= 180.0f)
+			if (transform.eulerAngles.z >= 270.0f)
 			{
 				Reset();
 			}
@@ -31,7 +31,7 @@ public class JettyDolphin : MonoBehaviour
 	void Reset()
 	{
 		transform.localRotation = startRot;
-		leaping = false;
+		//leaping = false;
 
 		// Randomly flip
 		if (Random.Range(0, 2) == 1)
