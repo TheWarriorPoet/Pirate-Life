@@ -559,7 +559,7 @@ public class Player : MonoBehaviour
 				{
 					if (r.gameObject.tag != "Parrot")
 						r.enabled = !r.enabled;
-					else if (r.gameObject.tag == "Parrot" && _parrotActive)
+					/*else*/ if (r.gameObject.tag == "Parrot" && _parrotActive)
 						r.enabled = !r.enabled;
 				}
             }
