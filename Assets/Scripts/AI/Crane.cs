@@ -5,8 +5,8 @@ public class Crane : MonoBehaviour
 {
 	public enum Actions
 	{
-		IDLE,
-		FORWARD,
+		//IDLE,
+		//FORWARD,
 		LEFT,
 		RIGHT,
 		END
@@ -27,47 +27,47 @@ public class Crane : MonoBehaviour
 
 		switch (state)
 		{
-			case Actions.FORWARD:
-				SetRotation(forward);
-				break;
+			//case Actions.FORWARD:
+			//	SetRotation(forward);
+			//	break;
 			case Actions.LEFT:
 				SetRotation(left);
 				break;
 			case Actions.RIGHT:
 				SetRotation(right);
 				break;
-			default:
-				state = Actions.IDLE;
-				break;
+			//default:
+			//	state = Actions.IDLE;
+			//	break;
 		}
 	}
 
 	void Update()
 	{
-		switch (state)
-		{
-			case Actions.IDLE:
-				thinkTimer += Time.deltaTime;
+		//switch (state)
+		//{
+		//	case Actions.IDLE:
+		//		thinkTimer += Time.deltaTime;
 
-				if (thinkTimer >= thinkTime)
-				{
-					state = (Actions)Random.Range(0, (int)Actions.END);
-					thinkTimer = 0;
-				}
-				break;
-			case Actions.FORWARD:
-				TurnTo(forward);
-				break;
-			case Actions.LEFT:
-				TurnTo(left);
-				break;
-			case Actions.RIGHT:
-				TurnTo(right);
-				break;
-			default:
-				state = Actions.IDLE;
-				break;
-		}
+		//		if (thinkTimer >= thinkTime)
+		//		{
+		//			state = (Actions)Random.Range(0, (int)Actions.END);
+		//			thinkTimer = 0;
+		//		}
+		//		break;
+		//	case Actions.FORWARD:
+		//		TurnTo(forward);
+		//		break;
+		//	case Actions.LEFT:
+		//		TurnTo(left);
+		//		break;
+		//	case Actions.RIGHT:
+		//		TurnTo(right);
+		//		break;
+		//	default:
+		//		state = Actions.IDLE;
+		//		break;
+		//}
 	}
 
 	void TurnTo(Vector3 direction)
@@ -77,13 +77,13 @@ public class Crane : MonoBehaviour
 
 		if (transform.rotation == Quaternion.LookRotation(direction))
 		{
-			state = Actions.IDLE;
+			//state = Actions.IDLE;
 		}
 	}
 
 	void SetRotation(Vector3 direction)
 	{
 		transform.rotation = Quaternion.LookRotation(direction);
-		state = Actions.IDLE;
+		//state = Actions.IDLE;
 	}
 }
