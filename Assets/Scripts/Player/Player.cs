@@ -636,6 +636,8 @@ public class Player : MonoBehaviour
 			Vector3 offset = new Vector3(0, 1, 0);
 			Instantiate(splashPrefab, transform.position + offset, transform.rotation);
 
+			Invoke("StopDeathCam", 0.25f);
+
 			AudioSource.PlayClipAtPoint(splashSound, transform.position);
 			velocity = Vector3.zero;
 			KillCharacter(false);
@@ -685,6 +687,7 @@ public class Player : MonoBehaviour
 		}
 
 		mainCamera.followPlayer = true;
+		mainCamera.deathCam = true;
 
         transform.position = startingPosition;
         transform.rotation = startingRotation;
@@ -724,6 +727,11 @@ public class Player : MonoBehaviour
 		swiped = false;
 
 		mainCamera.ResetCam();
+	}
+
+	void StopDeathCam()
+	{
+		mainCamera.deathCam = false;
 	}
 
 	void StopParticles()
