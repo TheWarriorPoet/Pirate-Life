@@ -1,24 +1,24 @@
 fileFormatVersion: 2
 guid: 1b8b6f9d4c702c74bba24cf6ef1ef4cf
-timeCreated: 1458282801
+timeCreated: 1464426161
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: MESH_SailsHD
     100002: //RootNode
-    100004: MESH_ShipHD1
+    100004: MESH_ShipHD
     400000: MESH_SailsHD
     400002: //RootNode
-    400004: MESH_ShipHD1
+    400004: MESH_ShipHD
     2300000: MESH_SailsHD
-    2300002: MESH_ShipHD1
+    2300002: MESH_ShipHD
     3300000: MESH_SailsHD
-    3300002: MESH_ShipHD1
-    4300000: MESH_ShipHD1
+    3300002: MESH_ShipHD
+    4300000: MESH_ShipHD
     4300002: MESH_SailsHD
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
   animations:
@@ -41,7 +41,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1.2
+    globalScale: 120
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
@@ -59,7 +59,7 @@ ModelImporter:
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
-    tangentImportMode: 4
+    tangentImportMode: 3
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
