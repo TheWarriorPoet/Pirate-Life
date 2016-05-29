@@ -536,11 +536,14 @@ public class Player : MonoBehaviour
         Renderer[] allRenderers = GetComponentsInChildren<Renderer>();
         foreach (Renderer r in allRenderers)
         {
-			if (r.material.HasProperty("_Color"))
+			if (r)
 			{
-				Vector4 alpha = r.material.color;
-				alpha.w = 0.5f;
-				r.material.color = alpha;
+				if (r.material.HasProperty("_Color"))
+				{
+					Vector4 alpha = r.material.color;
+					alpha.w = 0.5f;
+					r.material.color = alpha;
+				}
 			}
 		}
         for (int i = 0; i < 8; ++i) {
@@ -563,16 +566,21 @@ public class Player : MonoBehaviour
         }
         foreach (Renderer r in allRenderers)
         {
-			if (r.material.HasProperty("_Color"))
+			if (r)
 			{
-				Vector4 alpha = r.material.color;
-				alpha.w = 1.0f;
-				r.material.color = alpha;
+				if (r.material.HasProperty("_Color"))
+				{
+					Vector4 alpha = r.material.color;
+					alpha.w = 1.0f;
+					r.material.color = alpha;
+				}
+				r.enabled = true;
 			}
-			r.enabled = true;
         }
-        if (!_parrotActive)
-            UpgradeManager.instance.DeactivateParrot();
+		if (!_parrotActive)
+		{
+			UpgradeManager.instance.DeactivateParrot();
+		}
 
         multiplier = prevMultiplier;
         if (playerMode == PlayerMode.CRASHING)
