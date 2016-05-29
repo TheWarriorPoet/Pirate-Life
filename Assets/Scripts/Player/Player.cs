@@ -552,10 +552,13 @@ public class Player : MonoBehaviour
             timer = 0.0f;
             foreach (Renderer r in allRenderers)
             {
-                if (r.gameObject.tag != "Parrot")
-                    r.enabled = !r.enabled;
-                else if (r.gameObject.tag == "Parrot" && _parrotActive)
-                    r.enabled = !r.enabled;
+				if (r)
+				{
+					if (r.gameObject.tag != "Parrot")
+						r.enabled = !r.enabled;
+					else if (r.gameObject.tag == "Parrot" && _parrotActive)
+						r.enabled = !r.enabled;
+				}
             }
         }
         foreach (Renderer r in allRenderers)
