@@ -7,7 +7,6 @@ public class MapPiece : MonoBehaviour {
 	public List<GameObject> Collectables;
 	public List<GameObject> Obstacles;
 	public GameObject Posts;
-	public List<GameObject> NextPieces = new List<GameObject>();
 	private List<GameObject> objs = new List<GameObject> ();
 	// Use this for initialization
 	void Start () {
