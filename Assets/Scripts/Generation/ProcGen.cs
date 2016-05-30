@@ -107,6 +107,7 @@ public class ProcGen : MonoBehaviour {
 
 	public void BuildSection(GameObject Section)
 	{
+		Section.GetComponent<SectionGen> ().GenerateSection ();
 		for (int x = 0; x < Section.GetComponent<SectionGen> ().PieceList.Count; ++x) 
 		{
 			//Creates Rotation for newly spawned map pieces
