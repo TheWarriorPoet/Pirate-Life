@@ -15,6 +15,8 @@ public class ProcGen : MonoBehaviour {
 	public int MaxDifficultyScale; //How many sections the player must complete before reaching max difficult scale
 	public GameObject Corner, StartPiece, ShipObj;
 	public int ShipSpawnChance;
+	public GameObject CannonObj;
+	public int CannonSpawnChance;
 	private List<GameObject> SectionQueue = new List<GameObject> ();
 	private List<GameObject> objList = new List<GameObject>();
 	private Vector3 TrackPos = new Vector3(0,0,0);
@@ -127,6 +129,17 @@ public class ProcGen : MonoBehaviour {
 				GameObject ship = (GameObject)GameObject.Instantiate (ShipObj, obj.transform.position + offset *obj.transform.right,Quaternion.Euler(0, (TrackDirection -90) * Rot, 0));
 				ship.transform.position -= new Vector3 (0, 3, 0);
 				ship.transform.parent = obj.transform;
+			}else if (Random.Range (1, 100) <= CannonSpawnChance) {
+				float offset = 0;
+				float Rot = 1;
+				if (Random.Range (0, 100) > 50) {
+					offset = -offset;
+				}
+				if (Random.Range (0, 100) > 50) {
+					Rot = -1;
+				}
+				GameObject cannon = (GameObject)GameObject.Instantiate (CannonObj, obj.transform.position + offset *obj.transform.right,Quaternion.Euler(0, TrackDirection, 0));
+				cannon.transform.parent = obj.transform;
 			}
 
 			//Adjusts the Position of the next block position based on what direction we're heading in
@@ -182,64 +195,7 @@ public class ProcGen : MonoBehaviour {
 		TrackDirection = 0;
 		AddStartPiece ();
 		for (int i = 0; i < SectionQueue.Count; i += 1) {
-			for (int x = 0; x < SectionQueue [i].GetComponent<SectionGen> ().PieceList.Count; ++x) {
-				//Creates Rotation for newly spawned map pieces
-				//Creates the new Map Piece at TrackPos Position with rot Rotation
-				GameObject obj = (GameObject)GameObject.Instantiate (SectionQueue [i].GetComponent<SectionGen> ().PieceList[x], TrackPos, Quaternion.Euler (0, TrackDirection, 0));
-				obj.GetComponent<Transform> ().rotation.Set (0, TrackDirection, 0, 0);
-				obj.transform.SetParent (gameObject.transform);
-				objList.Add (obj);
-
-				if (Random.Range (1, 100) <= ShipSpawnChance) {
-					float offset = 10;
-					float Rot = 1;
-					if (Random.Range (0, 100) > 50) {
-						offset = -offset;
-					}
-					if (Random.Range (0, 100) > 50) {
-						Rot = -1;
-					}
-					GameObject ship = (GameObject)GameObject.Instantiate (ShipObj, obj.transform.position + offset *obj.transform.right,Quaternion.Euler(0, (TrackDirection -90) * Rot, 0));
-					ship.transform.position -= new Vector3 (0, 3, 0);
-					ship.transform.parent = obj.transform;
-				}
-
-				//Adjusts the Position of the next block position based on what direction we're heading in
-				switch (TrackDirection) {
-				case 0:
-					TrackPos.z += PieceLength;
-					break;
-				case 90:
-					TrackPos.x += PieceLength;
-					break;
-				case 180:
-					TrackPos.z -= PieceLength;
-					break;
-				case 270:
-					TrackPos.x -= PieceLength;
-					break;
-				default:
-					break;
-				}
-
-			}
-			AddCorner ();
-			switch (TrackDirection) {
-			case 0:
-				TrackPos.z += PieceLength;
-				break;
-			case 90:
-				TrackPos.x += PieceLength;
-				break;
-			case 180:
-				TrackPos.z -= PieceLength;
-				break;
-			case 270:
-				TrackPos.x -= PieceLength;
-				break;
-			default:
-				break;
-			}
+			BuildSection (SectionQueue [i]);
 		}
 	}
 
