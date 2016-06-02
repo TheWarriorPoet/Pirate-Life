@@ -13,7 +13,7 @@ public class Crane : MonoBehaviour
 	}
 
 	public Actions state;
-	public float thinkTime, speed, turnDelay;
+	public float /*thinkTime, speed,*/ turnSpeed;// turnDelay;
 
 	Vector3 forward, left, right, target;
 	float thinkTimer;
@@ -44,41 +44,42 @@ public class Crane : MonoBehaviour
 
 	void Update()
 	{
-		//switch (state)
-		//{
-		//	case Actions.IDLE:
-		//		thinkTimer += Time.deltaTime;
+		switch (state)
+		{
+			//case Actions.IDLE:
+			//	thinkTimer += Time.deltaTime;
 
-		//		if (thinkTimer >= thinkTime)
-		//		{
-		//			state = (Actions)Random.Range(0, (int)Actions.END);
-		//			thinkTimer = 0;
-		//		}
-		//		break;
-		//	case Actions.FORWARD:
-		//		TurnTo(forward);
-		//		break;
-		//	case Actions.LEFT:
-		//		TurnTo(left);
-		//		break;
-		//	case Actions.RIGHT:
-		//		TurnTo(right);
-		//		break;
-		//	default:
-		//		state = Actions.IDLE;
-		//		break;
-		//}
+			//	if (thinkTimer >= thinkTime)
+			//	{
+			//		state = (Actions)Random.Range(0, (int)Actions.END);
+			//		thinkTimer = 0;
+			//	}
+			//	break;
+			//case Actions.FORWARD:
+			//	TurnTo(forward);
+			//	break;
+			case Actions.LEFT:
+				Turn(turnSpeed);
+				break;
+			case Actions.RIGHT:
+				Turn(-turnSpeed);
+				break;
+			//default:
+			//	state = Actions.IDLE;
+			//	break;
+		}
 	}
 
-	void TurnTo(Vector3 direction)
+	void Turn(float speed)
 	{
 		// Set facing
-		transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime / turnDelay);
+		//transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime / turnDelay);
 
-		if (transform.rotation == Quaternion.LookRotation(direction))
-		{
-			//state = Actions.IDLE;
-		}
+		//if (transform.rotation == Quaternion.LookRotation(direction))
+		//{
+		//state = Actions.IDLE;
+		//}
+		transform.Rotate(0, speed * Time.deltaTime, 0);
 	}
 
 	void SetRotation(Vector3 direction)
