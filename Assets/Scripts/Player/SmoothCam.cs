@@ -20,7 +20,7 @@ public class SmoothCam : MonoBehaviour
 	{
 		followPlayer = true;
 		cam = GetComponent<Camera>();
-		player = FindObjectOfType<Player>();
+		player = GetComponentInParent<Player>();
 
 		transform.parent = null;
 
@@ -84,6 +84,8 @@ public class SmoothCam : MonoBehaviour
 
 	void CalculateTarget()
 	{
+		if (player == null) return;
+
 		// Position
 		targetPos = player.transform.position;
 
@@ -101,6 +103,8 @@ public class SmoothCam : MonoBehaviour
 
 	public void ResetCam()
 	{
+		if (player == null) return;
+
 		CalculateTarget();
 
 		transform.position = player.transform.position + posOffset;
