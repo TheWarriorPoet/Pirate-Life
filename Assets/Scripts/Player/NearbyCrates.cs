@@ -16,7 +16,7 @@ public class NearbyCrates : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+        if (other.gameObject.CompareTag("Smashable"))
             CratesAhead.Add(other.gameObject);
     }
 
