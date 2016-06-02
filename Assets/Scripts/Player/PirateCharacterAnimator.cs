@@ -24,8 +24,8 @@ public class PirateCharacterAnimator : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {        
-        NewPlayerSpeedMult = PiratePlayer.drunkenness / 100.0f;
-        PlayerAnimator.SetFloat("PlayerSpeed", NewPlayerSpeedMult);
+        NewPlayerSpeedMult = PiratePlayer.runSpeed / PiratePlayer.maxRunSpeed;
+        PlayerAnimator.SetFloat("RunSpeed", NewPlayerSpeedMult);
 
         if (Input.GetButtonDown("TestRagdoll"))
         {
