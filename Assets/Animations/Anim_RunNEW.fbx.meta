@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 78d68d1deef8d814ab8b63ff76981e24
-timeCreated: 1464790330
+timeCreated: 1464852511
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -113,10 +113,10 @@ ModelImporter:
     400102: Bn_R_Shoulder
     400104: Bn_R_Wrist
     400106: Bn_Root
-    7400000: RunRUN
+    7400000: RunNEW
     9500000: //RootNode
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
   animations:
@@ -135,9 +135,9 @@ ModelImporter:
       error = 38.862480 mm\n\t'Bn_BackBASE' : position error = 57.370872 mm\n\t'Bn_BackMID'
       : position error = 43.902046 mm\n\t'Bn_Chest' : position error = 58.883438 mm\n\t'Be_R_Clav'
       : position error = 32.192047 mm\n\t'Bn_R_Shoulder' : position error = 29.475357
-      mm\n\t'Bn_R_Elbow' : position error = 73.246284 mm\n\t'Bn_R_Wrist' : position
+      mm\n\t'Bn_R_Elbow' : position error = 72.849106 mm\n\t'Bn_R_Wrist' : position
       error = 34.615604 mm\n\t'Be_L_Clav' : position error = 29.946844 mm\n\t'Bn_L_Shoulder'
-      : position error = 29.736553 mm\n\t'Bn_L_Elbow' : position error = 79.719276
+      : position error = 29.736553 mm\n\t'Bn_L_Elbow' : position error = 69.987419
       mm\n\t'Bn_L_Wrist' : position error = 37.171864 mm\n\t'Bn_L_Hand' : position
       error = 14.190973 mm\n\t'Bn_L_IndexBASE' : position error = 19.036953 mm\n\t'Bn_L_IndexMID'
       : position error = 27.409660 mm\n\t'Bn_L_ThumbBASE' : position error = 17.506382
@@ -148,9 +148,9 @@ ModelImporter:
       : position error = 43.273167 mm\n\t'Bn_L_Eye' : position error = 33.611534 mm\n\t'Bn_R_Eye'
       : position error = 33.501724 mm\n\t'Bn_Beard' : position error = 65.776978 mm\n\nInbetween
       bone default rotation found in this file is different from the one found in
-      the source avatar:\n\t'Bn_L_Hand' : rotation error = 32.509312 deg\n\nClip 'Take
+      the source avatar:\n\t'Bn_L_Hand' : rotation error = 36.368912 deg\n\nClip 'Take
       001' has import animation warnings that might lower retargeting quality:\nNote:
-      Activate translation DOF on avatar to improve retargeting quality.\n\t'Bn_L_Elbow'
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'Bn_R_Elbow'
       has translation animation that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
@@ -162,10 +162,10 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: RunRUN
+      name: RunNEW
       takeName: Take 001
       firstFrame: 0
-      lastFrame: 35
+      lastFrame: 41
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
