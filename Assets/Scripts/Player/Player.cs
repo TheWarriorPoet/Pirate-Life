@@ -49,6 +49,7 @@ public class Player : MonoBehaviour
     private CharacterController controller;
     private bool dead = false, ragdolled = false;
     private AudioClip jumpSound, deckSound, landSound, splashSound, smackSound, skidSound;
+	private float baseAnimSpeed;
     // Controls
     private bool actionLeft, actionRight, actionJump;
 	private float jumpVelocity, jumpSpeed;
@@ -108,6 +109,8 @@ public class Player : MonoBehaviour
             }
         }
         anim = GetComponentInChildren<Animator>();
+		baseAnimSpeed = anim.speed;
+
 		mainCamera = FindObjectOfType<SmoothCam>();
 
 		// Effects
@@ -275,7 +278,7 @@ public class Player : MonoBehaviour
         {
 			case PlayerMode.CRASHING:
 			case PlayerMode.RUNNING:
-				if (anim.speed > 1) anim.speed = 1;
+				if (anim.speed > baseAnimSpeed) anim.speed = baseAnimSpeed;
 				if (actionLeft)
                 {
                     previousLane = currentLane;
@@ -290,7 +293,7 @@ public class Player : MonoBehaviour
                 break;
 
             case PlayerMode.TURNING:
-				if (anim.speed > 1) anim.speed = 1;
+				if (anim.speed > baseAnimSpeed) anim.speed = baseAnimSpeed;
 				if (isTurning)
                 {
 					// Calculate curve
@@ -320,6 +323,13 @@ public class Player : MonoBehaviour
                         laneVelocity = 0;
                         lanePosition = 0;
 
+						cornerStart = Vector3.zero;
+						cornerPoint = Vector3.zero;
+						cornerEnd = Vector3.zero;
+						turnTimer = 0;
+
+						isTurning = false;
+
 						//isTurning = false;
 						playerMode = PlayerMode.RUNNING;
                     }
@@ -343,7 +353,7 @@ public class Player : MonoBehaviour
                 break;
 			case PlayerMode.SLIPPING:
 
-				if (anim.speed < 4) anim.speed = 4;
+				if (anim.speed < baseAnimSpeed * 4) anim.speed = baseAnimSpeed * 4;
 				slipTimer += Time.deltaTime;
 				if (slipTimer >= slipDuration)
 				{
@@ -666,28 +676,13 @@ public class Player : MonoBehaviour
 			// Avoid flying
 			//if (!jumping)
 			//{
-				cornerPoint = collider.gameObject.transform.position;
+				cornerPoint = collider.gameObject.transform.parent.position;
 				cornerPoint.y = transform.position.y;
 
 				playerMode = PlayerMode.TURNING;
 			//}
 		}
 	}
-
-    void OnTriggerExit(Collider collider)
-    {
-        if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
-        {
-            cornerStart = Vector3.zero;
-            cornerPoint = Vector3.zero;
-            cornerEnd = Vector3.zero;
-            turnTimer = 0;
-
-            playerMode = PlayerMode.RUNNING;
-
-			isTurning = false;
-        }
-    }
 
     public void ResetCharacter()
     {
