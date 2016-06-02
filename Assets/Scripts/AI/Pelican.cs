@@ -11,6 +11,7 @@ public class Pelican : MonoBehaviour
 	GameObject pukedObject;
 	ParticleSystem vomit;
 	Animator anim;
+	Vector3 pukePos;
 	float pukeTimer;
 
 	void Start()
@@ -30,7 +31,7 @@ public class Pelican : MonoBehaviour
 
 		if (!hasPuked && distance < activateRadius)
 		{
-			SpawnPuke();
+			//SpawnPuke();
 			anim.speed = 1;
 			anim.Play("PUKE");
 		}
@@ -46,7 +47,12 @@ public class Pelican : MonoBehaviour
 		}
 	}
 
-	public void SpawnPuke()
+	void SpawnPuke()
+	{
+		pukedObject = (GameObject)Instantiate(pukePrefab, pukePos, Quaternion.identity);
+	}
+
+	public void Puke()
 	{
 		Vector3 target = (transform.position + transform.up) - transform.right * pukeDistance;
 
@@ -55,7 +61,8 @@ public class Pelican : MonoBehaviour
 		RaycastHit hit;
 		if (Physics.Raycast(target, -transform.up, out hit, 10))
 		{
-			pukedObject = (GameObject)Instantiate(pukePrefab, hit.point, Quaternion.identity);
+			pukePos = hit.point;
+			Invoke("SpawnPuke", 0.5f);
 			Debug.Log("PUKE!");
 			hasPuked = true;
 			vomit.Play();

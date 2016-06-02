@@ -69,7 +69,15 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.4198335
+        functionName: Puke
+        data: 
+        objectReferenceParameter: {fileID: 183386, guid: 0060239a2a5b9f64c9a38f1dfa4f5357,
+          type: 2}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
