@@ -11,6 +11,7 @@ public class PlayerFootstepsAudio : MonoBehaviour
 	{
 		audioSource = GetComponent<AudioSource>();
 		player = GetComponentInParent<Player>();
+		audioSource.volume = 0.5f;
 	}
 
 	void Update()
@@ -20,8 +21,11 @@ public class PlayerFootstepsAudio : MonoBehaviour
 
 	void PlayFootsteps()
 	{
-		audioSource.clip = footsteps[Random.Range(0, footsteps.Length)];
-		audioSource.Play();
+		if (player.isGrounded)
+		{
+			audioSource.clip = footsteps[Random.Range(0, footsteps.Length)];
+			audioSource.Play();
+		}
 	}
 
 	void FootstepsWalk()
