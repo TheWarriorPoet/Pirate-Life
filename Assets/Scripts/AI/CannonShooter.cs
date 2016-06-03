@@ -4,14 +4,15 @@ using System.Collections;
 public class CannonShooter : MonoBehaviour
 {
 	public GameObject ballPrefab, effectPrefab;
-	public AudioClip blastSound;
 	public float activateRadius;
 	public bool hasFired;
 
+	AudioSource audioSrc;
 	Player player;
 
 	void Start()
 	{
+		audioSrc = GetComponent<AudioSource>();
 		player = FindObjectOfType<Player>();
 	}
 
@@ -23,7 +24,7 @@ public class CannonShooter : MonoBehaviour
 		{
 			Instantiate(ballPrefab, transform.position, transform.rotation);
 			Instantiate(effectPrefab, transform.position, transform.rotation);
-			AudioSource.PlayClipAtPoint(blastSound, transform.position);
+			audioSrc.Play();
 			hasFired = true;
 			Debug.Log("BOMBS AWAY!");
 		}
