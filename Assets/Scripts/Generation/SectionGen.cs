@@ -21,7 +21,7 @@ public class SectionGen : MonoBehaviour {
 		
 			PieceList.Clear ();
 
-			PieceList.Add (FullPieceList [Random.Range (0, FullPieceList.Count - 1)]);
+			PieceList.Add (FullPieceList [(Random.Range (1,FullPieceList.Count)) - 1]);
 			for (int i = 1; i < Size; i++) {
 				List<GameObject> tempList = PieceList [PieceList.Count - 1].GetComponent<MapPiece> ().NextPieces;
 				PieceList.Add (tempList [Random.Range (0, tempList.Count - 1)]);
