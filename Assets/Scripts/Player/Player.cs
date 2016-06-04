@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
 	public float laneDistance;
 	public float slipDuration;
 	public int currentLane;
-	public bool jumping, isTurning;
+	public bool jumping, isTurning, autoTurn;
 	[Header("Touch Settings")]
 	public float angleDeadzone;
 	public float swipeDeadzone;
@@ -64,8 +64,8 @@ public class Player : MonoBehaviour
     private float laneVelocity;
     private float lanePosition;
     private int previousLane;
-    // Corner Turning
-    private Vector3 cornerStart;
+	// Corner Turning
+	private Vector3 cornerStart;
     private Vector3 cornerPoint;
     private Vector3 cornerEnd;
     private float turnTimer;
@@ -332,8 +332,24 @@ public class Player : MonoBehaviour
 
 						//isTurning = false;
 						playerMode = PlayerMode.RUNNING;
-                    }
+						anim.Play("Walk");
+					}
                 }
+				else
+				{
+					// Turning			
+					switch (lg.cornerDirection)
+					{
+						case ProcGen.CornerDirection.LEFT:
+							if (autoTurn) { actionLeft = true; actionRight = false; }
+							anim.Play("LeftTurn");
+							break;
+						case ProcGen.CornerDirection.RIGHT:
+							if (autoTurn) { actionRight = true; actionLeft = false; }
+							anim.Play("RightTurn");
+							break;
+					}
+				}
 
                 if (actionLeft && !isTurning)
                 {
@@ -671,16 +687,13 @@ public class Player : MonoBehaviour
 			Debug.Log("Slipped!");
 		}
 
+		// Cornering
 		if (collider.gameObject.layer == LayerMask.NameToLayer("CornerTrigger"))
 		{
-			// Avoid flying
-			//if (!jumping)
-			//{
-				cornerPoint = collider.gameObject.transform.parent.position;
-				cornerPoint.y = transform.position.y;
+			cornerPoint = collider.gameObject.transform.parent.position;
+			cornerPoint.y = transform.position.y;
 
-				playerMode = PlayerMode.TURNING;
-			//}
+			playerMode = PlayerMode.TURNING;
 		}
 	}
 

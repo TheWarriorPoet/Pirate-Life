@@ -1,8 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+public class ProcGen : MonoBehaviour
+{
+	public enum CornerDirection
+	{
+		LEFT,
+		RIGHT
+	}
 
-public class ProcGen : MonoBehaviour {
+	public CornerDirection cornerDirection;
 	public int TrackDirection;
 	public float PieceLength = 50;
 	//public GameObject CornerBlock; //This is to check if the block is a corner, and to start layering the track around the corner
@@ -17,11 +24,15 @@ public class ProcGen : MonoBehaviour {
 	public int ShipSpawnChance;
 	public GameObject CannonObj;
 	public int CannonSpawnChance;
+
+	private CornerDirection prevCornerDirection;
 	private List<GameObject> SectionQueue = new List<GameObject> ();
 	private List<GameObject> objList = new List<GameObject>();
 	private Vector3 TrackPos = new Vector3(0,0,0);
-	// Use this for initialization
-	void Start () {
+	
+
+	void Start()
+	{
 		SectionList.AddRange (EasySections);
 		Random.seed = (int)System.DateTime.Now.Ticks;
 		for (int i = 0; i < 2; ++i) {
@@ -30,8 +41,8 @@ public class ProcGen : MonoBehaviour {
 		RebuildMap ();
 	}
 
-	// Update is called once per frame
-	void Update () {
+	void Update()
+	{
 
 	}
 
@@ -46,11 +57,13 @@ public class ProcGen : MonoBehaviour {
 
 	private void AddCorner()
 	{
+		cornerDirection = prevCornerDirection;
 
 		Random.seed = (int)System.DateTime.Now.Ticks;
 		int i = Random.Range (0, 99);
 		GameObject obj;
 		if (i <= 50) {
+			prevCornerDirection = CornerDirection.LEFT;
 			obj = (GameObject)GameObject.Instantiate (Corner, TrackPos, Quaternion.Euler (0, TrackDirection, 0)); // Left corner
 			obj.GetComponent<Transform> ().rotation.Set (0, TrackDirection, 0, 0);
 			obj.transform.SetParent (gameObject.transform);
@@ -60,6 +73,7 @@ public class ProcGen : MonoBehaviour {
 				TrackDirection = 270;
 			}
 		} else {
+			prevCornerDirection = CornerDirection.RIGHT;
 			obj = (GameObject)GameObject.Instantiate (Corner, TrackPos, Quaternion.Euler (0, TrackDirection - 90.0f, 0)); // Right corner
 			obj.GetComponent<Transform> ().rotation.Set (0, TrackDirection, 0, 0);
 			obj.transform.SetParent (gameObject.transform);
@@ -69,7 +83,6 @@ public class ProcGen : MonoBehaviour {
 				TrackDirection = 0;
 			}
 		}
-
 	}
 
 	private void OrganiseSections()
