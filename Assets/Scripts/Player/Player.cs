@@ -734,7 +734,7 @@ public class Player : MonoBehaviour
 
 		lg.RebuildMap();
 
-		anim.Play("Movement");
+		anim.Play("Walk");
 
 		controller.enabled = true;
 
