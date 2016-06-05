@@ -332,24 +332,9 @@ public class Player : MonoBehaviour
 
 						//isTurning = false;
 						playerMode = PlayerMode.RUNNING;
-						anim.Play("Walk");
+						//anim.Play("Walk");
 					}
                 }
-				else
-				{
-					// Turning			
-					switch (lg.cornerDirection)
-					{
-						case ProcGen.CornerDirection.LEFT:
-							if (autoTurn) { actionLeft = true; actionRight = false; }
-							anim.Play("LeftTurn");
-							break;
-						case ProcGen.CornerDirection.RIGHT:
-							if (autoTurn) { actionRight = true; actionLeft = false; }
-							anim.Play("RightTurn");
-							break;
-					}
-				}
 
                 if (actionLeft && !isTurning)
                 {
@@ -692,6 +677,22 @@ public class Player : MonoBehaviour
 		{
 			cornerPoint = collider.gameObject.transform.parent.position;
 			cornerPoint.y = transform.position.y;
+
+			if (playerMode == PlayerMode.RUNNING) // Avoid triggering multiple times
+			{
+				// Turning
+				switch (lg.cornerDirection)
+				{
+					case ProcGen.CornerDirection.LEFT:
+						if (autoTurn) { actionLeft = true; actionRight = false; }
+						anim.SetTrigger("LookLeft");
+						break;
+					case ProcGen.CornerDirection.RIGHT:
+						if (autoTurn) { actionRight = true; actionLeft = false; }
+						anim.SetTrigger("LookRight");
+						break;
+				}
+			}
 
 			playerMode = PlayerMode.TURNING;
 		}
