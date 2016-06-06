@@ -203,4 +203,27 @@ public class SceneManager_Andrew : SceneManager_Base {
     {
         SceneManager.LoadScene("Main Game");
     }
+
+	public void BuyLife()
+	{
+		int cost = 200; // temp
+
+		// Check gamemanager for gold, deduct gold if enough
+		if (_myGameManager.m_CoinScore >= cost)
+		{
+			_myGameManager.m_CoinScore -= cost;
+
+			// Add new life to counter
+			m_Lives++;
+
+			// Reset character
+			GamePlayer.ResetCharacter();
+
+			// Hide gameover window
+			GameOverMenu.SetActive(false);
+
+			// Save
+			_myGameManager.Save();
+		}
+	}
 }

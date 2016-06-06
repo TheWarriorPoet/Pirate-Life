@@ -690,6 +690,8 @@ public class Player : MonoBehaviour
 
     public void ResetCharacter()
     {
+		dead = false;
+
 		if (ragdolled)
 		{
 			ragdoll.ResetRagdoll();
