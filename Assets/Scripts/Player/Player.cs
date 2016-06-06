@@ -712,6 +712,8 @@ public class Player : MonoBehaviour
         turnTimer = 0;
         turnDegree = 0;
 
+		isTurning = false;
+
         jumping = false;
 		jumpVelocity = 0.0f;
 
