@@ -108,6 +108,15 @@ public class Player : MonoBehaviour
                 }
             }
         }
+        Renderer[] allRenderers = GetComponentsInChildren<Renderer>();
+                        foreach (Renderer r in allRenderers)
+                        {
+                            if (r)
+                            {
+                                if (r.gameObject.tag == "Parrot")
+                                    r.enabled = _parrotActive;
+                            }
+                        }
         anim = GetComponentInChildren<Animator>();
 		baseAnimSpeed = anim.speed;
 
@@ -560,7 +569,7 @@ public class Player : MonoBehaviour
 				{
 					if (r.gameObject.tag != "Parrot")
 						r.enabled = !r.enabled;
-					/*else*/ if (r.gameObject.tag == "Parrot" && _parrotActive)
+					else if (_parrotActive)
 						r.enabled = !r.enabled;
 				}
             }
@@ -575,7 +584,9 @@ public class Player : MonoBehaviour
 					alpha.w = 1.0f;
 					r.material.color = alpha;
 				}
-				r.enabled = true;
+                if (r.gameObject.tag == "Parrot")
+                    r.enabled = _parrotActive;
+                else r.enabled = true;
 			}
         }
 		if (!_parrotActive)

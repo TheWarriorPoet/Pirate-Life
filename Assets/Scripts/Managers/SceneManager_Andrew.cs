@@ -75,6 +75,8 @@ public class SceneManager_Andrew : SceneManager_Base {
         if (_myGameManager != null)
         {
             _myGameManager.FirstPlay = false;
+
+            
         }
         StartCoroutine("DifficultyCoroutine");
 	}
