@@ -16,7 +16,10 @@ public enum UpgradeType
     FeatherMaterial,
     PantsMaterial,
     BodyMaterial,
-    ParrotUpgrade
+    ParrotUpgrade,
+    DrunkenStart,
+    PiratesTreasure,
+    HeadStart
 }
 
 public enum UpgradeBoostGold

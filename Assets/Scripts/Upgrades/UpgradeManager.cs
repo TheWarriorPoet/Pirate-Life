@@ -16,6 +16,8 @@ public class UpgradeManager : MonoBehaviour {
     private Material FeatherMaterial = null;
     private Material PantsMaterial = null;
 
+    private Player _player = null;
+
     //private UpgradeStruct _activeUpgrade = null;
     private GameManager _gameManager = null;
 
@@ -35,6 +37,7 @@ public class UpgradeManager : MonoBehaviour {
     // Use this for initialization
     void Awake () {
         _gameManager = GameManager.instance;
+        _player = Player.instance;
         PlayerRenderer = GameObject.FindGameObjectWithTag("PirateMesh").GetComponent<Renderer>();
         ParrotRenderer = GameObject.FindGameObjectWithTag("Parrot").GetComponent<Renderer>();
         var PlayerMaterials = PlayerRenderer.materials;
@@ -93,7 +96,7 @@ public class UpgradeManager : MonoBehaviour {
                                 break;
                         }
                     }
-                    else if (us.type == UpgradeBoostGold.Boost)
+                    else if (_player != null && us.type == UpgradeBoostGold.Boost)
                     {
                         if (us.BoostsAvailable > 0)
                         {
@@ -114,6 +117,26 @@ public class UpgradeManager : MonoBehaviour {
             PlayerRenderer.material = _activeUpgrade.upgradeMaterial;
             
         }*/
+    }
+
+    void Start()
+    {
+        foreach (UpgradeStruct us in ActiveBoosts)
+        {
+            switch (us.upgradeValues[0].upgradeType)
+            {
+                case UpgradeType.DrunkenStart:
+                    _player.GetDrunk((int)us.upgradeValues[0].value);
+                    break;
+                case UpgradeType.PiratesTreasure:
+                    SceneManager_Andrew sm = SceneManager_Andrew.instance;
+                    if (sm != null)
+                    {
+                        sm.coinMultiplier = (int)us.upgradeValues[0].value;
+                    }
+                    break;
+            }
+        }
     }
 	
 	// Update is called once per frame

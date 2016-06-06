@@ -12,9 +12,9 @@ public class SceneManager_Andrew : SceneManager_Base {
 
 	public UnityEngine.UI.Text m_CoinCounter = null;
     public int coinCount = 0;
+    public int coinMultiplier = 1;
 
-
-	public UnityEngine.UI.Text drunkText;
+    public UnityEngine.UI.Text drunkText;
 	public GameObject drunkMask;
 	private RectTransform drunkRect;
 	private float drunkWidth;

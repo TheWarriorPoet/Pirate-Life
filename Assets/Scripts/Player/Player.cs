@@ -38,6 +38,7 @@ public class Player : MonoBehaviour
 	public float runSpeed;
 	public Vector3 velocity;
 	public bool isGrounded;
+    public bool fastForward = false;
 
 	private SmoothCam mainCamera;
 	private Animator anim;
