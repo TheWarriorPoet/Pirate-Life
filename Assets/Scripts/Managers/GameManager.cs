@@ -79,6 +79,8 @@ public class GameManager : MonoBehaviour
     public List<UpgradeStruct> _allUpgrades = new List<UpgradeStruct>();
     public bool PlayerReset = false;
     public bool dataReset = false;
+    public bool FirstPlay = true;
+    public bool PlayTutorialSetting = false;
     /// <summary>
     /// This needs to be connected once we have new track sections generating. 
     /// Whenever a new section of track is deployed, some upgrades need to reset their lists of affected objects
@@ -194,6 +196,8 @@ public class GameManager : MonoBehaviour
             DataForSaving.SDAllUpgrades.Add(USV);
         }
         DataForSaving.CoinScore = m_CoinScore;
+        DataForSaving.FirstPlay = FirstPlay;
+        DataForSaving.PlayTutorialSetting = PlayTutorialSetting;
         bf.Serialize(file, DataForSaving);
         file.Close();
         Debug.Log("Save Complete");
@@ -209,6 +213,8 @@ public class GameManager : MonoBehaviour
             file.Close();
             HighScores = data.SDHighScores;
             m_CoinScore = data.CoinScore;
+            FirstPlay = data.FirstPlay;
+            PlayTutorialSetting = data.PlayTutorialSetting;
             foreach (UpgradeSaveVersion USV in data.SDAllUpgrades)
             {
                 foreach (UpgradeStruct US in _allUpgrades)
@@ -268,4 +274,6 @@ class SaveData
     public List<HighScore> SDHighScores = new List<HighScore>();
     public List<UpgradeSaveVersion> SDAllUpgrades = new List<UpgradeSaveVersion>();
     public int CoinScore;
+    public bool FirstPlay;
+    public bool PlayTutorialSetting;
 }

@@ -72,6 +72,10 @@ public class SceneManager_Andrew : SceneManager_Base {
         {
             _upgradeManager.DecreaseActiveBoosts();
         }
+        if (_myGameManager != null)
+        {
+            _myGameManager.FirstPlay = false;
+        }
         StartCoroutine("DifficultyCoroutine");
 	}
 
