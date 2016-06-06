@@ -5,11 +5,34 @@ using UnityEngine.UI;
 public class Purchase : MonoBehaviour {
     private GameManager _myGameManager = null;
     private UpgradeStruct _upgrade = null;
+
+    // Purchase Title
     public Text Title = null;
     public Text TitleShadow = null;
+
+    // Purchase Cost
     public Text Cost = null;
     public Text CostShadow = null;
     public Image CoinImage = null;
+
+    // You have
+    public Text YouHave = null;
+
+    // Description
+    public Text Description = null;
+
+    // Purchase Image
+    public Image PurchaseSprite = null;
+
+    // Buy/Activate Buttons
+    public GameObject BuyButton = null;
+    public GameObject ActiveButton = null;
+    public Image ActiveImage = null;
+
+    // Active Images
+    public Sprite ActiveSprite = null;
+    public Sprite InActiveSprite = null;
+
     private SceneManager_Store _storeSceneManager = null;
 	// Use this for initialization
 	void Start () {
@@ -24,40 +47,141 @@ public class Purchase : MonoBehaviour {
 
     public void SetupButton(UpgradeStruct us)
     {
+        // Sets the button up for use in store
         gameObject.name = us.name;
         _upgrade = us;
+
+        // Set Title
         if (Title != null && TitleShadow != null)
         {
             Title.text = us.name;
             TitleShadow.text = us.name;
         }
-        if (Cost != null && CostShadow != null)
+
+        // Set Image
+        if (PurchaseSprite != null)
         {
-            switch (us.type) {
-                case UpgradeBoostGold.Gold:
+            if (us.icon != null)
+                PurchaseSprite.sprite = us.icon;
+            else
+            {
+                PurchaseSprite.sprite = null;
+                Color c = PurchaseSprite.color;
+                c.a = 0.0f;
+                PurchaseSprite.color = c;
+            }
+        }
+
+        // Set Description
+        if (Description != null)
+        {
+            Description.text = us.description;
+        }
+
+        // Different Setup based on Store Button Type
+        switch (us.type)
+        {
+            case UpgradeBoostGold.Gold:
+                // Set Cost
+                if (Cost != null && CostShadow != null)
+                {
                     Cost.text = "$" + (us.MoneyCost / 100.0f).ToString();
                     CostShadow.text = "$" + (us.MoneyCost / 100.0f).ToString();
                     CoinImage.enabled = false;
-                    break;
-                case UpgradeBoostGold.Boost:
-                case UpgradeBoostGold.Upgrade:
-                    if (us.Active)
+                }
+                // Make Sure Buy Button is active, no matter what
+                if (BuyButton != null)
+                {
+                    BuyButton.SetActive(true);
+                }
+                // Switch off YouHave Text
+                if (YouHave != null)
+                {
+                    YouHave.text = "";
+                }
+                // Make sure Active Button is off, no matter what
+                if (ActiveButton != null)
+                {
+                    ActiveButton.SetActive(false);
+                }
+                break;
+            case UpgradeBoostGold.Boost:
+                // Set Cost
+                if (Cost != null && CostShadow != null)
+                {
+                    Cost.text = us.CoinCost.ToString();
+                    CostShadow.text = us.CoinCost.ToString();
+                    CoinImage.enabled = true;
+                }
+                // Make Sure Buy Button is active, no matter what
+                if (BuyButton != null)
+                {
+                    BuyButton.SetActive(true);
+                }
+                // Set YouHave Text
+                if (YouHave != null)
+                {
+                    YouHave.text = "You Have: " + us.BoostsAvailable;
+                }
+                // Make sure Active Button is off, no matter what
+                if (ActiveButton != null)
+                {
+                    ActiveButton.SetActive(false);
+                }
+                break;
+            case UpgradeBoostGold.Upgrade:
+                // Set Cost unless purchased
+                if (Cost != null && CostShadow != null)
+                {
+                    if (us.Purchased)
                     {
-                        Cost.text = "Active";
-                        CostShadow.text = "Active";
-                    }
-                    else if (us.Purchased)
-                    {
-                        Cost.text = "Bought";
-                        CostShadow.text = "Bought";
+                        Cost.text = "";
+                        CostShadow.text = "";
+                        CoinImage.enabled = false;
                     }
                     else
                     {
                         Cost.text = us.CoinCost.ToString();
                         CostShadow.text = us.CoinCost.ToString();
+                        CoinImage.enabled = true;
                     }
-                    break;
-            }
+                }
+                // Make Sure Buy Button is active, unless purchased
+                if (BuyButton != null)
+                {
+                    if (us.Purchased)
+                    {
+                        BuyButton.SetActive(false);
+                    }
+                    else
+                    {
+                        BuyButton.SetActive(true);
+                    }
+                }
+                // Set YouHave Text to null
+                if (YouHave != null)
+                {
+                    YouHave.text = "";
+                }
+                // Turn on Active button if active
+                if (ActiveButton != null)
+                {
+                    if (us.Active)
+                    {
+                        ActiveButton.SetActive(true);
+                        ActiveImage.sprite = ActiveSprite;
+                    }
+                    else if (us.Purchased)
+                    {
+                        ActiveButton.SetActive(true);
+                        ActiveImage.sprite = InActiveSprite;
+                    }
+                    else
+                    {
+                        ActiveButton.SetActive(false);
+                    }
+                }
+                break;
         }
     }
 
@@ -81,6 +205,7 @@ public class Purchase : MonoBehaviour {
                                 _myGameManager.AddCoins(-us.CoinCost);
                                 us.Active = true;
                                 us.BoostsAvailable += _upgrade.BoostsPerPurchase;
+                                _storeSceneManager.UpdateButtons();
                                 break;
                             }
                         }

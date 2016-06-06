@@ -52,6 +52,17 @@ public class SceneManager_Store : SceneManager_Base {
     {
         if (_myGameManager != null)
         {
+            for (int i = UpgradeButtonParent.transform.childCount - 1; i >= 0; --i) {
+                DestroyObject(UpgradeButtonParent.transform.GetChild(i).gameObject);
+            }
+            for (int i = GoldButtonParent.transform.childCount - 1; i >= 0; --i)
+            {
+                DestroyObject(GoldButtonParent.transform.GetChild(i).gameObject);
+            }
+            for (int i = BoostsButtonParent.transform.childCount - 1; i >= 0; --i)
+            {
+                DestroyObject(BoostsButtonParent.transform.GetChild(i).gameObject);
+            }
             int TotalUpgradeCount = 0;
             int TotalBoostCount = 0;
             int TotalGoldCount = 0;
@@ -70,9 +81,9 @@ public class SceneManager_Store : SceneManager_Base {
                         break;
                 }
             }
-            UpgradeButtonParent.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, TotalUpgradeCount * 150);
-            BoostsButtonParent.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, TotalBoostCount * 150);
-            GoldButtonParent.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, TotalGoldCount * 150);
+            UpgradeButtonParent.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, TotalUpgradeCount * 225);
+            BoostsButtonParent.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, TotalBoostCount * 225);
+            GoldButtonParent.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, TotalGoldCount * 225);
             int UpgradeCount = 0;
             int BoostCount = 0;
             int GoldCount = 0;
@@ -80,27 +91,28 @@ public class SceneManager_Store : SceneManager_Base {
             {
                 GameObject go;
                 Vector2 newPosition = Vector2.zero;
+                // Original newPosition.y = ((TotalUpgradeCount - 1) * 75) - (UpgradeCount++ * 150);
                 switch (us.type)
                 {
                     case UpgradeBoostGold.Upgrade:
                         go = GameObject.Instantiate(ButtonPrefab, ButtonPrefab.transform.position, ButtonPrefab.transform.rotation) as GameObject;
                         go.GetComponent<Purchase>().SetupButton(us);
                         go.transform.SetParent(UpgradeButtonParent.transform, false);
-                        newPosition.y = ((TotalUpgradeCount - 1) * 75) - (UpgradeCount++ * 150);
+                        newPosition.y = ((TotalUpgradeCount - 1) * 110) - (UpgradeCount++ * 225);
                         go.GetComponent<RectTransform>().anchoredPosition = newPosition;
                         break;
                     case UpgradeBoostGold.Boost:
                         go = GameObject.Instantiate(ButtonPrefab, ButtonPrefab.transform.position, ButtonPrefab.transform.rotation) as GameObject;
                         go.GetComponent<Purchase>().SetupButton(us);
                         go.transform.SetParent(BoostsButtonParent.transform, false);
-                        newPosition.y = ((TotalBoostCount - 1) * 75) - (BoostCount++ * 150);
+                        newPosition.y = ((TotalBoostCount - 1) * 110) - (BoostCount++ * 225);
                         go.GetComponent<RectTransform>().anchoredPosition = newPosition;
                         break;
                     case UpgradeBoostGold.Gold:
                         go = GameObject.Instantiate(ButtonPrefab, ButtonPrefab.transform.position, ButtonPrefab.transform.rotation) as GameObject;
                         go.GetComponent<Purchase>().SetupButton(us);
                         go.transform.SetParent(GoldButtonParent.transform, false);
-                        newPosition.y = ((TotalGoldCount - 1) * 75) - (GoldCount++ * 150);
+                        newPosition.y = ((TotalGoldCount - 1) * 110) - (GoldCount++ * 225);
                         go.GetComponent<RectTransform>().anchoredPosition = newPosition;
                         break;
                 }
