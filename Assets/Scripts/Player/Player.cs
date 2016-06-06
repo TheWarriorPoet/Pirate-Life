@@ -183,7 +183,7 @@ public class Player : MonoBehaviour
             actionRight = true;
         }
 
-        if ((Input.GetAxis("Jump") > 0 || Input.GetAxis("Jump") < 0) && controller.isGrounded)
+        if (Input.GetAxis("Jump") != 0 && controller.isGrounded)
         {
             actionJump = true;
         }
