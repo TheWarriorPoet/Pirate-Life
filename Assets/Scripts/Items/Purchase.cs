@@ -233,6 +233,7 @@ public class Purchase : MonoBehaviour {
                             }
                             else if (us.name == _upgrade.name && us.Purchased)
                             {
+                                bool active = us.Active;
                                 foreach (UpgradeStruct us2 in _myGameManager._allUpgrades)
                                 {
                                     if (us2.type == UpgradeBoostGold.Upgrade && us2.upgradeValues[0].upgradeType == us.upgradeValues[0].upgradeType && us2.Purchased && us2.Active)
@@ -240,7 +241,7 @@ public class Purchase : MonoBehaviour {
                                         us2.Active = false;
                                     }
                                 }
-                                us.Active = !us.Active;
+                                us.Active = !active;
                                 _storeSceneManager.UpdateButtons();
                             }
                         }
