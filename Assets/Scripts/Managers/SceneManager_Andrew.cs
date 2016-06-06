@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SceneManager_Andrew : SceneManager_Base {
-    public int m_Lives = 3;
+    public int m_Lives = 1;
     public GameObject m_PlayerObject = null;
     public GameObject m_GameOverText = null;
     public float m_Distance = 0;
