@@ -148,16 +148,6 @@ public class Player : MonoBehaviour
         {
             Controls();
             Limits();
-
-			if (!jumping && controller.isGrounded)
-			{
-				if (Input.GetKeyDown(KeyCode.Space))
-				{
-					//velocity.y = controller.velocity.y;
-					jumpVelocity = jumpSpeed;
-					jumping = true;
-				}
-			}
 		}
 
         // Debug
@@ -193,7 +183,7 @@ public class Player : MonoBehaviour
             actionRight = true;
         }
 
-        if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) && controller.isGrounded)
+        if ((Input.GetAxis("Jump") > 0 || Input.GetAxis("Jump") < 0) && controller.isGrounded)
         {
             actionJump = true;
         }
