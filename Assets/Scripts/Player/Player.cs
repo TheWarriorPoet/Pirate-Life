@@ -725,7 +725,10 @@ public class Player : MonoBehaviour
         prevDrunkenness = 0;
         newDrunkenness = 0;
 
-		multiplier = 1.0f;
+		multiplier *= 0.75f;
+		if (multiplier < 1) {
+			multiplier = 1;
+		}
 
 		lg.RebuildMap();
 
