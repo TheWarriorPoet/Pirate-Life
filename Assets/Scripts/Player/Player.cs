@@ -148,16 +148,6 @@ public class Player : MonoBehaviour
         {
             Controls();
             Limits();
-
-			if (!jumping && controller.isGrounded)
-			{
-				if (Input.GetKeyDown(KeyCode.Space))
-				{
-					//velocity.y = controller.velocity.y;
-					jumpVelocity = jumpSpeed;
-					jumping = true;
-				}
-			}
 		}
 
         // Debug
@@ -193,7 +183,7 @@ public class Player : MonoBehaviour
             actionRight = true;
         }
 
-        if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) && controller.isGrounded)
+        if (Input.GetAxis("Jump") != 0 && controller.isGrounded)
         {
             actionJump = true;
         }
@@ -700,6 +690,8 @@ public class Player : MonoBehaviour
 
     public void ResetCharacter()
     {
+		dead = false;
+
 		if (ragdolled)
 		{
 			ragdoll.ResetRagdoll();
@@ -722,6 +714,8 @@ public class Player : MonoBehaviour
         turnTimer = 0;
         turnDegree = 0;
 
+		isTurning = false;
+
         jumping = false;
 		jumpVelocity = 0.0f;
 
@@ -731,7 +725,10 @@ public class Player : MonoBehaviour
         prevDrunkenness = 0;
         newDrunkenness = 0;
 
-		multiplier = 1.0f;
+		multiplier *= 0.75f;
+		if (multiplier < 1) {
+			multiplier = 1;
+		}
 
 		lg.RebuildMap();
 

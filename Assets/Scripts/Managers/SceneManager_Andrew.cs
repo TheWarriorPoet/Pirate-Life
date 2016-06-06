@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SceneManager_Andrew : SceneManager_Base {
-    public int m_Lives = 3;
+    public int m_Lives = 1;
     public GameObject m_PlayerObject = null;
     public GameObject m_GameOverText = null;
     public float m_Distance = 0;
@@ -203,4 +203,27 @@ public class SceneManager_Andrew : SceneManager_Base {
     {
         SceneManager.LoadScene("Main Game");
     }
+
+	public void BuyLife()
+	{
+		int cost = 200; // temp
+
+		// Check gamemanager for gold, deduct gold if enough
+		if (_myGameManager.m_CoinScore >= cost)
+		{
+			_myGameManager.m_CoinScore -= cost;
+
+			// Add new life to counter
+			m_Lives++;
+
+			// Reset character
+			GamePlayer.ResetCharacter();
+
+			// Hide gameover window
+			GameOverMenu.SetActive(false);
+
+			// Save
+			_myGameManager.Save();
+		}
+	}
 }

@@ -24,6 +24,8 @@ public class ProcGen : MonoBehaviour
 	public int ShipSpawnChance;
 	public GameObject CannonObj;
 	public int CannonSpawnChance;
+	public bool RunTutorial;
+	public GameObject TutorialSection;
 
 	private CornerDirection prevCornerDirection;
 	private List<GameObject> SectionQueue = new List<GameObject> ();
@@ -35,8 +37,13 @@ public class ProcGen : MonoBehaviour
 	{
 		SectionList.AddRange (EasySections);
 		Random.seed = (int)System.DateTime.Now.Ticks;
-		for (int i = 0; i < 2; ++i) {
+		if (RunTutorial) {
+			SectionQueue.Add (TutorialSection);
 			SectionQueue.Add (SectionList [Random.Range (0, SectionList.Count - 1)]);
+		} else {
+			for (int i = 0; i < 2; ++i) {
+				SectionQueue.Add (SectionList [Random.Range (0, SectionList.Count - 1)]);
+			}
 		}
 		RebuildMap ();
 	}
@@ -55,12 +62,15 @@ public class ProcGen : MonoBehaviour
 		TrackPos.z += PieceLength;
 	}
 
-	private void AddCorner()
+	private void AddCorner(bool forceLeft)
 	{
 		cornerDirection = prevCornerDirection;
 
 		Random.seed = (int)System.DateTime.Now.Ticks;
 		int i = Random.Range (0, 99);
+		if (forceLeft) {
+			i = 0;
+		}
 		GameObject obj;
 		if (i <= 50) {
 			prevCornerDirection = CornerDirection.LEFT;
@@ -176,8 +186,11 @@ public class ProcGen : MonoBehaviour
 			}
 
 		}
-
-		AddCorner ();
+		if (Section == TutorialSection) {
+			AddCorner (true);
+		} else {
+			AddCorner (false);
+		}
 
 		switch (TrackDirection) 
 		{
