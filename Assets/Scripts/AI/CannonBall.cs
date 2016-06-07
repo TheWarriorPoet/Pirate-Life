@@ -18,7 +18,7 @@ public class CannonBall : MonoBehaviour
 	{
 		Vector3 pos = transform.position;
 
-		velocity.y -= 10 * Time.deltaTime;
+		//velocity.y -= 10 * Time.deltaTime;
 
 		pos += velocity * Time.deltaTime;
 

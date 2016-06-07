@@ -154,14 +154,8 @@ public class ProcGen : MonoBehaviour
 				ship.transform.position -= new Vector3 (0, 3, 0);
 				ship.transform.parent = obj.transform;
 			}else if (Random.Range (1, 100) <= CannonSpawnChance) {
-				float offset = 0;
+				float offset = -10;
 				float Rot = 1;
-				if (Random.Range (0, 100) > 50) {
-					offset = -offset;
-				}
-				if (Random.Range (0, 100) > 50) {
-					Rot = -1;
-				}
 				GameObject cannon = (GameObject)GameObject.Instantiate (CannonObj, obj.transform.position + offset *obj.transform.right,Quaternion.Euler(0, TrackDirection, 0));
 				cannon.transform.parent = obj.transform;
 			}
