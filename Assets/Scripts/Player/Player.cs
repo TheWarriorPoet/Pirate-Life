@@ -147,7 +147,33 @@ public class Player : MonoBehaviour
 		landSound = (AudioClip)Resources.Load("Sounds/player_land");
 		skidSound = (AudioClip)Resources.Load("Sounds/player_skid");
 
+        StartCoroutine("Blink");
+
 		ResetCharacter();
+    }
+
+    IEnumerator Blink(float target = 0.1f)
+    {
+        float timer = 0.0f;
+        while (timer < target)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        Renderer[] allRenderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer r in allRenderers)
+        {
+            if (r)
+            {
+                if (r.gameObject.tag == "Parrot")
+                    r.enabled = _parrotActive;
+                else r.enabled = false;
+                if (r.gameObject.tag == "Parrot")
+                    r.enabled = _parrotActive;
+                else r.enabled = true;
+            }
+        }
+        yield return null;
     }
 
     void Update()
