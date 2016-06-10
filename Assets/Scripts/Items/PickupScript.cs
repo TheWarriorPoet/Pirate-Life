@@ -5,7 +5,7 @@ public enum PickupType
 {
 	COIN,
 	RUM,
-	WATER,
+	COFFEE,
 }
 
 public class PickupScript : MonoBehaviour
@@ -77,7 +77,7 @@ public class PickupScript : MonoBehaviour
 				case PickupType.RUM:
 					player.GetDrunk(itemValue);
 					break;
-				case PickupType.WATER:
+				case PickupType.COFFEE:
 					player.SoberUp(itemValue);
 					break;
 			}

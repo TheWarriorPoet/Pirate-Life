@@ -14,7 +14,7 @@ public class CannonBall : MonoBehaviour
 		velocity.y = 4;
 	}
 
-	void Update()
+	void FixedUpdate()
 	{
 		Vector3 pos = transform.position;
 
