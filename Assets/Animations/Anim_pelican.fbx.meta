@@ -70,7 +70,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.33033967
+      - time: 0.14313588
         functionName: Puke
         data: 
         objectReferenceParameter: {fileID: 183386, guid: 0060239a2a5b9f64c9a38f1dfa4f5357,
