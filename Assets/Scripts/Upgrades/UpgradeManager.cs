@@ -53,7 +53,7 @@ public class UpgradeManager : MonoBehaviour {
         {
             foreach (UpgradeStruct us in _gameManager._allUpgrades)
             {
-                if (us.name == "Pirate's Parrot" && us.Purchased)
+                if (us.name == "Pirate's Parrot" && us.Active)
                 {
                     if (ParrotRenderer != null)
                     {
@@ -152,6 +152,9 @@ public class UpgradeManager : MonoBehaviour {
                         sm.coinMultiplier = (int)us.upgradeValues[0].value;
                     }
                     break;
+                case UpgradeType.HeadStart:
+                    StartCoroutine("HeadStartBoost", us.upgradeValues[0].value);
+                    break;
             }
         }
         if (PlayerRenderer.material.HasProperty("_Color"))
@@ -167,6 +170,45 @@ public class UpgradeManager : MonoBehaviour {
             PlayerRenderer.material.color = alpha;
         }
         else PlayerRenderer.enabled = true;
+    }
+
+    IEnumerator HeadStartBoost(float targetDistance)
+    {
+        bool finalTurn = false;
+        bool exitFinalTurn = false;
+        // Setup Boost
+        if (_player != null)
+        {
+            _player.ActivateHeadStart();
+        }
+        float distanceTravelled = 0.0f;
+        SceneManager_Andrew sm = SceneManager_Andrew.instance;
+        if (sm != null) {
+            while (distanceTravelled < targetDistance)
+            {
+                distanceTravelled = sm.m_Distance;
+                yield return null;
+            }
+        }
+        // Wait until exiting the next corner
+        while (!exitFinalTurn)
+        {
+            if (!finalTurn)
+            {
+                finalTurn = _player.isTurning;
+            }
+            else
+            {
+                exitFinalTurn = !_player.isTurning;
+            }
+            yield return null;
+        }
+        // Turn off boost
+        if (_player != null)
+        {
+            _player.DeactivateHeadStart();
+        }
+        yield return null;
     }
 	
 	// Update is called once per frame

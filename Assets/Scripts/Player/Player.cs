@@ -78,6 +78,9 @@ public class Player : MonoBehaviour
     // Player Mesh
     private bool _parrotActive = false;
 
+    // Variables for Head Start Books
+    private bool _headStarting = false;
+
     private GameManager _gameManager = null;
 
 	private static Player _instance = null;
@@ -139,49 +142,10 @@ public class Player : MonoBehaviour
 		landSound = (AudioClip)Resources.Load("Sounds/player_land");
 		skidSound = (AudioClip)Resources.Load("Sounds/player_skid");
 
-        //StartCoroutine("Blink", 0.01f);
-
 		ResetCharacter();
     }
 
-    IEnumerator Blink(float target = 0.2f)
-    {
-        /*float timer = 0.0f;
-        while (timer < target)
-        {
-            timer += Time.deltaTime;
-            yield return null;
-        }*/
-        Renderer[] allRenderers = GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in allRenderers)
-        {
-            if (r)
-            {
-                if (r.material.HasProperty("_Color"))
-                {
-                    Vector4 alpha = r.material.color;
-                    alpha.w = 0.5f;
-                    r.material.color = alpha;
-                }
-            }
-        }
-        foreach (Renderer r in allRenderers)
-        {
-            if (r)
-            {
-                if (r.material.HasProperty("_Color"))
-                {
-                    Vector4 alpha = r.material.color;
-                    alpha.w = 1.0f;
-                    r.material.color = alpha;
-                }
-                if (r.gameObject.tag == "Parrot")
-                    r.enabled = _parrotActive;
-                else r.enabled = true;
-            }
-        }
-        yield return null;
-    }
+    
 
     void Update()
     {
@@ -215,6 +179,7 @@ public class Player : MonoBehaviour
 
 	void Controls()
     {
+        if (_headStarting) return;
         // PC Controls
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
         {
@@ -311,6 +276,7 @@ public class Player : MonoBehaviour
         {
 			case PlayerMode.CRASHING:
 			case PlayerMode.RUNNING:
+                //if (_headStarting) return;
 				if (anim.speed > baseAnimSpeed) anim.speed = baseAnimSpeed;
 				if (actionLeft)
                 {
@@ -517,7 +483,7 @@ public class Player : MonoBehaviour
 		// Jumping
 		float jumpHeight = Mathf.Lerp(minJumpHeight, maxJumpHeight, drunkenness / 100.0f);
 
-		/*
+        /*
 		s = jumpHeight
 		u = u
 		v = 0
@@ -533,7 +499,9 @@ public class Player : MonoBehaviour
 		u = sqrt(-2as)
 		*/
 
-		float gravity = 10.0f * (jumpHeight * 0.85f);
+        float gravity = 0.0f;
+        if (!_headStarting)
+            gravity = 10.0f * (jumpHeight * 0.85f);
 
 		jumpSpeed = Mathf.Sqrt(2.0f * gravity * jumpHeight);
 
@@ -623,10 +591,6 @@ public class Player : MonoBehaviour
                 else r.enabled = true;
 			}
         }
-		if (!_parrotActive)
-		{
-			UpgradeManager.instance.DeactivateParrot();
-		}
 
         multiplier = prevMultiplier;
         if (playerMode == PlayerMode.CRASHING)
@@ -638,11 +602,11 @@ public class Player : MonoBehaviour
     {
         if (sceneManager != null && collision.gameObject.CompareTag("Smashable") && !ragdolled)
         {
-            if (playerMode == PlayerMode.CRASHING)
+            if (playerMode == PlayerMode.CRASHING && !_headStarting)
             {
                 return;
             }
-            else if (drunkenness >= drunkSmashValue)
+            else if (drunkenness >= drunkSmashValue || _headStarting)
             {
                 foreach (GameObject go in GetComponentInChildren<NearbyCrates>().CratesAhead)
                 {
@@ -655,11 +619,12 @@ public class Player : MonoBehaviour
                 prevMultiplier = multiplier;
                 multiplier = 1.0f;
                 playerMode = PlayerMode.CRASHING;
-				StartCoroutine("CrateCrashing");
+                if (!_headStarting)
+    				StartCoroutine("CrateCrashing");
             }
 		}
 
-		if (sceneManager != null && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+		if (sceneManager != null && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle") && !_headStarting)
 		{
 			if (collision.gameObject.CompareTag("Smashable") && playerMode == PlayerMode.CRASHING)
 			{
@@ -700,7 +665,7 @@ public class Player : MonoBehaviour
 			KillCharacter(false);
 		}
 
-		if (collider.gameObject.layer == LayerMask.NameToLayer("Hazard"))
+		if (collider.gameObject.layer == LayerMask.NameToLayer("Hazard") && !_headStarting)
 		{
 			AudioSource.PlayClipAtPoint(skidSound, transform.position);
 			playerMode = PlayerMode.SLIPPING;
@@ -713,7 +678,7 @@ public class Player : MonoBehaviour
 			cornerPoint = collider.gameObject.transform.parent.position;
 			cornerPoint.y = transform.position.y;
 
-			if (playerMode == PlayerMode.RUNNING) // Avoid triggering multiple times
+			if (playerMode == PlayerMode.RUNNING || playerMode == PlayerMode.CRASHING) // Avoid triggering multiple times
 			{
 				// Turning
 				switch (lg.cornerDirection)
@@ -831,4 +796,24 @@ public class Player : MonoBehaviour
 	{
 		return laneVelocity;
 	}
+
+    public void ActivateHeadStart()
+    {
+        Time.timeScale = 7.5f;
+        _headStarting = true;
+        autoTurn = true;
+    }
+
+    public bool GetHeadStartingBool()
+    {
+        return _headStarting;
+    }
+
+    public void DeactivateHeadStart()
+    {
+        Time.timeScale = 1.0f;
+        _headStarting = false;
+        autoTurn = false;
+        playerMode = PlayerMode.RUNNING;
+    }
 }
