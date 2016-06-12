@@ -33,6 +33,7 @@ public class SceneManager_Andrew : SceneManager_Base {
     public GameObject GameOverMenu = null;
     public Text DistanceText = null;
     public Text DistanceTextShadow = null;
+    private float _previousTimeScale;
 
     private UpgradeManager _upgradeManager = null;
 
@@ -196,7 +197,10 @@ public class SceneManager_Andrew : SceneManager_Base {
 
 	public void TogglePause()
 	{
-		Time.timeScale = Time.timeScale == 0 ? 1 : 0;
+        float prevTimeScale  = Time.timeScale;
+
+        Time.timeScale = Time.timeScale == 0 ? _previousTimeScale : 0;
+        _previousTimeScale = prevTimeScale;
         if (PauseMenu != null)
         {
             PauseMenu.SetActive(!PauseMenu.activeSelf);

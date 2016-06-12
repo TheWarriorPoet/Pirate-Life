@@ -79,7 +79,8 @@ public class Player : MonoBehaviour
     private bool _parrotActive = false;
 
     // Variables for Head Start Books
-    private bool _headStarting = false;
+    public bool _headStarting = false;
+    private List<GameObject> disableGOs = new List<GameObject>();
 
     private GameManager _gameManager = null;
 
@@ -112,7 +113,6 @@ public class Player : MonoBehaviour
                 }
             }
         }
-
         anim = GetComponentInChildren<Animator>();
 		baseAnimSpeed = anim.speed;
 
@@ -502,8 +502,16 @@ public class Player : MonoBehaviour
         float gravity = 0.0f;
         if (!_headStarting)
             gravity = 10.0f * (jumpHeight * 0.85f);
+        else if (_headStarting && transform.position.y > 3.8f)
+        {
+            gravity = 20.0f;
+        }
+        else if (_headStarting)
+        {
+            velocity.y = 0;
+        }
 
-		jumpSpeed = Mathf.Sqrt(2.0f * gravity * jumpHeight);
+        jumpSpeed = Mathf.Sqrt(2.0f * gravity * jumpHeight);
 
 		velocity.y = jumpVelocity;
 
@@ -598,8 +606,23 @@ public class Player : MonoBehaviour
         yield return null;
     }
 
+    void DisableGameObject()
+    {
+        foreach (GameObject go in disableGOs)
+        {
+            if (go)
+            {
+                go.SetActive(false);
+                disableGOs.Remove(go);
+            }
+        }
+    }
     void OnControllerColliderHit(ControllerColliderHit collision)
     {
+        if (_headStarting && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle")) {
+            disableGOs.Add(collision.gameObject);
+            Invoke("DisableGameObject", 0.05f);
+        }
         if (sceneManager != null && collision.gameObject.CompareTag("Smashable") && !ragdolled)
         {
             if (playerMode == PlayerMode.CRASHING && !_headStarting)
@@ -614,10 +637,14 @@ public class Player : MonoBehaviour
                 }
 
                 AudioSource.PlayClipAtPoint(smackSound, transform.position);
-                SoberUp(drunkSmashValue);
+                if (!_headStarting)
+                {
+                    SoberUp(drunkSmashValue);
+                    prevMultiplier = multiplier;
+                    multiplier = 1.0f;
+                }
 				Instantiate(smashPrefab, transform.position + (transform.forward * 3.0f), transform.rotation);
-                prevMultiplier = multiplier;
-                multiplier = 1.0f;
+                
                 playerMode = PlayerMode.CRASHING;
                 if (!_headStarting)
     				StartCoroutine("CrateCrashing");
@@ -799,7 +826,7 @@ public class Player : MonoBehaviour
 
     public void ActivateHeadStart()
     {
-        Time.timeScale = 7.5f;
+        Time.timeScale = 5.0f;
         _headStarting = true;
         autoTurn = true;
     }
@@ -815,7 +842,7 @@ public class Player : MonoBehaviour
         _headStarting = false;
         autoTurn = false;
         playerMode = PlayerMode.RUNNING;
-        ResetCharacter();
-        multiplier = 1.5f;
+        //ResetCharacter();
+        multiplier = 1.4f;
     }
 }
