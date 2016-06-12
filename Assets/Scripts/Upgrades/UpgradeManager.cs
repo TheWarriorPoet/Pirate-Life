@@ -154,6 +154,19 @@ public class UpgradeManager : MonoBehaviour {
                     break;
             }
         }
+        if (PlayerRenderer.material.HasProperty("_Color"))
+        {
+            Vector4 alpha = PlayerRenderer.material.color;
+            alpha.w = 0.5f;
+            PlayerRenderer.material.color = alpha;
+        }
+        if (PlayerRenderer.material.HasProperty("_Color"))
+        {
+            Vector4 alpha = PlayerRenderer.material.color;
+            alpha.w = 1.0f;
+            PlayerRenderer.material.color = alpha;
+        }
+        else PlayerRenderer.enabled = true;
     }
 	
 	// Update is called once per frame

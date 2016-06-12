@@ -109,34 +109,6 @@ public class Player : MonoBehaviour
                 }
             }
         }
-        Renderer[] allRenderers = GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in allRenderers)
-        {
-            if (r)
-            {
-                if (r.material.HasProperty("_Color"))
-                {
-                    Vector4 alpha = r.material.color;
-                    alpha.w = 0.5f;
-                    r.material.color = alpha;
-                }
-            }
-        }
-        foreach (Renderer r in allRenderers)
-        {
-            if (r)
-            {
-                if (r.material.HasProperty("_Color"))
-                {
-                    Vector4 alpha = r.material.color;
-                    alpha.w = 1.0f;
-                    r.material.color = alpha;
-                }
-                if (r.gameObject.tag == "Parrot")
-                    r.enabled = _parrotActive;
-                else r.enabled = true;
-            }
-        }
 
         anim = GetComponentInChildren<Animator>();
 		baseAnimSpeed = anim.speed;
