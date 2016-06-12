@@ -205,7 +205,7 @@ public class SceneManager_Andrew : SceneManager_Base {
 
     public void RestartLevel()
     {
-        Time.timeScale = Time.timeScale == 0 ? 1 : 0;
+        Time.timeScale = 1.0f;
         SceneManager.LoadScene("Main Game");
     }
 
