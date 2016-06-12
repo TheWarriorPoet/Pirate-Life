@@ -110,14 +110,34 @@ public class Player : MonoBehaviour
             }
         }
         Renderer[] allRenderers = GetComponentsInChildren<Renderer>();
-                        foreach (Renderer r in allRenderers)
-                        {
-                            if (r)
-                            {
-                                if (r.gameObject.tag == "Parrot")
-                                    r.enabled = _parrotActive;
-                            }
-                        }
+        foreach (Renderer r in allRenderers)
+        {
+            if (r)
+            {
+                if (r.material.HasProperty("_Color"))
+                {
+                    Vector4 alpha = r.material.color;
+                    alpha.w = 0.5f;
+                    r.material.color = alpha;
+                }
+            }
+        }
+        foreach (Renderer r in allRenderers)
+        {
+            if (r)
+            {
+                if (r.material.HasProperty("_Color"))
+                {
+                    Vector4 alpha = r.material.color;
+                    alpha.w = 1.0f;
+                    r.material.color = alpha;
+                }
+                if (r.gameObject.tag == "Parrot")
+                    r.enabled = _parrotActive;
+                else r.enabled = true;
+            }
+        }
+
         anim = GetComponentInChildren<Animator>();
 		baseAnimSpeed = anim.speed;
 
@@ -147,27 +167,42 @@ public class Player : MonoBehaviour
 		landSound = (AudioClip)Resources.Load("Sounds/player_land");
 		skidSound = (AudioClip)Resources.Load("Sounds/player_skid");
 
-        StartCoroutine("Blink");
+        //StartCoroutine("Blink", 0.01f);
 
 		ResetCharacter();
     }
 
-    IEnumerator Blink(float target = 0.1f)
+    IEnumerator Blink(float target = 0.2f)
     {
-        float timer = 0.0f;
+        /*float timer = 0.0f;
         while (timer < target)
         {
             timer += Time.deltaTime;
             yield return null;
-        }
+        }*/
         Renderer[] allRenderers = GetComponentsInChildren<Renderer>();
         foreach (Renderer r in allRenderers)
         {
             if (r)
             {
-                if (r.gameObject.tag == "Parrot")
-                    r.enabled = _parrotActive;
-                else r.enabled = false;
+                if (r.material.HasProperty("_Color"))
+                {
+                    Vector4 alpha = r.material.color;
+                    alpha.w = 0.5f;
+                    r.material.color = alpha;
+                }
+            }
+        }
+        foreach (Renderer r in allRenderers)
+        {
+            if (r)
+            {
+                if (r.material.HasProperty("_Color"))
+                {
+                    Vector4 alpha = r.material.color;
+                    alpha.w = 1.0f;
+                    r.material.color = alpha;
+                }
                 if (r.gameObject.tag == "Parrot")
                     r.enabled = _parrotActive;
                 else r.enabled = true;
