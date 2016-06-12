@@ -815,5 +815,7 @@ public class Player : MonoBehaviour
         _headStarting = false;
         autoTurn = false;
         playerMode = PlayerMode.RUNNING;
+        ResetCharacter();
+        multiplier = 1.5f;
     }
 }
