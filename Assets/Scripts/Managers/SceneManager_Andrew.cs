@@ -53,6 +53,14 @@ public class SceneManager_Andrew : SceneManager_Base {
     new void Awake()
     {
         base.Awake();
+        if (_myGameManager != null)
+        {
+            if (_myGameManager.FirstPlay)
+            {
+                FindObjectOfType<ProcGen>().RunTutorial = true;
+                _myGameManager.FirstPlay = false;
+            }
+        }
     }
     // Use this for initialization
     void Start()
@@ -72,10 +80,6 @@ public class SceneManager_Andrew : SceneManager_Base {
         if (_upgradeManager != null)
         {
             _upgradeManager.DecreaseActiveBoosts();
-        }
-        if (_myGameManager != null)
-        {
-            _myGameManager.FirstPlay = false;
         }
         StartCoroutine("DifficultyCoroutine");
 	}

@@ -1,15 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class SceneManager_Credits : SceneManager_Base {
+    public Toggle TutorialOn = null;
+    private bool awaking = true;
+    void Awake()
+    {
+        base.Awake();
+        if (_myGameManager != null && TutorialOn != null)
+        {
+            TutorialOn.isOn = _myGameManager.FirstPlay;
+        }
+    }
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    public void ToggleTutorial()
+    {
+        if (_myGameManager != null && TutorialOn != null)
+        {
+            _myGameManager.FirstPlay = TutorialOn.isOn;
+        }
+    }
 }
